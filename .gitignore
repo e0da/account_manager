@@ -1,5 +1,1 @@
 .rvmrc
-db/*
-log/*
-tmp/*
-!.gitkeep
