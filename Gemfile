@@ -11,6 +11,6 @@ group :development, :test do
   gem 'ladle'
   gem 'rspec'
   gem 'guard'
-  gem 'guard-passenger'
   gem 'guard-rspec'
+  gem 'sinatra-contrib'
 end
