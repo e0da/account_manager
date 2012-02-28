@@ -1,8 +1,5 @@
 require 'sinatra'
-require './account_manager'
-
-disable :run
-set :environment, :production
+require './lib/account_manager'
 
 map '/account' do
   run AccountManager
