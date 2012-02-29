@@ -1,6 +1,8 @@
 require 'sinatra'
 require './lib/account_manager'
 
+disable :run
+
 map '/account' do
-  run AccountManager
+  run AccountManager::App
 end

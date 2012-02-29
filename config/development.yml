@@ -1,0 +1,7 @@
+---
+host: localhost
+port: 3897
+base: dc=example,dc=org
+ssl: false
+bind_dn: uid=aa729,ou=people,dc=example,dc=org
+password: smada

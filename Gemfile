@@ -3,9 +3,9 @@ source :rubygems
 gem 'sinatra'
 gem 'net-ldap'
 gem 'passenger'
-gem 'haml'
 gem 'coffee-script'
-gem 'haml'
+gem 'slim'
+gem 'sinatra-flash'
 
 group :development, :test do
   gem 'ladle'
@@ -13,4 +13,6 @@ group :development, :test do
   gem 'guard'
   gem 'guard-rspec'
   gem 'sinatra-contrib'
+  gem 'capybara'
+  gem 'libnotify'
 end
