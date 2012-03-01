@@ -2,8 +2,12 @@ doctype html
 html
   head
     title Manage Your Gevirtz Account
-  body
+    link href==url('/app.css') media="screen, projection" rel="stylesheet" type="text/css"
+  body.account_manager
     header
-    h1 Manage Your Gevirtz Account
-    == yield
+      h1 Manage Your Gevirtz Account
+      nav
+    #content
+      == yield
     footer
+    script src==url('/app.js')

@@ -1,11 +1,13 @@
 source :rubygems
 
 gem 'sinatra'
+gem 'sinatra-flash'
 gem 'net-ldap'
 gem 'passenger'
 gem 'coffee-script'
+gem 'therubyracer'
 gem 'slim'
-gem 'sinatra-flash'
+gem 'sass'
 
 group :development, :test do
   gem 'ladle'
