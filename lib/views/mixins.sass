@@ -1,0 +1,37 @@
+//
+// mixins
+//
+
+// Simple linear gradient background
+// Found at http://breakthebit.org/post/5214569460/sass-mixin-for-css3-gradients
+//
+=gradient-bg($from, $to)
+  // fallback/image non-cover color
+  background-color: $from
+
+  // Firefox 3.6+
+  background-image: -moz-linear-gradient($from, $to)
+
+  // Safari 4+, Chrome 1+
+  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from($from), to($to))
+
+  // Safari 5.1+, Chrome 10+
+  background-image: -webkit-linear-gradient($from, $to)
+
+  // Opera 11.10+
+  background-image: -o-linear-gradient($from, $to)
+
+// Almost always just need a gradient that darkens the initial color up or down
+//
+=grad($from)
+  @include gradient-bg($from, darken($from, 20%))
+
+=grad-up($from)
+  @include gradient-bg(darken($from, 20%), $from)
+
+=no-user-select
+  -webkit-user-select: none
+  -khtml-user-select: none
+  -moz-user-select: none
+  -o-user-select: none
+  user-select: none

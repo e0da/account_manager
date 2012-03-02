@@ -8,6 +8,14 @@ require 'slim'
 require 'sass'
 require 'coffee-script'
 
+# module Sinatra
+#   class Request
+#     def url
+      
+#     end
+#   end
+# end
+
 module AccountManager
   class App < Sinatra::Base
 
@@ -23,8 +31,11 @@ module AccountManager
     end
 
     helpers do
-      def url(route)
-        "#{request.script_name}#{route}"
+
+      # overload uri helper to default to absolute=false
+      #
+      def uri(addr = nil, absolute = false, add_script_name = true)
+        super(addr, absolute, add_script_name)
       end
     end
 
