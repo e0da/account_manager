@@ -1,0 +1,6 @@
+The public directory must exist or Passenger won't properly serve requests. You just get a bunch of errors like this: 
+
+    2012/03/02 13:07:36 [error] 4853#0: *5 open() "/home/force/Dropbox/code/account_manager/public/favicon.ico" failed (2: No such file or directory), client: 127.0.0.1, server: _, request: "GET /favicon.ico HTTP/1.1", host: "localhost:3000"
+
+This bug is documented here:
+http://code.google.com/p/phusion-passenger/issues/detail?id=720

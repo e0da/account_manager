@@ -1,5 +1,3 @@
-# Add lib to LOAD_PATH
-$:.unshift File.dirname __FILE__
 
 require 'sinatra/base'
 require 'sinatra/reloader'
@@ -7,14 +5,6 @@ require 'sinatra/flash'
 require 'slim'
 require 'sass'
 require 'coffee-script'
-
-# module Sinatra
-#   class Request
-#     def url
-      
-#     end
-#   end
-# end
 
 module AccountManager
   class App < Sinatra::Base
@@ -31,15 +21,13 @@ module AccountManager
     end
 
     helpers do
-
       # overload uri helper to default to absolute=false
-      #
       def uri(addr = nil, absolute = false, add_script_name = true)
         super(addr, absolute, add_script_name)
       end
+      alias url uri
+      alias to uri
     end
-
-
 
     #
     # assets
@@ -51,8 +39,6 @@ module AccountManager
     get '/app.js' do
       coffee :app
     end
-
-
 
     #
     # routes
