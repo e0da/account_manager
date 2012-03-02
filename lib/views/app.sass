@@ -41,7 +41,7 @@ label
   font-weight: bold
   display: block
   margin-top: 1.5em
-  line-height: 1.2em
+  line-height: 1.5em
 
 input
   &[type=text], &[type=password]
@@ -70,10 +70,11 @@ button[type=submit]
   padding: 0.5em
   color: white
   font-weight: bold
-  border: 1px outset #58c830
-    radius: 5px
+  border: 1px outset darken($submit_color, 10%)
+    radius: 2px
+  +no-user-select
   +grad($submit_color)
   &:hover
     +grad(lighten($submit_color, 5%))
   &:active
-    +grad(lighten($submit_color, 2%))
+    +grad(darken($submit_color, 5%))
