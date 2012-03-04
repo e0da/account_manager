@@ -1,20 +1,25 @@
-
 require 'sinatra/base'
 require 'sinatra/reloader'
 require 'sinatra/flash'
 require 'slim'
 require 'sass'
+require 'compass'
 require 'coffee-script'
 
 module AccountManager
   class App < Sinatra::Base
 
-    #
-    # configuration
-    #
-    register Sinatra::Flash
+    configure do
+      register Sinatra::Flash
+      Slim::Engine.set_default_options pretty: true
+      Compass.configuration do |config|
+        config.project_path = File.dirname(__FILE__)
+        config.sass_dir = 'views'
+      end
 
-    Slim::Engine.set_default_options pretty: true
+      set :haml, { :format => :html5 }
+      set :sass, Compass.sass_engine_options
+    end
 
     configure :development do
       register Sinatra::Reloader
@@ -34,6 +39,10 @@ module AccountManager
     #
     get '/app.css' do
       sass :app
+    end
+
+    get '/stylesheets/:sheet.css' do
+      sass :"stylesheets/#{params[:sheet]}"
     end
 
     get '/app.js' do

@@ -14,6 +14,7 @@ group :development, :test do
   gem 'rspec'
   gem 'guard'
   gem 'guard-rspec'
+  gem 'guard-compass'
   gem 'sinatra-contrib'
   gem 'capybara'
   gem 'libnotify'
