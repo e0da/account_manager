@@ -71,8 +71,50 @@ module AccountManager
           end
 
           context 'an unsuccessful attempt' do
-            it 'does not update the directory'
-            it 'redirects back to /change_password and reports an error'
+
+            it 'does not update the directory' do
+
+              uid = 'aa729'
+              old_password = 'BADPASSWORD'
+              new_password = 'chickenDinnerPunchFight5'
+
+              password_hash = nil
+
+              open_ldap do |ldap|
+                ldap.search filter: "(uid=#{uid})" do |entry|
+                  password_hash = entry[:userpassword].first
+                end
+              end
+
+              fill_in 'Username', with: uid
+              fill_in 'Password', with: old_password
+              fill_in 'New Password', with: new_password
+              fill_in 'Verify New Password', with: new_password
+              check 'agree'
+              click_on 'Change My Password'
+
+              open_ldap do |ldap|
+                ldap.search filter: "(uid=#{uid})" do |entry|
+                  entry[:userpassword].first.should == password_hash
+                end
+              end
+            end
+
+            it 'redirects back to /change_password and reports an error' do
+
+              uid = 'aa729'
+              old_password = 'BADPASSWORD'
+              new_password = 'chickenDinnerPunchFight5'
+
+              fill_in 'Username', with: uid
+              fill_in 'Password', with: old_password
+              fill_in 'New Password', with: new_password
+              fill_in 'Verify New Password', with: new_password
+              check 'agree'
+              click_on 'Change My Password'
+
+              page.should have_content 'Your password has not been changed'
+            end
           end
         end
 

@@ -65,12 +65,13 @@ module AccountManager
       def change_password(uid, old_password, new_password)
         open_ldap do |ldap|
           ldap.auth "uid=#{uid},ou=people,dc=example,dc=org", old_password
-          ldap.bind
-          ldap.replace_attribute(
-            "uid=#{uid},ou=people,dc=example,dc=org",
-            'userpassword',
-            hashed_password(new_password)
-          )
+          if ldap.bind
+            ldap.replace_attribute(
+              "uid=#{uid},ou=people,dc=example,dc=org",
+              'userpassword',
+              hashed_password(new_password)
+            )
+          end
         end
       end
     end
