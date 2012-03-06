@@ -1,0 +1,9 @@
+#
+# I recommend using Apache Directory Studio with the included config/test.ldif
+# to do development and integration testing.
+#
+---
+host: localhost
+port: 3898
+base: dc=example,dc=org
+dn: uid=%s,ou=people,dc=example,dc=org # the bind dn should have a %s where the uid goes
