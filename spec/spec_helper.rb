@@ -20,6 +20,9 @@ def start_ladle
   Ladle::Server.new(opts).start
 end
 
+#
+# convenience wrapper for Net::LDAP#open since we do it SO MUCH
+#
 def ldap_open
   @conf ||= YAML.load_file File.expand_path("../../config/test.yml", __FILE__)
   Net::LDAP.open(
@@ -27,10 +30,21 @@ def ldap_open
     port: @conf['port'],
     base: @conf['base']
   ) do |ldap|
-    yield ldap
+    yield ldap if block_given?
   end
 end
 
-def bind_dn(uid)
-  "uid=#{uid},ou=people,dc=example,dc=org"
+#
+# convenience wrapper for Net::LDAP#search since we do it SO MUCH
+#
+def ldap_search(filter)
+  ldap_open do |ldap|
+    ldap.search filter: filter do |entry|
+      yield entry if block_given?
+    end
+  end
+end
+
+def bind_dn(who)
+  "uid=#{who[:uid]},ou=people,dc=example,dc=org"
 end
