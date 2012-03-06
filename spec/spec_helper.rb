@@ -48,3 +48,13 @@ end
 def bind_dn(who)
   "uid=#{who[:uid]},ou=people,dc=example,dc=org"
 end
+
+def submit_password_change_form(user)
+  visit '/change_password'
+  fill_in 'Username', with: user[:uid]
+  fill_in 'Password', with: user[:password]
+  fill_in 'New Password', with: user[:new_password]
+  fill_in 'Verify New Password', with: user[:new_password]
+  check 'agree'
+  click_on 'Change My Password'
+end

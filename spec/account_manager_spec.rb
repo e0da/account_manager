@@ -97,13 +97,7 @@ module AccountManager
             describe 'changes their password' do
 
               before :all do
-                visit '/change_password'
-                fill_in 'Username', with: @active[:uid]
-                fill_in 'Password', with: @active[:password]
-                fill_in 'New Password', with: @active[:new_password]
-                fill_in 'Verify New Password', with: @active[:new_password]
-                check 'agree'
-                click_on 'Change My Password'
+                submit_password_change_form @active
               end
 
               it 'informs the user that their password has been changed' do
@@ -136,13 +130,7 @@ module AccountManager
             describe 'changes their password' do
 
               before :all do
-                visit '/change_password'
-                fill_in 'Username', with: @inactive[:uid]
-                fill_in 'Password', with: @inactive[:password]
-                fill_in 'New Password', with: @inactive[:new_password]
-                fill_in 'Verify New Password', with: @inactive[:new_password]
-                check 'agree'
-                click_on 'Change My Password'
+                submit_password_change_form @inactive
               end
 
               it 'informs the user that their password has been changed' do
@@ -171,13 +159,9 @@ module AccountManager
           context 'when they fail to athenticate' do
 
             before :all do
-              visit '/change_password'
-              fill_in 'Username', with: @read_only[:uid]
-              fill_in 'Password', with: 'incorrect password'
-              fill_in 'New Password', with: @read_only[:new_password]
-              fill_in 'Verify New Password', with: @read_only[:new_password]
-              check 'agree'
-              click_on 'Change My Password'
+              bad = @read_only.clone
+              bad[:password] = 'bad password'
+              submit_password_change_form bad
             end
 
             it 'redirects back to /change_password and reports an error' do
