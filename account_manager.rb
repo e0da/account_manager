@@ -67,7 +67,7 @@ module AccountManager
 
       def change_password(uid, old_password, new_password)
         open_ldap do |ldap|
-          dn = "uid=#{uid},ou=people,dc=example,dc=org"
+          dn = @conf['dn'] % uid
           timestamp = Time.now.strftime '%Y%m%d%H%M%SZ'
           ldap.auth dn, old_password
 
@@ -113,7 +113,7 @@ module AccountManager
 
     post '/change_password' do
       open_ldap do |ldap|
-        ldap.auth "uid=#{params[:uid]},ou=people,dc=example,dc=org", params[:password]
+        ldap.auth @conf['dn'] % params[:uid], params[:password]
         if change_password params[:uid], params[:password], params[:new_password]
           flash[:notice] = 'Your password has been changed'
         else
