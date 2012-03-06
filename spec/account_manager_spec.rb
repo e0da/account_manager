@@ -81,7 +81,7 @@ module AccountManager
 
         it 'has a complete "password change on inactive account" example' do
           ldap_search "(uid=#{@inactive[:uid]})" do |entry|
-            entry[:ituseagreementacceptdate].should == []
+            entry[:ituseagreementacceptdate].first.should match /activation required/
             entry[:passwordchangedate].should == []
             (@inactive[:password_hash] = entry[:userpassword]).should_not be nil
           end

@@ -39,14 +39,28 @@ module AccountManager
       alias url uri
       alias to uri
 
+      #
+      # convenience wrapper for Net::LDAP#open since we do it SO MUCH
+      #
       def ldap_open
-        @conf ||= YAML.load_file File.expand_path("../config/#{App.environment}.yml", __FILE__)
+        @conf ||= YAML.load_file File.expand_path("../config/test.yml", __FILE__)
         Net::LDAP.open(
           host: @conf['host'],
           port: @conf['port'],
           base: @conf['base']
         ) do |ldap|
-          yield ldap
+          yield ldap if block_given?
+        end
+      end
+
+      #
+      # convenience wrapper for Net::LDAP#search since we do it SO MUCH
+      #
+      def ldap_search(filter)
+        ldap_open do |ldap|
+          ldap.search filter: filter do |entry|
+            yield entry if block_given?
+          end
         end
       end
 
@@ -67,7 +81,8 @@ module AccountManager
       end
 
       def change_password(uid, old_password, new_password)
-        dn = @conf['dn'] % uid
+
+        dn = @conf['bind_dn'] % uid
         timestamp = Time.now.strftime '%Y%m%d%H%M%SZ'
 
         ldap_open do |ldap|
@@ -79,7 +94,7 @@ module AccountManager
             # fails (as it should if this is an already-activated account) the
             # success of the other transactions still counts
             #
-            ldap.add_attribute     dn, 'ituseagreementacceptdate', timestamp
+            ldap.replace_attribute dn, 'ituseagreementacceptdate', timestamp
             ldap.replace_attribute dn, 'passwordchangedate',       timestamp
             ldap.replace_attribute dn, 'userpassword',             hashed_password(new_password)
           end
@@ -115,7 +130,7 @@ module AccountManager
 
     post '/change_password' do
       ldap_open do |ldap|
-        ldap.auth @conf['dn'] % params[:uid], params[:password]
+        ldap.auth @conf['bind_dn'] % params[:uid], params[:password]
         if change_password params[:uid], params[:password], params[:new_password]
           flash[:notice] = 'Your password has been changed'
         else
