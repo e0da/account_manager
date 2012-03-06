@@ -49,6 +49,13 @@ module AccountManager
         end
       end
 
+      #
+      # Return an LDAP-ready hashed password generated from the unhashed
+      # password passed in. In our production environment, we use a SSHA hash.
+      # This isn't supported in net-ldap or the bundled version of Ladle. So we
+      # use SHA for them (handily provided by net-ldap) and roll our own SSHA
+      # for production.
+      #
       def hashed_password(unhashed_password)
         if App.environment == :production
           salt = 20.times.inject('') {|out| out+=%w[0 1 2 3 4 5 6 7 8 9 a b c d e f][rand(16)]}

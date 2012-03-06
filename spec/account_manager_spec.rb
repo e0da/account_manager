@@ -19,10 +19,34 @@ module AccountManager
     # qualities that fit our needs per test below so that we can run Ladle just
     # one time.
     #
-    context 'directory operations' do
+    describe 'directory operations' do
 
       before :all do
         @ladle = start_ladle
+
+        @read_only = {
+          uid: 'aa729',
+          password: 'smada',
+          new_password: 'rubberChickenHyperFight5'
+        }
+
+        @active = {
+          uid: 'bb459',
+          password: 'niwdlab',
+          new_password: 'extraBiscuitsInMyBasket4'
+        }
+
+        @inactive = {
+          uid: 'cc414',
+          password: 'retneprac',
+          new_password: 'youCantStopTheSignal7'
+        }
+
+        @bad = {
+          uid: 'bad_uid',
+          password: 'bad_password',
+          new_password: 'another_bad_password'
+        }
       end
 
       after :all do
@@ -32,170 +56,186 @@ module AccountManager
       describe 'sanity' do
 
         it 'authenticates with known good credentials' do
-          uid = 'aa729'
-          password = 'smada'
-          open_ldap do |ldap|
-            ldap.auth "uid=#{uid},ou=people,dc=example,dc=org", password
+          ldap_open do |ldap|
+            ldap.auth bind_dn(@read_only[:uid]), @read_only[:password]
             ldap.bind.should be true
+          end
+        end
+
+        it 'has a complete "read only" example' do
+          ldap_open do |ldap|
+            ldap.search filter: "(uid=#{@read_only[:uid]})" do |entry|
+              (@read_only[:activated] =  entry[:ituseagreementacceptdate].first).should_not be nil
+              (@read_only[:password_hash] =          entry[:userpassword].first).should_not be nil
+              (@read_only[:password_changed] = entry[:passwordchangedate].first).should_not be nil
+            end
+          end
+        end
+
+        it 'has a complete "password change on active account" example' do
+          ldap_open do |ldap|
+            ldap.search filter: "(uid=#{@active[:uid]})" do |entry|
+              (@active[:activated] =  entry[:ituseagreementacceptdate].first).should_not be nil
+              (@active[:password_hash] =          entry[:userpassword].first).should_not be nil
+              (@active[:password_changed] = entry[:passwordchangedate].first).should_not be nil
+            end
+          end
+        end
+
+        it 'has a complete "password change on inactive account" example' do
+          ldap_open do |ldap|
+            ldap.search filter: "(uid=#{@inactive[:uid]})" do |entry|
+              entry[:ituseagreementacceptdate].should == []
+              entry[:passwordchangedate].should == []
+              (@inactive[:password_hash] = entry[:userpassword]).should_not be nil
+            end
           end
         end
       end
 
       context 'a user', type: :request do
-        describe 'changes their password' do
 
-          before :each do
-            visit '/change_password'
-          end
+        describe 'wants to change their password' do
 
+          context 'when their account is already activated' do
 
-          context 'a successful attempt' do
-            it 'updates the password' do
-              uid = 'bb459'
-              old_password = 'niwdlab'
-              new_password = 'chickenDinnerPunchFight5'
+            describe 'changes their password' do
 
-              open_ldap do |ldap|
-                ldap.auth "uid=#{uid},ou=people,dc=example,dc=org", old_password
-                ldap.bind.should be true
+              before :all do
+                visit '/change_password'
+                fill_in 'Username', with: @active[:uid]
+                fill_in 'Password', with: @active[:password]
+                fill_in 'New Password', with: @active[:new_password]
+                fill_in 'Verify New Password', with: @active[:new_password]
+                check 'agree'
+                click_on 'Change My Password'
               end
 
-              fill_in 'Username', with: uid
-              fill_in 'Password', with: old_password
-              fill_in 'New Password', with: new_password
-              fill_in 'Verify New Password', with: new_password
-              check 'agree'
-              click_on 'Change My Password'
-              page.should have_content 'Your password has been changed'
-
-              open_ldap do |ldap|
-                ldap.auth "uid=#{uid},ou=people,dc=example,dc=org", new_password
-                ldap.bind.should be true
-              end
-            end
-
-            it 'activates an inactive account' do
-              uid = 'cc414'
-              old_password = 'retneprac'
-              new_password = 'chickenDinnerPunchFight5'
-
-              # verify the account is unactivated
-              #
-              open_ldap do |ldap|
-                ldap.search(filter: "(uid=#{uid})").should have(1).entries
-                ldap.search(filter: "(&(uid=#{uid})(ituseagreementacceptdate=*))").should be_empty
+              it 'informs the user that their password has been changed' do
+                page.should have_content 'Your password has been changed'
               end
 
-              fill_in 'Username', with: uid
-              fill_in 'Password', with: old_password
-              fill_in 'New Password', with: new_password
-              fill_in 'Verify New Password', with: new_password
-              check 'agree'
-              click_on 'Change My Password'
-              page.should have_content 'Your password has been changed'
-
-              open_ldap do |ldap|
-                ldap.search(filter: "(&(uid=#{uid})(ituseagreementacceptdate=*))").should have(1).entries
-              end
-            end
-
-            it 'does not change activation date on an active account' do
-              uid = 'dd945'
-              old_password = 'noswad'
-              new_password = 'chickenDinnerPunchFight5'
-
-              ituseagreementacceptdate = nil
-
-              open_ldap do |ldap|
-                ldap.search(filter: "(&(uid=#{uid})(ituseagreementacceptdate=*))") do |entry|
-                  (ituseagreementacceptdate = entry[:ituseagreementacceptdate].first).should_not be nil
+              it 'changes the password' do
+                ldap_open do |ldap|
+                  ldap.auth bind_dn(@active[:uid]), @active[:new_password]
+                  ldap.bind.should be true
                 end
               end
 
-              fill_in 'Username', with: uid
-              fill_in 'Password', with: old_password
-              fill_in 'New Password', with: new_password
-              fill_in 'Verify New Password', with: new_password
-              check 'agree'
-              click_on 'Change My Password'
-              page.should have_content 'Your password has been changed'
+              it 'does not change the "ituseagreeementacceptdate" timestamp' do
+                ldap_open do |ldap|
+                  ldap.search filter: "(uid=#{@active[:uid]})" do |entry|
+                    entry[:ituseagreementacceptdate].first.should == @active[:activated]
+                  end
+                end
+              end
 
-              open_ldap do |ldap|
-                ldap.search(filter: "(&(uid=#{uid})(ituseagreementacceptdate=*))") do |entry|
-                  entry[:ituseagreementacceptdate].first.should == ituseagreementacceptdate
+              it 'changes the "passwordchangedate" timestamp' do
+                ldap_open do |ldap|
+                  ldap.search filter: "(uid=#{@active[:uid]})" do |entry|
+                    entry[:passwordchangedate].first.should_not == @active[:password_changed]
+                  end
                 end
               end
             end
           end
 
-          context 'an unsuccessful attempt' do
+          context 'when their account is not activated' do
 
-            it 'does not update the directory' do
+            describe 'changes their password' do
 
-              uid = 'aa729'
-              old_password = 'BADPASSWORD'
-              new_password = 'chickenDinnerPunchFight5'
+              before :all do
+                visit '/change_password'
+                fill_in 'Username', with: @inactive[:uid]
+                fill_in 'Password', with: @inactive[:password]
+                fill_in 'New Password', with: @inactive[:new_password]
+                fill_in 'Verify New Password', with: @inactive[:new_password]
+                check 'agree'
+                click_on 'Change My Password'
+              end
 
-              password_hash = nil
+              it 'informs the user that their password has been changed' do
+                page.should have_content 'Your password has been changed'
+              end
 
-              open_ldap do |ldap|
-                ldap.search filter: "(uid=#{uid})" do |entry|
-                  password_hash = entry[:userpassword].first
+              it 'changes the password' do
+                ldap_open do |ldap|
+                  ldap.auth bind_dn(@inactive[:uid]), @inactive[:new_password]
+                  ldap.bind.should be true
                 end
               end
 
-              fill_in 'Username', with: uid
-              fill_in 'Password', with: old_password
-              fill_in 'New Password', with: new_password
-              fill_in 'Verify New Password', with: new_password
+              it 'activates an inactive account' do
+                ldap_open do |ldap|
+                  ldap.search(filter: "(&(uid=#{@inactive[:uid]})(ituseagreementacceptdate=*))").should have(1).entries
+                end
+              end
+
+              it 'does not change activation date on an active account' do
+                ldap_open do |ldap|
+                  ldap.search(filter: "(&(uid=#{@inactive[:uid]})(ituseagreementacceptdate=*))") do |entry|
+                    entry[:ituseagreementacceptdate].first.should_not be nil
+                  end
+                end
+              end
+            end
+          end
+
+          context 'when they fail to athenticate' do
+
+            before :all do
+              visit '/change_password'
+              fill_in 'Username', with: @read_only[:uid]
+              fill_in 'Password', with: 'incorrect password'
+              fill_in 'New Password', with: @read_only[:new_password]
+              fill_in 'Verify New Password', with: @read_only[:new_password]
               check 'agree'
               click_on 'Change My Password'
-
-              open_ldap do |ldap|
-                ldap.search filter: "(uid=#{uid})" do |entry|
-                  entry[:userpassword].first.should == password_hash
-                end
-              end
             end
 
             it 'redirects back to /change_password and reports an error' do
-
-              uid = 'aa729'
-              old_password = 'BADPASSWORD'
-              new_password = 'chickenDinnerPunchFight5'
-
-              fill_in 'Username', with: uid
-              fill_in 'Password', with: old_password
-              fill_in 'New Password', with: new_password
-              fill_in 'Verify New Password', with: new_password
-              check 'agree'
-              click_on 'Change My Password'
-
+              page.current_path.should == '/change_password'
               page.should have_content 'Your password has not been changed'
+            end
+
+            it 'does not update the directory' do
+
+              ldap_open do |ldap|
+                ldap.search filter: "(uid=#{@read_only[:uid]})" do |entry|
+                  entry[:userpassword].first.should == @read_only[:password_hash]
+                  entry[:ituseagreementacceptdate].first.should == @read_only[:activated]
+                  entry[:passwordchangedate].first.should == @read_only[:password_changed]
+                end
+                ldap.auth bind_dn(@read_only[:uid]), @read_only[:password]
+                ldap.bind.should be true
+              end
             end
           end
         end
+        
+        describe 'wants to reset their password' do
 
-        describe 'requests a reset token' do
-          it 'deletes any existing reset tokens'
-          it 'creates a new reset token'
-          it 'emails the reset token to the user'
-        end
-
-        describe 'resets their password' do
-          context 'a successful attempt' do
-            it 'changes the password'
-            it 'deletes the reset token'
+          describe 'requests a reset token' do
+            it 'deletes any existing reset tokens'
+            it 'creates a new reset token'
+            it 'emails the reset token to the user'
           end
 
-          context 'an unsuccessful attempt' do
-            it 'does not update the directory'
-          end
+          describe 'resets their password' do
+            context 'a successful attempt' do
+              it 'changes the password'
+              it 'deletes the reset token'
+            end
 
-          context 'the token is expired' do
-            it 'informs the user the token is expired'
-            it 'deletes the token'
-            it 'prompts the user to try again'
+            context 'an unsuccessful attempt' do
+              it 'does not update the directory'
+            end
+
+            context 'the token is expired' do
+              it 'informs the user the token is expired'
+              it 'deletes the token'
+              it 'prompts the user to try again'
+            end
           end
         end
       end

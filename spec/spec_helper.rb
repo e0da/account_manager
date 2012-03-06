@@ -20,12 +20,8 @@ def start_ladle
   Ladle::Server.new(opts).start
 end
 
-def read_conf
+def ldap_open
   @conf ||= YAML.load_file File.expand_path("../../config/test.yml", __FILE__)
-end
-
-def open_ldap
-  read_conf
   Net::LDAP.open(
     host: @conf['host'],
     port: @conf['port'],
@@ -33,4 +29,8 @@ def open_ldap
   ) do |ldap|
     yield ldap
   end
+end
+
+def bind_dn(uid)
+  "uid=#{uid},ou=people,dc=example,dc=org"
 end
