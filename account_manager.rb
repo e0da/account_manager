@@ -38,12 +38,8 @@ module AccountManager
       alias url uri
       alias to uri
 
-      def read_conf
-        @conf ||= YAML.load_file File.expand_path("../config/#{App.environment}.yml", __FILE__)
-      end
-
       def open_ldap
-        read_conf
+        @conf ||= YAML.load_file File.expand_path("../config/#{App.environment}.yml", __FILE__)
         Net::LDAP.open(
           host: @conf['host'],
           port: @conf['port'],
