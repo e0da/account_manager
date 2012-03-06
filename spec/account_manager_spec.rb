@@ -13,12 +13,20 @@ module AccountManager
       end
     end
 
+    #
+    # See notes in config/test.ldif for more information about individual
+    # test LDAP accounts. We're going to use different accounts with different
+    # qualities that fit our needs per test below so that we can run Ladle just
+    # one time.
+    #
     context 'directory operations' do
 
-      around :each do |example|
-        ladle = start_ladle
-        example.run
-        ladle.stop
+      before :all do
+        @ladle = start_ladle
+      end
+
+      after :all do
+        @ladle.stop
       end
 
       describe 'sanity' do
@@ -43,8 +51,8 @@ module AccountManager
 
           context 'a successful attempt' do
             it 'updates the password' do
-              uid = 'aa729'
-              old_password = 'smada'
+              uid = 'bb459'
+              old_password = 'niwdlab'
               new_password = 'chickenDinnerPunchFight5'
 
               open_ldap do |ldap|
@@ -66,8 +74,58 @@ module AccountManager
               end
             end
 
-            it 'activates an inactive account'
-            it 'does not change activation date on an active account'
+            it 'activates an inactive account' do
+              uid = 'cc414'
+              old_password = 'retneprac'
+              new_password = 'chickenDinnerPunchFight5'
+
+              # verify the account is unactivated
+              #
+              open_ldap do |ldap|
+                ldap.search(filter: "(uid=#{uid})").should have(1).entries
+                ldap.search(filter: "(&(uid=#{uid})(ituseagreementacceptdate=*))").should be_empty
+              end
+
+              fill_in 'Username', with: uid
+              fill_in 'Password', with: old_password
+              fill_in 'New Password', with: new_password
+              fill_in 'Verify New Password', with: new_password
+              check 'agree'
+              click_on 'Change My Password'
+              page.should have_content 'Your password has been changed'
+
+              open_ldap do |ldap|
+                ldap.search(filter: "(&(uid=#{uid})(ituseagreementacceptdate=*))").should have(1).entries
+              end
+            end
+
+            it 'does not change activation date on an active account' do
+              uid = 'dd945'
+              old_password = 'noswad'
+              new_password = 'chickenDinnerPunchFight5'
+
+              ituseagreementacceptdate = nil
+
+              open_ldap do |ldap|
+                ldap.search(filter: "(&(uid=#{uid})(ituseagreementacceptdate=*))") do |entry|
+                  (ituseagreementacceptdate = entry[:ituseagreementacceptdate].first).should_not be nil
+                end
+              end
+
+              fill_in 'Username', with: uid
+              fill_in 'Password', with: old_password
+              fill_in 'New Password', with: new_password
+              fill_in 'Verify New Password', with: new_password
+              check 'agree'
+              click_on 'Change My Password'
+              page.should have_content 'Your password has been changed'
+
+              open_ldap do |ldap|
+                ldap.search(filter: "(&(uid=#{uid})(ituseagreementacceptdate=*))") do |entry|
+                  entry[:ituseagreementacceptdate].first.should == ituseagreementacceptdate
+                end
+              end
+            end
           end
 
           context 'an unsuccessful attempt' do

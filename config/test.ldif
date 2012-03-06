@@ -5,11 +5,17 @@ objectClass: top
 objectClass: organizationalUnit
 ou: people
 
+#
+# aa729: read only active account
+#         - The account is already activated
+#         - The tests will make NO CHANGES to this account
+#
 dn: uid=aa729,ou=people,dc=example,dc=org
 objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
+objectClass: ggseperson
 cn: Alexandra Adams
 sn: Adams
 givenName: Alexandra
@@ -17,12 +23,20 @@ mail: alexandra@example.org
 uid: aa729
 # Password is "smada"
 userpassword: {SHA}pGlmZX1VOEdHHb30HZezeVNFxGM=
+ituseagreementacceptdate: 20051129194040Z
+passwordchangedate: 20051129194040Z
 
+#
+# bb459: password change on an active account
+#         - The account is already activated
+#         - The tests will change the password
+#
 dn: uid=bb459,ou=people,dc=example,dc=org
 objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
+objectClass: ggseperson
 cn: Belle Baldwin
 sn: Baldwin
 givenName: Belle
@@ -30,12 +44,21 @@ mail: belle@example.org
 uid: bb459
 # Password is "niwdlab"
 userpassword: {SHA}LRif2N+5TDSaO/rdkH2HHF8fF74=
+ituseagreementacceptdate: 20051129194040Z
+passwordchangedate: 20051129194040Z
 
+#
+# cc414: password activation example
+#         - The account is NOT activated
+#         - The tests will activate the account
+#         - The tests will change the password
+#
 dn: uid=cc414,ou=people,dc=example,dc=org
 objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
+objectClass: ggseperson
 cn: Claire Carpenter
 sn: Carpenter
 givenName: Claire
@@ -44,11 +67,17 @@ uid: cc414
 # Password is "retneprac"
 userpassword: {SHA}UL/iS+2R7GhwbhXOWoTHd4/qoMA=
 
+#
+# dd945: password change on an active account
+#         - The account is activated
+#         - The activation date doesn't change when the password does
+#
 dn: uid=dd945,ou=people,dc=example,dc=org
 objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
+objectClass: ggseperson
 cn: Dorothy Dawson
 sn: Dawson
 givenName: Dorothy
@@ -56,12 +85,15 @@ mail: dorothy@example.org
 uid: dd945
 # Password is "noswad"
 userpassword: {SHA}D0UlcTfbCddFLwih04ig4DEilAc=
+ituseagreementacceptdate: 20051129194040Z
+passwordchangedate: 20051129194040Z
 
 dn: uid=ee855,ou=people,dc=example,dc=org
 objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
+objectClass: ggseperson
 cn: Elizabeth Emerson
 sn: Emerson
 givenName: Elizabeth
@@ -75,6 +107,7 @@ objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
+objectClass: ggseperson
 cn: Freya Fuller
 sn: Fuller
 givenName: Freya
@@ -88,6 +121,7 @@ objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
+objectClass: ggseperson
 cn: Grace Gonzales
 sn: Gonzales
 givenName: Grace
@@ -101,6 +135,7 @@ objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
+objectClass: ggseperson
 cn: Hilda Hatfield
 sn: Hatfield
 givenName: Hilda
@@ -114,6 +149,7 @@ objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
+objectClass: ggseperson
 cn: Iona Ingram
 sn: Ingram
 givenName: Iona
@@ -127,6 +163,7 @@ objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
+objectClass: ggseperson
 cn: Josephine Jackson
 sn: Jackson
 givenName: Josephine
@@ -140,6 +177,7 @@ objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
+objectClass: ggseperson
 cn: Kelly Kline
 sn: Kline
 givenName: Kelly
@@ -153,6 +191,7 @@ objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
+objectClass: ggseperson
 cn: Leah Lawrence
 sn: Lawrence
 givenName: Leah
@@ -166,6 +205,7 @@ objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
+objectClass: ggseperson
 cn: Mona Maddox
 sn: Maddox
 givenName: Mona
@@ -179,6 +219,7 @@ objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
+objectClass: ggseperson
 cn: Noel Nash
 sn: Nash
 givenName: Noel
@@ -192,6 +233,7 @@ objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
+objectClass: ggseperson
 cn: Ophelia Osborn
 sn: Osborn
 givenName: Ophelia
@@ -205,6 +247,7 @@ objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
+objectClass: ggseperson
 cn: Penelope Patel
 sn: Patel
 givenName: Penelope
@@ -218,6 +261,7 @@ objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
+objectClass: ggseperson
 cn: Quin Queen
 sn: Queen
 givenName: Quin
@@ -231,6 +275,7 @@ objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
+objectClass: ggseperson
 cn: Ruth Rowland
 sn: Rowland
 givenName: Ruth
@@ -244,6 +289,7 @@ objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
+objectClass: ggseperson
 cn: Serena Solomon
 sn: Solomon
 givenName: Serena
@@ -257,6 +303,7 @@ objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
+objectClass: ggseperson
 cn: Talia Torres
 sn: Torres
 givenName: Talia
@@ -270,6 +317,7 @@ objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
+objectClass: ggseperson
 cn: Ursula Underwood
 sn: Underwood
 givenName: Ursula
@@ -283,6 +331,7 @@ objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
+objectClass: ggseperson
 cn: Vera Vickers
 sn: Vickers
 givenName: Vera
@@ -296,6 +345,7 @@ objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
+objectClass: ggseperson
 cn: Wendy Wise
 sn: Wise
 givenName: Wendy
@@ -309,6 +359,7 @@ objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
+objectClass: ggseperson
 cn: Xara Xiong
 sn: Xiong
 givenName: Xara
@@ -322,6 +373,7 @@ objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
+objectClass: ggseperson
 cn: Yvette Yates
 sn: Yates
 givenName: Yvette
@@ -335,6 +387,7 @@ objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
+objectClass: ggseperson
 cn: Zana Zimmerman
 sn: Zimmerman
 givenName: Zana

@@ -64,13 +64,19 @@ module AccountManager
 
       def change_password(uid, old_password, new_password)
         open_ldap do |ldap|
-          ldap.auth "uid=#{uid},ou=people,dc=example,dc=org", old_password
+          dn = "uid=#{uid},ou=people,dc=example,dc=org"
+          timestamp = Time.now.strftime '%Y%m%d%H%M%SZ'
+          ldap.auth dn, old_password
+
           if ldap.bind
-            ldap.replace_attribute(
-              "uid=#{uid},ou=people,dc=example,dc=org",
-              'userpassword',
-              hashed_password(new_password)
-            )
+
+            # ituseagreementacceptdate must come first so that if it quietly
+            # fails (as it should if this is an already-activated account) the
+            # success of the other transactions still counts
+            #
+            ldap.add_attribute     dn, 'ituseagreementacceptdate', timestamp
+            ldap.replace_attribute dn, 'passwordchangedate',       timestamp
+            ldap.replace_attribute dn, 'userpassword',             hashed_password(new_password)
           end
         end
       end
