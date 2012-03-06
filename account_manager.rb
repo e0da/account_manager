@@ -8,6 +8,7 @@ require 'coffee-script'
 require 'yaml'
 require 'base64'
 require 'digest'
+require 'net-ldap'
 
 module AccountManager
   class App < Sinatra::Base
@@ -38,7 +39,7 @@ module AccountManager
       alias url uri
       alias to uri
 
-      def open_ldap
+      def ldap_open
         @conf ||= YAML.load_file File.expand_path("../config/#{App.environment}.yml", __FILE__)
         Net::LDAP.open(
           host: @conf['host'],
@@ -66,9 +67,10 @@ module AccountManager
       end
 
       def change_password(uid, old_password, new_password)
-        open_ldap do |ldap|
-          dn = @conf['dn'] % uid
-          timestamp = Time.now.strftime '%Y%m%d%H%M%SZ'
+        dn = @conf['dn'] % uid
+        timestamp = Time.now.strftime '%Y%m%d%H%M%SZ'
+
+        ldap_open do |ldap|
           ldap.auth dn, old_password
 
           if ldap.bind
@@ -112,7 +114,7 @@ module AccountManager
     end
 
     post '/change_password' do
-      open_ldap do |ldap|
+      ldap_open do |ldap|
         ldap.auth @conf['dn'] % params[:uid], params[:password]
         if change_password params[:uid], params[:password], params[:new_password]
           flash[:notice] = 'Your password has been changed'

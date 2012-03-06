@@ -1,3 +1,4 @@
 .rvmrc
 .sass-cache
 config/production.yml
+*.log
