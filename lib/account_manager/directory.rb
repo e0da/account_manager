@@ -33,6 +33,15 @@ module AccountManager
       def bind_dn(uid)
         @conf['bind_dn'] % uid
       end
+
+      def user_active?(uid)
+        active = false
+        Directory.search "(uid=#{uid})" do |entry|
+          active = !entry[:ituseagreementacceptdate].first.match(/activation required/)
+        end
+
+        active
+      end
     end
   end
 end

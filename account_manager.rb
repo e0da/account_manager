@@ -58,15 +58,6 @@ module AccountManager
         Crypto.check_password(password, hash)
       end
 
-      def user_active?(uid)
-        active = false
-        Directory.search "(uid=#{uid})" do |entry|
-          active = !entry[:ituseagreementacceptdate].first.match(/activation required/)
-        end
-
-        active
-      end
-
       def change_password(uid, old_password, new_password)
 
         dn = Directory.bind_dn uid
@@ -80,7 +71,7 @@ module AccountManager
             # fails (as it should if this is an already-activated account) the
             # success of the other transactions still counts
             #
-            ldap.replace_attribute dn, 'ituseagreementacceptdate', timestamp unless user_active? uid
+            ldap.replace_attribute dn, 'ituseagreementacceptdate', timestamp unless Directory.user_active? uid
             ldap.replace_attribute dn, 'passwordchangedate',       timestamp
             ldap.replace_attribute dn, 'userpassword',             Crypto.hash_password(new_password)
           end
