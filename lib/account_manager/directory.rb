@@ -8,7 +8,7 @@ module AccountManager
       # configuration. Call it within other static methods conf[:attribute].
       #
       def conf
-        @@conf ||= YAML.load_file File.expand_path("#{App.root}/config/test.yml", __FILE__)
+        @@conf ||= YAML.load_file File.expand_path("#{App.root}/config/#{App.environment}.yml", __FILE__)
       end
 
       # Wrap Net::LDAP#open, bind as admin, then execute the block in the
