@@ -69,7 +69,7 @@ module AccountManager
       # convenience wrapper for Net::LDAP#search since we do it SO MUCH
       #
       def ldap_search(filter)
-        ldap_open do |ldap|
+        ldap_open_as_admin do |ldap|
           ldap.search filter: filter do |entry|
             yield entry if block_given?
           end
@@ -214,8 +214,7 @@ module AccountManager
     end
 
     post '/change_password' do
-      ldap_open do |ldap|
-        ldap.auth @conf['bind_dn'] % params[:uid], params[:password]
+      ldap_open do |ldap| # FIXME why do we need this?
         if change_password params[:uid], params[:password], params[:new_password]
           flash[:notice] = 'Your password has been changed'
         else
