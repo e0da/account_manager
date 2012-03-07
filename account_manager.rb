@@ -106,12 +106,10 @@ module AccountManager
     end
 
     post '/change_password' do
-      Directory.open do |ldap| # FIXME why do we need this?
-        if change_password params[:uid], params[:password], params[:new_password]
-          flash[:notice] = 'Your password has been changed'
-        else
-          flash[:error] = 'Your password has not been changed'
-        end
+      if change_password params[:uid], params[:password], params[:new_password]
+        flash[:notice] = 'Your password has been changed'
+      else
+        flash[:error] = 'Your password has not been changed'
       end
       redirect to '/change_password'
     end
