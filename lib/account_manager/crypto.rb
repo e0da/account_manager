@@ -2,6 +2,8 @@ require 'base64'
 require 'digest'
 require 'net-ldap'
 
+# TODO documentation
+
 module AccountManager
   class Crypto
     class << self

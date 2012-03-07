@@ -1,5 +1,7 @@
 require 'net-ldap'
 
+# TODO documentation
+
 module AccountManager
   class Directory
     class << self

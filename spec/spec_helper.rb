@@ -1,5 +1,7 @@
 $: << '.'
 
+# TODO documentation
+
 require 'account_manager'
 require 'capybara/rspec'
 
