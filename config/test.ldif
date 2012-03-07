@@ -66,12 +66,8 @@ mail: claire@example.org
 uid: cc414
 # Password is "retneprac"
 userpassword: {SHA}UL/iS+2R7GhwbhXOWoTHd4/qoMA=
+ituseagreementacceptdate: activation required
 
-#
-# dd945: password change on an active account
-#         - The account is activated
-#         - The activation date doesn't change when the password does
-#
 dn: uid=dd945,ou=people,dc=example,dc=org
 objectClass: top
 objectClass: person
@@ -85,8 +81,7 @@ mail: dorothy@example.org
 uid: dd945
 # Password is "noswad"
 userpassword: {SHA}D0UlcTfbCddFLwih04ig4DEilAc=
-ituseagreementacceptdate: 20051129194040Z
-passwordchangedate: 20051129194040Z
+ituseagreementacceptdate: activation required
 
 dn: uid=ee855,ou=people,dc=example,dc=org
 objectClass: top
@@ -101,6 +96,7 @@ mail: elizabeth@example.org
 uid: ee855
 # Password is "nosreme"
 userpassword: {SHA}pheE9wd/iTps6f8bJjM6AePjwrU=
+ituseagreementacceptdate: activation required
 
 dn: uid=ff531,ou=people,dc=example,dc=org
 objectClass: top
@@ -115,6 +111,7 @@ mail: freya@example.org
 uid: ff531
 # Password is "relluf"
 userpassword: {SHA}HLU2WZjFf/PF0Pp4qSDzoB3x+bs=
+ituseagreementacceptdate: activation required
 
 dn: uid=gg855,ou=people,dc=example,dc=org
 objectClass: top
@@ -129,6 +126,7 @@ mail: grace@example.org
 uid: gg855
 # Password is "selaznog"
 userpassword: {SHA}zT4oO9pFXIj+ISIc60bvM8A5+UQ=
+ituseagreementacceptdate: activation required
 
 dn: uid=hh153,ou=people,dc=example,dc=org
 objectClass: top
@@ -143,6 +141,7 @@ mail: hilda@example.org
 uid: hh153
 # Password is "dleiftah"
 userpassword: {SHA}PTDJLPy4kwa7VZ/sGLyCPzZ7d3o=
+ituseagreementacceptdate: activation required
 
 dn: uid=ii711,ou=people,dc=example,dc=org
 objectClass: top
@@ -157,6 +156,7 @@ mail: iona@example.org
 uid: ii711
 # Password is "margni"
 userpassword: {SHA}L7qElLblWuLNFPrFku60uCuCr7Q=
+ituseagreementacceptdate: activation required
 
 dn: uid=jj243,ou=people,dc=example,dc=org
 objectClass: top
@@ -171,6 +171,7 @@ mail: josephine@example.org
 uid: jj243
 # Password is "noskcaj"
 userpassword: {SHA}ElqdCxdbvRNqXBgdUdkCmGZlQmk=
+ituseagreementacceptdate: activation required
 
 dn: uid=kk891,ou=people,dc=example,dc=org
 objectClass: top
@@ -185,6 +186,7 @@ mail: kelly@example.org
 uid: kk891
 # Password is "enilk"
 userpassword: {SHA}WlNzQqBB/QoEKh3LRcLZHgnCGNw=
+ituseagreementacceptdate: activation required
 
 dn: uid=ll819,ou=people,dc=example,dc=org
 objectClass: top
@@ -199,6 +201,7 @@ mail: leah@example.org
 uid: ll819
 # Password is "ecnerwal"
 userpassword: {SHA}CzyyPOSrIxgFCm24nSv2FA8wihQ=
+ituseagreementacceptdate: activation required
 
 dn: uid=mm405,ou=people,dc=example,dc=org
 objectClass: top
@@ -213,6 +216,7 @@ mail: mona@example.org
 uid: mm405
 # Password is "xoddam"
 userpassword: {SHA}WiCnxkOb4kpy16ON7ZC6mD/iqII=
+ituseagreementacceptdate: activation required
 
 dn: uid=nn297,ou=people,dc=example,dc=org
 objectClass: top
@@ -227,6 +231,7 @@ mail: noel@example.org
 uid: nn297
 # Password is "hsan"
 userpassword: {SHA}1zOsG076wDkikQbnK5vAMM1BM/o=
+ituseagreementacceptdate: activation required
 
 dn: uid=oo981,ou=people,dc=example,dc=org
 objectClass: top
@@ -241,6 +246,7 @@ mail: ophelia@example.org
 uid: oo981
 # Password is "nrobso"
 userpassword: {SHA}w8mQw0kEa1UiWzMsNclD/LWzlgs=
+ituseagreementacceptdate: activation required
 
 dn: uid=pp468,ou=people,dc=example,dc=org
 objectClass: top
@@ -255,6 +261,7 @@ mail: penelope@example.org
 uid: pp468
 # Password is "letap"
 userpassword: {SHA}p7jaVoRIV9o8gDPbN10sEhXaYHk=
+ituseagreementacceptdate: activation required
 
 dn: uid=qq612,ou=people,dc=example,dc=org
 objectClass: top
@@ -269,6 +276,7 @@ mail: quin@example.org
 uid: qq612
 # Password is "neeuq"
 userpassword: {SHA}v9ibNIx42giCH4tQnwUHJy6LeJg=
+ituseagreementacceptdate: activation required
 
 dn: uid=rr477,ou=people,dc=example,dc=org
 objectClass: top
@@ -283,6 +291,7 @@ mail: ruth@example.org
 uid: rr477
 # Password is "dnalwor"
 userpassword: {SHA}S3eMb2C/ctXzbFnlgcH7ZQ/fozU=
+ituseagreementacceptdate: activation required
 
 dn: uid=ss198,ou=people,dc=example,dc=org
 objectClass: top
@@ -297,6 +306,7 @@ mail: serena@example.org
 uid: ss198
 # Password is "nomolos"
 userpassword: {SHA}EizIKlU79Kz1Y2WIV4deIh0MSA8=
+ituseagreementacceptdate: activation required
 
 dn: uid=tt882,ou=people,dc=example,dc=org
 objectClass: top
@@ -311,6 +321,7 @@ mail: talia@example.org
 uid: tt882
 # Password is "serrot"
 userpassword: {SHA}yO0DcSZ4fTMcx3sTHnAPQGvMkwg=
+ituseagreementacceptdate: activation required
 
 dn: uid=uu972,ou=people,dc=example,dc=org
 objectClass: top
@@ -325,6 +336,7 @@ mail: ursula@example.org
 uid: uu972
 # Password is "doowrednu"
 userpassword: {SHA}GQWGu8IvIEFU1PP34qGi5DyDF/c=
+ituseagreementacceptdate: activation required
 
 dn: uid=vv180,ou=people,dc=example,dc=org
 objectClass: top
@@ -339,6 +351,7 @@ mail: vera@example.org
 uid: vv180
 # Password is "srekciv"
 userpassword: {SHA}3UrzY38O4R1GLK6ccSSfL4D0efQ=
+ituseagreementacceptdate: activation required
 
 dn: uid=ww369,ou=people,dc=example,dc=org
 objectClass: top
@@ -353,6 +366,7 @@ mail: wendy@example.org
 uid: ww369
 # Password is "esiw"
 userpassword: {SHA}8gU4KSqUeeLRPov2tmXZXgOZw78=
+ituseagreementacceptdate: activation required
 
 dn: uid=xx396,ou=people,dc=example,dc=org
 objectClass: top
@@ -367,6 +381,7 @@ mail: xara@example.org
 uid: xx396
 # Password is "gnoix"
 userpassword: {SHA}Yc2En2R/sbdjlEOitkLlkwY4jAY=
+ituseagreementacceptdate: activation required
 
 dn: uid=yy423,ou=people,dc=example,dc=org
 objectClass: top
@@ -381,6 +396,7 @@ mail: yvette@example.org
 uid: yy423
 # Password is "setay"
 userpassword: {SHA}iKBhwF+Mbbct6mlmy6AvodIek3E=
+ituseagreementacceptdate: activation required
 
 dn: uid=zz882,ou=people,dc=example,dc=org
 objectClass: top
@@ -395,4 +411,5 @@ mail: zana@example.org
 uid: zz882
 # Password is "namremmiz"
 userpassword: {SHA}KlsWojnknRWCHXGoBOTlEZxxrG8=
+ituseagreementacceptdate: activation required
 

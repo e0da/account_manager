@@ -1,3 +1,5 @@
+$: << 'lib'
+
 require 'sinatra/base'
 require 'sinatra/reloader'
 require 'sinatra/flash'
@@ -9,6 +11,10 @@ require 'yaml'
 require 'base64'
 require 'digest'
 require 'net-ldap'
+require 'account_manager/directory'
+require 'account_manager/crypto'
+
+# TODO documentation
 
 module AccountManager
   class App < Sinatra::Base
@@ -24,6 +30,7 @@ module AccountManager
 
       set :haml, { :format => :html5 }
       set :sass, Compass.sass_engine_options
+
     end
 
     configure :development do
@@ -39,49 +46,34 @@ module AccountManager
       alias url uri
       alias to uri
 
-      def ldap_open
-        @conf ||= YAML.load_file File.expand_path("../config/#{App.environment}.yml", __FILE__)
-        Net::LDAP.open(
-          host: @conf['host'],
-          port: @conf['port'],
-          base: @conf['base']
-        ) do |ldap|
-          yield ldap
-        end
-      end
-
+      # In our production environment, you can't bind until your account has
+      # been activated, so we must verify the password without binding. To do
+      # this we just compare hashes.
       #
-      # Return an LDAP-ready hashed password generated from the unhashed
-      # password passed in. In our production environment, we use a SSHA hash.
-      # This isn't supported in net-ldap or the bundled version of Ladle. So we
-      # use SHA for them (handily provided by net-ldap) and roll our own SSHA
-      # for production.
-      #
-      def hashed_password(unhashed_password)
-        if App.environment == :production
-          salt = 20.times.inject('') {|out| out+=%w[0 1 2 3 4 5 6 7 8 9 a b c d e f][rand(16)]}
-          "{SSHA}"+Base64.encode64(Digest::SHA1.digest(unhashed_password+salt)+salt).chomp
-        else
-          Net::LDAP::Password.generate :sha, unhashed_password
+      def verify_user_password(uid, password)
+        hash = nil
+        Directory.search "(uid=#{uid})" do |entry|
+          hash = entry[:userpassword].first
         end
+        Crypto.check_password(password, hash)
       end
 
       def change_password(uid, old_password, new_password)
-        dn = @conf['dn'] % uid
+
+        dn = Directory.bind_dn uid
         timestamp = Time.now.strftime '%Y%m%d%H%M%SZ'
 
-        ldap_open do |ldap|
-          ldap.auth dn, old_password
+        if verify_user_password uid, old_password
 
-          if ldap.bind
+          Directory.open do |ldap|
 
             # ituseagreementacceptdate must come first so that if it quietly
             # fails (as it should if this is an already-activated account) the
             # success of the other transactions still counts
             #
-            ldap.add_attribute     dn, 'ituseagreementacceptdate', timestamp
+            ldap.replace_attribute dn, 'ituseagreementacceptdate', timestamp unless Directory.user_active? uid
             ldap.replace_attribute dn, 'passwordchangedate',       timestamp
-            ldap.replace_attribute dn, 'userpassword',             hashed_password(new_password)
+            ldap.replace_attribute dn, 'userpassword',             Crypto.hash_password(new_password)
           end
         end
       end
@@ -114,13 +106,10 @@ module AccountManager
     end
 
     post '/change_password' do
-      ldap_open do |ldap|
-        ldap.auth @conf['dn'] % params[:uid], params[:password]
-        if change_password params[:uid], params[:password], params[:new_password]
-          flash[:notice] = 'Your password has been changed'
-        else
-          flash[:error] = 'Your password has not been changed'
-        end
+      if change_password params[:uid], params[:password], params[:new_password]
+        flash[:notice] = 'Your password has been changed'
+      else
+        flash[:error] = 'Your password has not been changed'
       end
       redirect to '/change_password'
     end
