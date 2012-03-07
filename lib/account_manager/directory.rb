@@ -21,7 +21,7 @@ module AccountManager
           port: conf['port'],
           base: conf['base']
         ) do |ldap|
-          ldap.auth conf['bind_dn'] % conf['admin_username'], conf['admin_password']
+          ldap.auth conf['admin_bind_dn'], conf['admin_password']
           ldap.bind
           yield ldap
         end
@@ -49,7 +49,7 @@ module AccountManager
       # Return true if the user identified by uid has a timestamp in the
       # ituseagreementacceptdate attribute.
       #
-      def user_active?(uid)
+      def active?(uid)
         active = false
         Directory.search "(uid=#{uid})" do |entry|
           active = !entry[:ituseagreementacceptdate].first.match(/activation required/)

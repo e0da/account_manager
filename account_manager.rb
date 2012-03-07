@@ -58,6 +58,12 @@ module AccountManager
         Crypto.check_password(password, hash)
       end
 
+      def activate(uid, timestamp)
+        Directory.open do |ldap|
+          ldap.replace_attribute Directory.bind_dn(uid), 'ituseagreementacceptdate', timestamp
+        end
+      end
+
       def change_password(uid, old_password, new_password)
 
         dn = Directory.bind_dn uid
@@ -65,13 +71,9 @@ module AccountManager
 
         if verify_user_password uid, old_password
 
-          Directory.open do |ldap|
+          activate uid, timestamp unless Directory.active? uid
 
-            # ituseagreementacceptdate must come first so that if it quietly
-            # fails (as it should if this is an already-activated account) the
-            # success of the other transactions still counts
-            #
-            ldap.replace_attribute dn, 'ituseagreementacceptdate', timestamp unless Directory.user_active? uid
+          Directory.open do |ldap|
             ldap.replace_attribute dn, 'passwordchangedate',       timestamp
             ldap.replace_attribute dn, 'userpassword',             Crypto.hash_password(new_password)
           end
