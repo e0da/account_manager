@@ -9,6 +9,7 @@ require 'yaml'
 require 'base64'
 require 'digest'
 require 'net-ldap'
+require 'account_manager/directory'
 
 module AccountManager
   class App < Sinatra::Base
@@ -42,39 +43,6 @@ module AccountManager
       end
       alias url uri
       alias to uri
-
-      #
-      # convenience wrapper for Net::LDAP#open since we do it SO MUCH
-      #
-      def ldap_open
-        @conf ||= YAML.load_file File.expand_path("../config/test.yml", __FILE__)
-        Net::LDAP.open(
-          host: @conf['host'],
-          port: @conf['port'],
-          base: @conf['base']
-        ) do |ldap|
-          yield ldap if block_given?
-        end
-      end
-
-      def ldap_open_as_admin
-        ldap_open do |ldap|
-          ldap.auth @conf['bind_dn'] % @conf['admin_username'], @conf['admin_password']
-          ldap.bind
-          yield ldap if block_given?
-        end
-      end
-
-      #
-      # convenience wrapper for Net::LDAP#search since we do it SO MUCH
-      #
-      def ldap_search(filter)
-        ldap_open_as_admin do |ldap|
-          ldap.search filter: filter do |entry|
-            yield entry if block_given?
-          end
-        end
-      end
 
       #
       # crypto methods
@@ -151,7 +119,7 @@ module AccountManager
       #
       def verify_password(uid, password)
         hash = nil
-        ldap_search "(uid=#{uid})" do |entry|
+        Directory.ldap_search "(uid=#{uid})" do |entry|
           hash = entry[:userpassword].first
         end
         check_password(password, hash)
@@ -159,7 +127,7 @@ module AccountManager
 
       def active?(uid)
         active = false
-        ldap_search "(uid=#{uid})" do |entry|
+        Directory.ldap_search "(uid=#{uid})" do |entry|
           active = !entry[:ituseagreementacceptdate].first.match(/activation required/)
         end
 
@@ -168,12 +136,12 @@ module AccountManager
 
       def change_password(uid, old_password, new_password)
 
-        dn = @conf['bind_dn'] % uid
+        dn = Directory.bind_dn uid
         timestamp = Time.now.strftime '%Y%m%d%H%M%SZ'
 
         if verify_password uid, old_password
 
-          ldap_open_as_admin do |ldap|
+          Directory.ldap_open_as_admin do |ldap|
 
             # ituseagreementacceptdate must come first so that if it quietly
             # fails (as it should if this is an already-activated account) the
@@ -214,7 +182,7 @@ module AccountManager
     end
 
     post '/change_password' do
-      ldap_open do |ldap| # FIXME why do we need this?
+      Directory.ldap_open do |ldap| # FIXME why do we need this?
         if change_password params[:uid], params[:password], params[:new_password]
           flash[:notice] = 'Your password has been changed'
         else

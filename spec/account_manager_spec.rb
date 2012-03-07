@@ -57,14 +57,14 @@ module AccountManager
       describe 'sanity' do
 
         it 'authenticates with known good credentials' do
-          ldap_open do |ldap|
+          Directory.ldap_open do |ldap|
             ldap.auth bind_dn(@read_only), @read_only[:password]
             ldap.bind.should be true
           end
         end
 
         it 'has a complete "read only" example' do
-          ldap_search "(uid=#{@read_only[:uid]})" do |entry|
+          Directory.ldap_search "(uid=#{@read_only[:uid]})" do |entry|
             (@read_only[:activated] =  entry[:ituseagreementacceptdate].first).should_not be nil
             (@read_only[:password_hash] =          entry[:userpassword].first).should_not be nil
             (@read_only[:password_changed] = entry[:passwordchangedate].first).should_not be nil
@@ -72,7 +72,7 @@ module AccountManager
         end
 
         it 'has a complete "password change on active account" example' do
-          ldap_search "(uid=#{@active[:uid]})" do |entry|
+          Directory.ldap_search "(uid=#{@active[:uid]})" do |entry|
             (@active[:activated] =  entry[:ituseagreementacceptdate].first).should_not be nil
             (@active[:password_hash] =          entry[:userpassword].first).should_not be nil
             (@active[:password_changed] = entry[:passwordchangedate].first).should_not be nil
@@ -80,7 +80,7 @@ module AccountManager
         end
 
         it 'has a complete "password change on inactive account" example' do
-          ldap_search "(uid=#{@inactive[:uid]})" do |entry|
+          Directory.ldap_search "(uid=#{@inactive[:uid]})" do |entry|
             entry[:ituseagreementacceptdate].first.should match /activation required/
             entry[:passwordchangedate].should == []
             (@inactive[:password_hash] = entry[:userpassword]).should_not be nil
@@ -105,20 +105,20 @@ module AccountManager
               end
 
               it 'changes the password' do
-                ldap_open do |ldap|
+                Directory.ldap_open do |ldap|
                   ldap.auth bind_dn(@active), @active[:new_password]
                   ldap.bind.should be true
                 end
               end
 
               it 'does not change the "ituseagreeementacceptdate" timestamp' do
-                ldap_search "(uid=#{@active[:uid]})" do |entry|
+                Directory.ldap_search "(uid=#{@active[:uid]})" do |entry|
                   entry[:ituseagreementacceptdate].first.should == @active[:activated]
                 end
               end
 
               it 'changes the "passwordchangedate" timestamp' do
-                ldap_search "(uid=#{@active[:uid]})" do |entry|
+                Directory.ldap_search "(uid=#{@active[:uid]})" do |entry|
                   entry[:passwordchangedate].first.should_not == @active[:password_changed]
                 end
               end
@@ -138,18 +138,18 @@ module AccountManager
               end
 
               it 'changes the password' do
-                ldap_open do |ldap|
+                Directory.ldap_open do |ldap|
                   ldap.auth bind_dn(@inactive), @inactive[:new_password]
                   ldap.bind.should be true
                 end
               end
 
               it 'activates an inactive account' do
-                ldap_search("(&(uid=#{@inactive[:uid]})(ituseagreementacceptdate=*))").should have(1).entries
+                Directory.ldap_search("(&(uid=#{@inactive[:uid]})(ituseagreementacceptdate=*))").should have(1).entries
               end
 
               it 'does not change activation date on an active account' do
-                ldap_search "(&(uid=#{@inactive[:uid]})(ituseagreementacceptdate=*))" do |entry|
+                Directory.ldap_search "(&(uid=#{@inactive[:uid]})(ituseagreementacceptdate=*))" do |entry|
                   entry[:ituseagreementacceptdate].first.should_not be nil
                 end
               end
@@ -170,12 +170,12 @@ module AccountManager
             end
 
             it 'does not update the directory' do
-              ldap_search "(uid=#{@read_only[:uid]})" do |entry|
+              Directory.ldap_search "(uid=#{@read_only[:uid]})" do |entry|
                 entry[:userpassword].first.should == @read_only[:password_hash]
                 entry[:ituseagreementacceptdate].first.should == @read_only[:activated]
                 entry[:passwordchangedate].first.should == @read_only[:password_changed]
               end
-              ldap_open do |ldap|
+              Directory.ldap_open do |ldap|
                 ldap.auth bind_dn(@read_only), @read_only[:password]
                 ldap.bind.should be true
               end

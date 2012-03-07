@@ -21,42 +21,8 @@ def start_ladle
   Ladle::Server.new(opts).start
 end
 
-#
-# convenience wrapper for Net::LDAP#open since we do it SO MUCH
-#
-def ldap_open
-  @conf ||= YAML.load_file File.expand_path("../../config/test.yml", __FILE__)
-  Net::LDAP.open(
-    host: @conf['host'],
-    port: @conf['port'],
-    base: @conf['base']
-  ) do |ldap|
-    yield ldap if block_given?
-  end
-end
-
-def ldap_open_as_admin
-  ldap_open do |ldap|
-    ldap.auth @conf['bind_dn'] % @conf['admin_username'], @conf['admin_password']
-    ldap.bind
-    yield ldap if block_given?
-  end
-end
-
-#
-# convenience wrapper for Net::LDAP#search since we do it SO MUCH
-#
-def ldap_search(filter)
-  ldap_open_as_admin do |ldap|
-    ldap.search filter: filter do |entry|
-      yield entry if block_given?
-    end
-  end
-end
-
-
 def bind_dn(who)
-  "uid=#{who[:uid]},ou=people,dc=example,dc=org"
+  AccountManager::Directory.bind_dn who[:uid]
 end
 
 def submit_password_change_form(user)
