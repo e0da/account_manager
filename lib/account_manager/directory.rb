@@ -4,21 +4,13 @@ module AccountManager
   class Directory
     class << self
 
-      # convenience wrapper for Net::LDAP#open since we do it SO MUCH
-      #
-      def ldap_open
+      def ldap_open_as_admin
         @conf ||= YAML.load_file File.expand_path("#{App.root}/config/test.yml", __FILE__)
         Net::LDAP.open(
           host: @conf['host'],
           port: @conf['port'],
           base: @conf['base']
         ) do |ldap|
-          yield ldap if block_given?
-        end
-      end
-
-      def ldap_open_as_admin
-        ldap_open do |ldap|
           ldap.auth @conf['bind_dn'] % @conf['admin_username'], @conf['admin_password']
           ldap.bind
           yield ldap if block_given?

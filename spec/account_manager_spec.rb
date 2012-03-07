@@ -57,7 +57,7 @@ module AccountManager
       describe 'sanity' do
 
         it 'authenticates with known good credentials' do
-          Directory.ldap_open do |ldap|
+          Directory.ldap_open_as_admin do |ldap|
             ldap.auth bind_dn(@read_only), @read_only[:password]
             ldap.bind.should be true
           end
@@ -105,7 +105,7 @@ module AccountManager
               end
 
               it 'changes the password' do
-                Directory.ldap_open do |ldap|
+                Directory.ldap_open_as_admin do |ldap|
                   ldap.auth bind_dn(@active), @active[:new_password]
                   ldap.bind.should be true
                 end
@@ -138,7 +138,7 @@ module AccountManager
               end
 
               it 'changes the password' do
-                Directory.ldap_open do |ldap|
+                Directory.ldap_open_as_admin do |ldap|
                   ldap.auth bind_dn(@inactive), @inactive[:new_password]
                   ldap.bind.should be true
                 end
@@ -175,7 +175,7 @@ module AccountManager
                 entry[:ituseagreementacceptdate].first.should == @read_only[:activated]
                 entry[:passwordchangedate].first.should == @read_only[:password_changed]
               end
-              Directory.ldap_open do |ldap|
+              Directory.ldap_open_as_admin do |ldap|
                 ldap.auth bind_dn(@read_only), @read_only[:password]
                 ldap.bind.should be true
               end

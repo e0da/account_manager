@@ -46,7 +46,7 @@ module AccountManager
       # been activated, so we must verify the password without binding. To do
       # this we just compare hashes.
       #
-      def verify_password(uid, password)
+      def verify_user_password(uid, password)
         hash = nil
         Directory.ldap_search "(uid=#{uid})" do |entry|
           hash = entry[:userpassword].first
@@ -68,7 +68,7 @@ module AccountManager
         dn = Directory.bind_dn uid
         timestamp = Time.now.strftime '%Y%m%d%H%M%SZ'
 
-        if verify_password uid, old_password
+        if verify_user_password uid, old_password
 
           Directory.ldap_open_as_admin do |ldap|
 
@@ -111,7 +111,7 @@ module AccountManager
     end
 
     post '/change_password' do
-      Directory.ldap_open do |ldap| # FIXME why do we need this?
+      Directory.ldap_open_as_admin do |ldap| # FIXME why do we need this?
         if change_password params[:uid], params[:password], params[:new_password]
           flash[:notice] = 'Your password has been changed'
         else
