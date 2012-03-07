@@ -65,6 +65,34 @@ module AccountManager
       end
 
       #
+      # crypto methods
+      # TODO move these into a module or something? at least a helper file?
+      #
+
+      # get 16 random hex bytes
+      #
+      def new_salt
+        16.times.inject('') {|t| t << rand(16).to_s(16)}
+      end
+
+      # hash the password using the given salt. If no salt is supplied, use a new
+      # one.
+      #
+      def hash_password(password, salt=new_salt)
+        "{SSHA}" + Base64.encode64("#{Digest::SHA1.digest("#{password}#{salt}")}#{salt}").chomp
+      end
+
+      # Check the supplied password against the given hash and return true if they
+      # match, else false.
+      #
+      def check_password(password, ssha)
+        decoded = Base64.decode64(ssha.gsub(/^{SSHA}/, ''))
+        hash = decoded[0,20] # isolate the hash
+        salt = decoded[20,40] # isolate the salt
+        hash_password(password, salt) == ssha
+      end
+
+      #
       # Return an LDAP-ready hashed password generated from the unhashed
       # password passed in. In our production environment, we use a SSHA hash.
       # This isn't supported in net-ldap or the bundled version of Ladle. So we
@@ -94,7 +122,7 @@ module AccountManager
             # fails (as it should if this is an already-activated account) the
             # success of the other transactions still counts
             #
-            ldap.replace_attribute dn, 'ituseagreementacceptdate', timestamp
+            ldap.replace_attribute dn, 'ituseagreementacceptdate', timestamp # FIXME this should be conditional
             ldap.replace_attribute dn, 'passwordchangedate',       timestamp
             ldap.replace_attribute dn, 'userpassword',             hashed_password(new_password)
           end
