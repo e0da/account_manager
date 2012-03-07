@@ -1,3 +1,5 @@
+$: << 'lib'
+
 require 'sinatra/base'
 require 'sinatra/reloader'
 require 'sinatra/flash'
@@ -48,7 +50,7 @@ module AccountManager
       #
       def verify_user_password(uid, password)
         hash = nil
-        Directory.ldap_search "(uid=#{uid})" do |entry|
+        Directory.search "(uid=#{uid})" do |entry|
           hash = entry[:userpassword].first
         end
         Crypto.check_password(password, hash)
@@ -56,7 +58,7 @@ module AccountManager
 
       def user_active?(uid)
         active = false
-        Directory.ldap_search "(uid=#{uid})" do |entry|
+        Directory.search "(uid=#{uid})" do |entry|
           active = !entry[:ituseagreementacceptdate].first.match(/activation required/)
         end
 
@@ -70,7 +72,7 @@ module AccountManager
 
         if verify_user_password uid, old_password
 
-          Directory.ldap_open_as_admin do |ldap|
+          Directory.open do |ldap|
 
             # ituseagreementacceptdate must come first so that if it quietly
             # fails (as it should if this is an already-activated account) the
@@ -111,7 +113,7 @@ module AccountManager
     end
 
     post '/change_password' do
-      Directory.ldap_open_as_admin do |ldap| # FIXME why do we need this?
+      Directory.open do |ldap| # FIXME why do we need this?
         if change_password params[:uid], params[:password], params[:new_password]
           flash[:notice] = 'Your password has been changed'
         else

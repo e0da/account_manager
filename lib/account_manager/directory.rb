@@ -4,7 +4,7 @@ module AccountManager
   class Directory
     class << self
 
-      def ldap_open_as_admin
+      def open
         @conf ||= YAML.load_file File.expand_path("#{App.root}/config/test.yml", __FILE__)
         Net::LDAP.open(
           host: @conf['host'],
@@ -20,8 +20,8 @@ module AccountManager
       #
       # convenience wrapper for Net::LDAP#search since we do it SO MUCH
       #
-      def ldap_search(filter)
-        ldap_open_as_admin do |ldap|
+      def search(filter)
+        open do |ldap|
           ldap.search filter: filter do |entry|
             yield entry if block_given?
           end
