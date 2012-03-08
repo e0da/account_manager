@@ -139,7 +139,22 @@ module AccountManager
             end
           end
 
-          context 'when they fail to athenticate' do
+          context 'when the account does not exist' do
+
+            before :all do
+              bad = @read_only.clone
+              bad[:uid] = 'nobody'
+              submit_password_change_form bad
+            end
+
+            it 'redirects back to /change_password and reports an error' do
+              page.current_path.should == '/change_password'
+              page.should have_content 'Your username or password was incorrect'
+            end
+
+          end
+
+          context 'when their password is wrong' do
 
             before :all do
               bad = @read_only.clone
@@ -149,7 +164,29 @@ module AccountManager
 
             it 'redirects back to /change_password and reports an error' do
               page.current_path.should == '/change_password'
-              page.should have_content 'Your password has not been changed'
+              page.should have_content 'Your username or password was incorrect'
+            end
+
+            it 'does not update the directory' do
+              Directory.search "(uid=#{@read_only[:uid]})" do |entry|
+                entry[:userpassword].first.should == @read_only[:password_hash]
+                entry[:ituseagreementacceptdate].first.should == @read_only[:activated]
+                entry[:passwordchangedate].first.should == @read_only[:password_changed]
+              end
+            end
+          end
+
+          context "when their verify_password field doesn't match" do
+
+            before :all do
+              bad = @read_only.clone
+              bad[:verify_password] = 'does not match'
+              submit_password_change_form bad
+            end
+
+            it 'redirects back to /change_password and reports an error' do
+              page.current_path.should == '/change_password'
+              page.should have_content 'Your new passwords do not match'
             end
 
             it 'does not update the directory' do

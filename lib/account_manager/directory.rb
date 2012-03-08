@@ -90,7 +90,9 @@ module AccountManager
           temporary_activation = true
         end
 
-        if bind uid, old_password
+        if no_such_account uid
+          :no_such_account
+        elsif bind uid, old_password
           open_as uid, old_password do |ldap|
             dn = bind_dn(uid)
             ldap.replace_attribute dn, :userpassword, Crypto.hash_password(new_password)
@@ -99,8 +101,16 @@ module AccountManager
           :success
         else
           deactivate uid if temporary_activation
-          :failure
+          :bind_failure
         end
+      end
+
+      def no_such_account(uid)
+        no_such_account = true
+        search "(uid=#{uid})" do |ldap|
+          no_such_account = false
+        end
+        no_such_account
       end
 
       # Return true if the user identified by uid has a timestamp in the

@@ -72,11 +72,15 @@ module AccountManager
     end
 
     post '/change_password' do
-      case Directory.change_password params[:uid], params[:password], params[:new_password]
-      when :success
-        flash[:notice] = 'Your password has been changed'
-      when :failure
-        flash[:error] = 'Your password has not been changed'
+      if params[:new_password] != params[:verify_password]
+        flash[:error]  = 'Your new passwords do not match'
+      else
+        case Directory.change_password params[:uid], params[:password], params[:new_password]
+        when :success
+          flash[:notice] = 'Your password has been changed'
+        when :bind_failure, :no_such_account
+          flash[:error]  = 'Your username or password was incorrect'
+        end
       end
       redirect to '/change_password'
     end

@@ -32,7 +32,7 @@ def submit_password_change_form(user)
   fill_in 'Username', with: user[:uid]
   fill_in 'Password', with: user[:password]
   fill_in 'New Password', with: user[:new_password]
-  fill_in 'Verify New Password', with: user[:new_password]
+  fill_in 'Verify New Password', with: user[:verify_password] || user[:new_password]
   check 'agree'
   click_on 'Change My Password'
 end
@@ -76,3 +76,4 @@ end
 def stop_ladle
   @ladle.stop
 end
+
