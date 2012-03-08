@@ -58,26 +58,44 @@ module AccountManager
         Crypto.check_password(password, hash)
       end
 
-      def activate(uid, timestamp)
-        Directory.open do |ldap|
-          ldap.replace_attribute Directory.bind_dn(uid), 'ituseagreementacceptdate', timestamp
+      def set_activation(uid, active=true)
+        Directory.open_as_admin do |ldap|
+          ldap.replace_attribute Directory.bind_dn(uid), 'ituseagreementacceptdate', (active ? timestamp : 'activation required')
         end
       end
+      alias activate set_activation
 
+      def deactivate(uid)
+        set_activation uid, false
+      end
+
+      # get a timestamp per request
+      #
+      def timestamp
+        @timestamp ||= Time.now.strftime '%Y%m%d%H%M%SZ'
+      end
+
+      # Verify that the account exists; verify that the username and password
+      # match; activate the account if it isn't active; AS THE USER, set the
+      # password and password change date.
+      #
       def change_password(uid, old_password, new_password)
 
-        dn = Directory.bind_dn uid
-        timestamp = Time.now.strftime '%Y%m%d%H%M%SZ'
-
-        if verify_user_password uid, old_password
-
-          activate uid, timestamp unless Directory.active? uid
-
-          Directory.open do |ldap|
-            ldap.replace_attribute dn, 'passwordchangedate',       timestamp
-            ldap.replace_attribute dn, 'userpassword',             Crypto.hash_password(new_password)
-          end
+        unless Directory.active? uid
+          activate uid 
+          temporary_activation = true
         end
+
+        dn = Directory.bind_dn uid
+
+        Directory.open_as uid, old_password do |ldap|
+          ldap.replace_attribute dn, 'userpassword', new_password
+        end
+        Directory.open_as_admin do |ldap|
+          ldap.replace_attribute dn, 'passwordchangedate', timestamp
+        end
+      rescue Net::LDAP::LdapError
+        deactivate uid if temporary_activation
       end
     end
 
