@@ -20,7 +20,7 @@ module AccountManager
       #
       def hash_password(password, opts=nil)
 
-        opts = {} unless opts
+        opts ||= {}
         opts[:type] ||= opts[:salt] ? :ssha : default_hash_type
         opts[:salt] ||= new_salt if opts[:type] == :ssha
 
