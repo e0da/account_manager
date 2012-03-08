@@ -124,12 +124,16 @@ module AccountManager
               end
 
               it 'activates an inactive account' do
-                Directory.search("(&(uid=#{@inactive[:uid]})(ituseagreementacceptdate=*))").should have(1).entries
+                Directory.search "(uid=#{@inactive[:uid]})" do |entry|
+                  entry[:ituseagreementacceptdate].first.should_not == 'activation required'
+                  entry[:nsaccountlock].should == []
+                  entry[:nsroledn].should == []
+                end
               end
 
-              it 'does not change activation date on an active account' do
-                Directory.search "(&(uid=#{@inactive[:uid]})(ituseagreementacceptdate=*))" do |entry|
-                  entry[:ituseagreementacceptdate].first.should_not be nil
+              it 'sets a "passwordchangedate" timestamp' do
+                Directory.search "(uid=#{@inactive[:uid]})" do |entry|
+                  entry[:passwordchangedate].first.should match /\d{14}Z/
                 end
               end
             end
@@ -153,10 +157,6 @@ module AccountManager
                 entry[:userpassword].first.should == @read_only[:password_hash]
                 entry[:ituseagreementacceptdate].first.should == @read_only[:activated]
                 entry[:passwordchangedate].first.should == @read_only[:password_changed]
-              end
-              Directory.open_as_admin do |ldap|
-                ldap.auth bind_dn(@read_only), @read_only[:password]
-                ldap.bind.should be true
               end
             end
           end
