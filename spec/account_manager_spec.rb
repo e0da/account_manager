@@ -35,20 +35,20 @@ module AccountManager
 
       it 'has a complete "read only" example' do
         Directory.search "(uid=#{@read_only[:uid]})" do |entry|
-          (@read_only[:activated] =  entry[:ituseagreementacceptdate].first).should_not be nil
-          (@read_only[:password_hash] =          entry[:userpassword].first).should_not be nil
+          (@read_only[:activated] = entry[:ituseagreementacceptdate].first).should_not be nil
+          (@read_only[:password_hash] = entry[:userpassword].first).should_not be nil
           (@read_only[:password_changed] = entry[:passwordchangedate].first).should_not be nil
-          entry[:nsroledn].should  be_empty
+          entry[:nsroledn].should be_empty
           entry[:nsaccountlock].should be_empty
         end
       end
 
       it 'has a complete "password change on active account" example' do
         Directory.search "(uid=#{@active[:uid]})" do |entry|
-          (@active[:activated] =  entry[:ituseagreementacceptdate].first).should_not be nil
-          (@active[:password_hash] =          entry[:userpassword].first).should_not be nil
+          (@active[:activated] = entry[:ituseagreementacceptdate].first).should_not be nil
+          (@active[:password_hash] = entry[:userpassword].first).should_not be nil
           (@active[:password_changed] = entry[:passwordchangedate].first).should_not be nil
-          entry[:nsroledn].should  be_empty
+          entry[:nsroledn].should be_empty
           entry[:nsaccountlock].should be_empty
         end
       end
@@ -57,9 +57,9 @@ module AccountManager
         Directory.search "(uid=#{@inactive[:uid]})" do |entry|
           (@inactive[:password_hash] = entry[:userpassword]).should_not be nil
           entry[:ituseagreementacceptdate].first.should match /activation required/
-          entry[:passwordchangedate].should                == []
-          entry[:nsroledn].first.should                    == 'cn=nsmanageddisabledrole,o=education.ucsb.edu'
-          entry[:nsaccountlock].first.should               == 'true'
+          entry[:passwordchangedate].should == []
+          entry[:nsroledn].first.should == 'cn=nsmanageddisabledrole,o=education.ucsb.edu'
+          entry[:nsaccountlock].first.should == 'true'
         end
       end
     end
