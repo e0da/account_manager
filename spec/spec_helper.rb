@@ -36,3 +36,43 @@ def submit_password_change_form(user)
   check 'agree'
   click_on 'Change My Password'
 end
+
+
+def start_ladle_and_init_fixtures
+  @ladle = start_ladle
+
+  #
+  # See notes in config/test.ldif for more information about individual
+  # test LDAP accounts. We're going to use different accounts with different
+  # qualities that fit our needs per test below so that we can run Ladle just
+  # one time.
+  #
+
+  @read_only = {
+    uid: 'aa729',
+    password: 'smada',
+    new_password: 'rubberChickenHyperFight5'
+  }
+
+  @active = {
+    uid: 'bb459',
+    password: 'niwdlab',
+    new_password: 'extraBiscuitsInMyBasket4'
+  }
+
+  @inactive = {
+    uid: 'cc414',
+    password: 'retneprac',
+    new_password: 'youCantStopTheSignal7'
+  }
+
+  @bad = {
+    uid: 'bad_uid',
+    password: 'bad_password',
+    new_password: 'another_bad_password'
+  }
+end
+
+def stop_ladle
+  @ladle.stop
+end

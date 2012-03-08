@@ -18,7 +18,8 @@ namespace :ladle do
     sleep
   end
 
-  task :stop do
-    @ladle.stop
+  desc 'remove Ladle tmp dirs'
+  task :clean do
+    `rm -rf tmp/ladle*`
   end
 end

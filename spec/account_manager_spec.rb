@@ -6,89 +6,68 @@ module AccountManager
 
   describe App do
 
-    describe 'GET /', type: :request  do
-      it 'redirects to /change_password' do
-        visit '/'
-        page.current_path.should == '/change_password'
+    before :all do
+      start_ladle_and_init_fixtures
+    end
+
+    after :all do
+      stop_ladle
+    end
+
+    describe 'routes' do
+
+      describe 'GET /', type: :request  do
+        it 'redirects to /change_password' do
+          visit '/'
+          page.current_path.should == '/change_password'
+        end
       end
     end
 
-    describe 'directory operations' do
+    describe 'sanity' do
 
-      before :all do
-        @ladle = start_ladle
-
-        #
-        # See notes in config/test.ldif for more information about individual
-        # test LDAP accounts. We're going to use different accounts with different
-        # qualities that fit our needs per test below so that we can run Ladle just
-        # one time.
-        #
-
-        @read_only = {
-          uid: 'aa729',
-          password: 'smada',
-          new_password: 'rubberChickenHyperFight5'
-        }
-
-        @active = {
-          uid: 'bb459',
-          password: 'niwdlab',
-          new_password: 'extraBiscuitsInMyBasket4'
-        }
-
-        @inactive = {
-          uid: 'cc414',
-          password: 'retneprac',
-          new_password: 'youCantStopTheSignal7'
-        }
-
-        @bad = {
-          uid: 'bad_uid',
-          password: 'bad_password',
-          new_password: 'another_bad_password'
-        }
-      end
-
-      after :all do
-        @ladle.stop
-      end
-
-      describe 'sanity' do
-
-        it 'authenticates with known good credentials' do
-          Directory.open_as_admin do |ldap|
-            ldap.auth bind_dn(@read_only), @read_only[:password]
-            ldap.bind.should be true
-          end
-        end
-
-        it 'has a complete "read only" example' do
-          Directory.search "(uid=#{@read_only[:uid]})" do |entry|
-            (@read_only[:activated] =  entry[:ituseagreementacceptdate].first).should_not be nil
-            (@read_only[:password_hash] =          entry[:userpassword].first).should_not be nil
-            (@read_only[:password_changed] = entry[:passwordchangedate].first).should_not be nil
-          end
-        end
-
-        it 'has a complete "password change on active account" example' do
-          Directory.search "(uid=#{@active[:uid]})" do |entry|
-            (@active[:activated] =  entry[:ituseagreementacceptdate].first).should_not be nil
-            (@active[:password_hash] =          entry[:userpassword].first).should_not be nil
-            (@active[:password_changed] = entry[:passwordchangedate].first).should_not be nil
-          end
-        end
-
-        it 'has a complete "password change on inactive account" example' do
-          Directory.search "(uid=#{@inactive[:uid]})" do |entry|
-            entry[:ituseagreementacceptdate].first.should match /activation required/
-            entry[:passwordchangedate].should == []
-            (@inactive[:password_hash] = entry[:userpassword]).should_not be nil
-          end
+      it 'authenticates with known good credentials' do
+        Directory.open_as_admin do |ldap|
+          ldap.auth bind_dn(@read_only), @read_only[:password]
+          ldap.bind.should be true
         end
       end
 
-      context 'a user', type: :request do
+      it 'has a complete "read only" example' do
+        Directory.search "(uid=#{@read_only[:uid]})" do |entry|
+          (@read_only[:activated] =  entry[:ituseagreementacceptdate].first).should_not be nil
+          (@read_only[:password_hash] =          entry[:userpassword].first).should_not be nil
+          (@read_only[:password_changed] = entry[:passwordchangedate].first).should_not be nil
+          entry[:nsroledn].should  be_empty
+          entry[:nsaccountlock].should be_empty
+        end
+      end
+
+      it 'has a complete "password change on active account" example' do
+        Directory.search "(uid=#{@active[:uid]})" do |entry|
+          (@active[:activated] =  entry[:ituseagreementacceptdate].first).should_not be nil
+          (@active[:password_hash] =          entry[:userpassword].first).should_not be nil
+          (@active[:password_changed] = entry[:passwordchangedate].first).should_not be nil
+          entry[:nsroledn].should  be_empty
+          entry[:nsaccountlock].should be_empty
+        end
+      end
+
+      it 'has a complete "password change on inactive account" example' do
+        Directory.search "(uid=#{@inactive[:uid]})" do |entry|
+          entry[:ituseagreementacceptdate].first.should match /activation required/
+          entry[:passwordchangedate].should == []
+          entry[:nsroledn].first.should == 'cn=nsmanageddisabledrole,o=education.ucsb.edu'
+          entry[:nsaccountlock].first.should == 'true'
+          (@inactive[:password_hash] = entry[:userpassword]).should_not be nil
+        end
+      end
+    end
+
+
+    describe 'requests', type: :request do
+
+      context 'a user' do
 
         describe 'wants to change their password' do
 
@@ -182,7 +161,7 @@ module AccountManager
             end
           end
         end
-        
+
         describe 'wants to reset their password' do
 
           describe 'requests a reset token' do

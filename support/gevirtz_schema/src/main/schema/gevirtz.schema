@@ -8,8 +8,8 @@
 #              +--------------------------------+--------------------------+
 #              | 1.3.6.1.4.1.18060.0.4.1.2.1001 | ituseagreementacceptdate |
 #              | 1.3.6.1.4.1.18060.0.4.1.2.1002 | passwordchangedate       |
-#              | 2.16.840.1.113730.3.1.575      | nsroledn                 |
-#              | 2.16.840.1.113730.3.1.610      | nsaccountlock            |
+#              | 1.3.6.1.4.1.18060.0.4.1.2.1003 | nsroledn                 |
+#              | 1.3.6.1.4.1.18060.0.4.1.2.1004 | nsaccountlock            |
 #              +--------------------------------+--------------------------+
 #
 #              +--------------------------------+--------------------------+
@@ -33,18 +33,16 @@ attributetype ( 1.3.6.1.4.1.18060.0.4.1.2.1002
 	SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 
  )
 
-attributetype ( 2.16.840.1.113730.3.1.575
+attributetype ( 1.3.6.1.4.1.18060.0.4.1.2.1003 
   NAME 'nsroledn'
   DESC 'Sun ONE defined attribute type'
   SYNTAX 1.3.6.1.4.1.1466.115.121.1.12
-  USAGE directoryOperation
  )
 
-attributetype ( 2.16.840.1.113730.3.1.610
+attributetype ( 1.3.6.1.4.1.18060.0.4.1.2.1004 
   NAME 'nsaccountlock'
   DESC 'Operational attribute for Account Inactivation'
   SYNTAX 1.3.6.1.4.1.1466.115.121.1.15
-  USAGE directoryOperation
  )
 
 objectclass ( 1.3.6.1.4.1.18060.0.4.1.3.1001 
