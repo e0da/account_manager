@@ -55,11 +55,11 @@ module AccountManager
 
       it 'has a complete "password change on inactive account" example' do
         Directory.search "(uid=#{@inactive[:uid]})" do |entry|
-          entry[:ituseagreementacceptdate].first.should match /activation required/
-          entry[:passwordchangedate].should == []
-          entry[:nsroledn].first.should == 'cn=nsmanageddisabledrole,o=education.ucsb.edu'
-          entry[:nsaccountlock].first.should == 'true'
           (@inactive[:password_hash] = entry[:userpassword]).should_not be nil
+          entry[:ituseagreementacceptdate].first.should match /activation required/
+          entry[:passwordchangedate].should                == []
+          entry[:nsroledn].first.should                    == 'cn=nsmanageddisabledrole,o=education.ucsb.edu'
+          entry[:nsaccountlock].first.should               == 'true'
         end
       end
     end
