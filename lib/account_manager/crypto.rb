@@ -11,7 +11,7 @@ module AccountManager
       # get 16 random hex bytes
       #
       def new_salt
-        16.times.inject('') {|t| t << rand(16).to_s(16)}
+        20.times.inject('') {|t| t << rand(16).to_s(16)}
       end
 
       # Hash the given password. You can supply a hash type and a salt. If no
@@ -30,7 +30,7 @@ module AccountManager
         when :sha
           Net::LDAP::Password.generate :sha, password
         else
-          raise "Unsupported password hash type #{type}"
+          raise "Unsupported password hash type #{opts[:type]}"
         end
       end
 
@@ -54,7 +54,9 @@ module AccountManager
       #
       def check_password(password, original_hash)
 
-        type = original_hash.match(/{(\S+)}/)[1].downcase.to_sym
+        original_hash.match(/{(\S+)}/)
+        raise 'No hash prefix. Expected something like {SHA} at the beginning of the hash.' unless $1
+        type = $1.downcase.to_sym
 
         case type
         when :ssha

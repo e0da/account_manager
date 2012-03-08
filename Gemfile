@@ -18,4 +18,5 @@ group :development, :test do
   gem 'sinatra-contrib'
   gem 'capybara'
   gem 'libnotify'
+  gem 'simplecov'
 end
