@@ -7,14 +7,12 @@ require 'slim'
 require 'sass'
 require 'compass'
 require 'coffee-script'
-require 'yaml'
-require 'base64'
-require 'digest'
-require 'net-ldap'
-require 'account_manager/directory'
-require 'account_manager/crypto'
 
+require 'account_manager/directory'
+
+#
 # TODO documentation
+#
 
 module AccountManager
   class App < Sinatra::Base

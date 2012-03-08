@@ -1,4 +1,5 @@
 require 'net-ldap'
+require 'account_manager/crypto'
 
 #
 # TODO documentation
