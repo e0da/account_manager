@@ -67,6 +67,8 @@ uid: cc414
 # Password is "retneprac"
 userpassword: {SHA}UL/iS+2R7GhwbhXOWoTHd4/qoMA=
 ituseagreementacceptdate: activation required
+nsroledn: cn=nsmanageddisabledrole,o=education.ucsb.edu
+nsaccountlock: true
 
 dn: uid=dd945,ou=people,dc=example,dc=org
 objectClass: top
@@ -82,6 +84,8 @@ uid: dd945
 # Password is "noswad"
 userpassword: {SHA}D0UlcTfbCddFLwih04ig4DEilAc=
 ituseagreementacceptdate: activation required
+nsroledn: cn=nsmanageddisabledrole,o=education.ucsb.edu
+nsaccountlock: true
 
 dn: uid=ee855,ou=people,dc=example,dc=org
 objectClass: top
@@ -97,6 +101,8 @@ uid: ee855
 # Password is "nosreme"
 userpassword: {SHA}pheE9wd/iTps6f8bJjM6AePjwrU=
 ituseagreementacceptdate: activation required
+nsroledn: cn=nsmanageddisabledrole,o=education.ucsb.edu
+nsaccountlock: true
 
 dn: uid=ff531,ou=people,dc=example,dc=org
 objectClass: top
@@ -112,6 +118,8 @@ uid: ff531
 # Password is "relluf"
 userpassword: {SHA}HLU2WZjFf/PF0Pp4qSDzoB3x+bs=
 ituseagreementacceptdate: activation required
+nsroledn: cn=nsmanageddisabledrole,o=education.ucsb.edu
+nsaccountlock: true
 
 dn: uid=gg855,ou=people,dc=example,dc=org
 objectClass: top
@@ -127,6 +135,8 @@ uid: gg855
 # Password is "selaznog"
 userpassword: {SHA}zT4oO9pFXIj+ISIc60bvM8A5+UQ=
 ituseagreementacceptdate: activation required
+nsroledn: cn=nsmanageddisabledrole,o=education.ucsb.edu
+nsaccountlock: true
 
 dn: uid=hh153,ou=people,dc=example,dc=org
 objectClass: top
@@ -142,6 +152,8 @@ uid: hh153
 # Password is "dleiftah"
 userpassword: {SHA}PTDJLPy4kwa7VZ/sGLyCPzZ7d3o=
 ituseagreementacceptdate: activation required
+nsroledn: cn=nsmanageddisabledrole,o=education.ucsb.edu
+nsaccountlock: true
 
 dn: uid=ii711,ou=people,dc=example,dc=org
 objectClass: top
@@ -157,6 +169,8 @@ uid: ii711
 # Password is "margni"
 userpassword: {SHA}L7qElLblWuLNFPrFku60uCuCr7Q=
 ituseagreementacceptdate: activation required
+nsroledn: cn=nsmanageddisabledrole,o=education.ucsb.edu
+nsaccountlock: true
 
 dn: uid=jj243,ou=people,dc=example,dc=org
 objectClass: top
@@ -172,6 +186,8 @@ uid: jj243
 # Password is "noskcaj"
 userpassword: {SHA}ElqdCxdbvRNqXBgdUdkCmGZlQmk=
 ituseagreementacceptdate: activation required
+nsroledn: cn=nsmanageddisabledrole,o=education.ucsb.edu
+nsaccountlock: true
 
 dn: uid=kk891,ou=people,dc=example,dc=org
 objectClass: top
@@ -187,6 +203,8 @@ uid: kk891
 # Password is "enilk"
 userpassword: {SHA}WlNzQqBB/QoEKh3LRcLZHgnCGNw=
 ituseagreementacceptdate: activation required
+nsroledn: cn=nsmanageddisabledrole,o=education.ucsb.edu
+nsaccountlock: true
 
 dn: uid=ll819,ou=people,dc=example,dc=org
 objectClass: top
@@ -202,6 +220,8 @@ uid: ll819
 # Password is "ecnerwal"
 userpassword: {SHA}CzyyPOSrIxgFCm24nSv2FA8wihQ=
 ituseagreementacceptdate: activation required
+nsroledn: cn=nsmanageddisabledrole,o=education.ucsb.edu
+nsaccountlock: true
 
 dn: uid=mm405,ou=people,dc=example,dc=org
 objectClass: top
@@ -217,6 +237,8 @@ uid: mm405
 # Password is "xoddam"
 userpassword: {SHA}WiCnxkOb4kpy16ON7ZC6mD/iqII=
 ituseagreementacceptdate: activation required
+nsroledn: cn=nsmanageddisabledrole,o=education.ucsb.edu
+nsaccountlock: true
 
 dn: uid=nn297,ou=people,dc=example,dc=org
 objectClass: top
@@ -232,6 +254,8 @@ uid: nn297
 # Password is "hsan"
 userpassword: {SHA}1zOsG076wDkikQbnK5vAMM1BM/o=
 ituseagreementacceptdate: activation required
+nsroledn: cn=nsmanageddisabledrole,o=education.ucsb.edu
+nsaccountlock: true
 
 dn: uid=oo981,ou=people,dc=example,dc=org
 objectClass: top
@@ -247,6 +271,8 @@ uid: oo981
 # Password is "nrobso"
 userpassword: {SHA}w8mQw0kEa1UiWzMsNclD/LWzlgs=
 ituseagreementacceptdate: activation required
+nsroledn: cn=nsmanageddisabledrole,o=education.ucsb.edu
+nsaccountlock: true
 
 dn: uid=pp468,ou=people,dc=example,dc=org
 objectClass: top
@@ -262,6 +288,8 @@ uid: pp468
 # Password is "letap"
 userpassword: {SHA}p7jaVoRIV9o8gDPbN10sEhXaYHk=
 ituseagreementacceptdate: activation required
+nsroledn: cn=nsmanageddisabledrole,o=education.ucsb.edu
+nsaccountlock: true
 
 dn: uid=qq612,ou=people,dc=example,dc=org
 objectClass: top
@@ -277,6 +305,8 @@ uid: qq612
 # Password is "neeuq"
 userpassword: {SHA}v9ibNIx42giCH4tQnwUHJy6LeJg=
 ituseagreementacceptdate: activation required
+nsroledn: cn=nsmanageddisabledrole,o=education.ucsb.edu
+nsaccountlock: true
 
 dn: uid=rr477,ou=people,dc=example,dc=org
 objectClass: top
@@ -292,6 +322,8 @@ uid: rr477
 # Password is "dnalwor"
 userpassword: {SHA}S3eMb2C/ctXzbFnlgcH7ZQ/fozU=
 ituseagreementacceptdate: activation required
+nsroledn: cn=nsmanageddisabledrole,o=education.ucsb.edu
+nsaccountlock: true
 
 dn: uid=ss198,ou=people,dc=example,dc=org
 objectClass: top
@@ -307,6 +339,8 @@ uid: ss198
 # Password is "nomolos"
 userpassword: {SHA}EizIKlU79Kz1Y2WIV4deIh0MSA8=
 ituseagreementacceptdate: activation required
+nsroledn: cn=nsmanageddisabledrole,o=education.ucsb.edu
+nsaccountlock: true
 
 dn: uid=tt882,ou=people,dc=example,dc=org
 objectClass: top
@@ -322,6 +356,8 @@ uid: tt882
 # Password is "serrot"
 userpassword: {SHA}yO0DcSZ4fTMcx3sTHnAPQGvMkwg=
 ituseagreementacceptdate: activation required
+nsroledn: cn=nsmanageddisabledrole,o=education.ucsb.edu
+nsaccountlock: true
 
 dn: uid=uu972,ou=people,dc=example,dc=org
 objectClass: top
@@ -337,6 +373,8 @@ uid: uu972
 # Password is "doowrednu"
 userpassword: {SHA}GQWGu8IvIEFU1PP34qGi5DyDF/c=
 ituseagreementacceptdate: activation required
+nsroledn: cn=nsmanageddisabledrole,o=education.ucsb.edu
+nsaccountlock: true
 
 dn: uid=vv180,ou=people,dc=example,dc=org
 objectClass: top
@@ -352,6 +390,8 @@ uid: vv180
 # Password is "srekciv"
 userpassword: {SHA}3UrzY38O4R1GLK6ccSSfL4D0efQ=
 ituseagreementacceptdate: activation required
+nsroledn: cn=nsmanageddisabledrole,o=education.ucsb.edu
+nsaccountlock: true
 
 dn: uid=ww369,ou=people,dc=example,dc=org
 objectClass: top
@@ -367,6 +407,8 @@ uid: ww369
 # Password is "esiw"
 userpassword: {SHA}8gU4KSqUeeLRPov2tmXZXgOZw78=
 ituseagreementacceptdate: activation required
+nsroledn: cn=nsmanageddisabledrole,o=education.ucsb.edu
+nsaccountlock: true
 
 dn: uid=xx396,ou=people,dc=example,dc=org
 objectClass: top
@@ -382,6 +424,8 @@ uid: xx396
 # Password is "gnoix"
 userpassword: {SHA}Yc2En2R/sbdjlEOitkLlkwY4jAY=
 ituseagreementacceptdate: activation required
+nsroledn: cn=nsmanageddisabledrole,o=education.ucsb.edu
+nsaccountlock: true
 
 dn: uid=yy423,ou=people,dc=example,dc=org
 objectClass: top
@@ -397,6 +441,8 @@ uid: yy423
 # Password is "setay"
 userpassword: {SHA}iKBhwF+Mbbct6mlmy6AvodIek3E=
 ituseagreementacceptdate: activation required
+nsroledn: cn=nsmanageddisabledrole,o=education.ucsb.edu
+nsaccountlock: true
 
 dn: uid=zz882,ou=people,dc=example,dc=org
 objectClass: top
@@ -412,4 +458,6 @@ uid: zz882
 # Password is "namremmiz"
 userpassword: {SHA}KlsWojnknRWCHXGoBOTlEZxxrG8=
 ituseagreementacceptdate: activation required
+nsroledn: cn=nsmanageddisabledrole,o=education.ucsb.edu
+nsaccountlock: true
 
