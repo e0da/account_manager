@@ -79,6 +79,13 @@ module AccountManager
       # match; activate the account if it isn't active; AS THE USER, set the
       # password and password change date.
       #
+      # FIXME the following attributes need to be updated to activate the
+      #       account. Refer to ldapUtil.java:656 for details:
+      #
+      #   - DELETE  "nsroledn: cn=nsmanageddisabledrole,o=education.ucsb.edu"
+      #   - DELETE  "nsaccountlock:"
+      #   - REPLACE "ituseagreementacceptdate: #{timestamp}"
+      #
       def change_password(uid, old_password, new_password)
 
         unless Directory.active? uid
