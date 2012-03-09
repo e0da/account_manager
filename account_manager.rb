@@ -63,17 +63,16 @@ module AccountManager
 
     post '/change_password' do
 
-      #
-      # TODO refactor this conditional logic. It's a mess.
-      #
       unless params[:agree]
         flash[:error] = 'You must agree to the terms and conditions'
         redirect to '/change_password'
       end
+      
       if params[:new_password] != params[:verify_password]
         flash[:error] = 'Your new passwords do not match'
         redirect to '/change_password'
       end
+
       case Directory.change_password params[:uid], params[:password], params[:new_password]
       when :success
         flash[:notice] = 'Your password has been changed'

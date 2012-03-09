@@ -12,11 +12,12 @@ module AccountManager
     INACTIVE_VALUE = 'activation required'
     DISABLED_ROLE = 'cn=nsmanageddisabledrole,o=education.ucsb.edu'
 
+
     class << self
 
-
       # Read the configuration and cache it. Returns a hash of the
-      # configuration. Call it within other static methods conf[:attribute].
+      # configuration. Call it within other static methods, e.g.
+      # conf[:attribute].
       #
       def conf
         @@conf ||= YAML.load_file File.expand_path("#{App.root}/config/#{App.environment}.yml", __FILE__)
@@ -111,7 +112,7 @@ module AccountManager
         no_such_account = true
         search "(uid=#{uid})" do |ldap|
           no_such_account = false
-        end
+        end unless uid == ''
         no_such_account
       end
 

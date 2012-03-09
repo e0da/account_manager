@@ -1,5 +1,8 @@
 require 'simplecov'
 SimpleCov.start
+SimpleCov.configure do
+  add_filter 'spec'
+end
 
 $: << '.'
 
