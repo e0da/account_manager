@@ -33,9 +33,7 @@ module AccountManager
      def open_as_dn(dn, password)
         open do |ldap|
           ldap.auth dn, password
-          unless ldap.bind
-            raise Net::LDAP::LdapError
-          end
+          ldap.bind
           yield ldap
         end
       end
