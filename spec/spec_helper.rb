@@ -69,6 +69,12 @@ def start_ladle_and_init_fixtures
     new_password: 'youCantStopTheSignal7'
   }
 
+  @inactive_read_only = {
+    uid: 'dd945',
+    password: 'noswad',
+    new_password: 'owMyGibson12'
+  }
+
   @bad = {
     uid: 'bad_uid',
     password: 'bad_password',

@@ -197,6 +197,26 @@ module AccountManager
               end
             end
           end
+
+          context 'when their account is inactive and their password is wrong' do
+
+            before :all do
+              bad = @inactive_read_only.clone
+              bad[:password] = 'wrong-password'
+              # submit_password_change_form bad
+            end
+
+            it 'does not activate the account' do
+              pending "fix the before block. It kills Ladle."
+              Directory.search "(uid=#{@inactive_read_only[:uid]})" do |entry|
+                entry[:ituseagreementacceptdate].should == ['activation required']
+                entry[:nsaccountlock].should == ['cn=nsmanageddisabledrole,o=education.ucsb.edu']
+                entry[:nsroledn].should == ['true']
+              end
+            end
+
+            it 'redirects back to /change_password and reports and error'
+          end
         end
 
         describe 'wants to reset their password' do

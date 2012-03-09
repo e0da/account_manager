@@ -83,6 +83,8 @@ module AccountManager
 
         timestamp = Time.now.strftime '%Y%m%d%H%M%SZ'
 
+        temporary_activation = false
+
         unless activated? uid
           activate uid, timestamp
           temporary_activation = true
