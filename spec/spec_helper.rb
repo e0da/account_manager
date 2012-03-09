@@ -55,6 +55,12 @@ def start_ladle_and_init_fixtures
   #
 
   @users = {
+
+    admin: {
+      uid: 'admin',
+      password: 'admin',
+    },
+
     read_only: {
       uid: 'aa729',
       password: 'smada',
