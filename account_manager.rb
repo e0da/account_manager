@@ -17,6 +17,8 @@ require 'account_manager/directory'
 module AccountManager
   class App < Sinatra::Base
 
+    DEFAULT_ROUTE = '/change_password'
+
     configure do
       enable :sessions
       register Sinatra::Flash
@@ -54,7 +56,7 @@ module AccountManager
     # routes
     #
     get '/' do
-      redirect to '/change_password'
+      redirect to DEFAULT_ROUTE
     end
 
     get '/change_password' do
@@ -80,6 +82,18 @@ module AccountManager
         flash[:error]  = 'Your username or password was incorrect'
       end
       redirect to '/change_password'
+    end
+
+    get '/admin' do
+      redirect to '/admin/reset'
+    end
+
+    get '/admin/reset' do
+      slim :admin_reset
+    end
+
+    get '*' do
+      redirect to DEFAULT_ROUTE
     end
   end
 end

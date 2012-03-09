@@ -54,32 +54,34 @@ def start_ladle_and_init_fixtures
   # one time.
   #
 
-  @read_only = {
-    uid: 'aa729',
-    password: 'smada',
-    new_password: 'rubberChickenHyperFight5',
-    agree: true
-  }
+  @users = {
+    read_only: {
+      uid: 'aa729',
+      password: 'smada',
+      new_password: 'rubberChickenHyperFight5',
+      agree: true
+    },
 
-  @active = {
-    uid: 'bb459',
-    password: 'niwdlab',
-    new_password: 'extraBiscuitsInMyBasket4',
-    agree: true
-  }
+    active: {
+      uid: 'bb459',
+      password: 'niwdlab',
+      new_password: 'extraBiscuitsInMyBasket4',
+      agree: true
+    },
 
-  @inactive = {
-    uid: 'cc414',
-    password: 'retneprac',
-    new_password: 'youCantStopTheSignal7',
-    agree: true
-  }
+    inactive: {
+      uid: 'cc414',
+      password: 'retneprac',
+      new_password: 'youCantStopTheSignal7',
+      agree: true
+    },
 
-  @inactive_read_only = {
-    uid: 'dd945',
-    password: 'noswad',
-    new_password: 'owMyGibson12',
-    agree: true
+    inactive_read_only: {
+      uid: 'dd945',
+      password: 'noswad',
+      new_password: 'owMyGibson12',
+      agree: true
+    },
   }
 end
 
