@@ -213,8 +213,25 @@ module AccountManager
           end
 
           context "when they don't agree to the terms and conditions" do
-            it 'redirects back to /change_password and reports and error'
-            it 'does not update the directory'
+
+            before :all do
+              bad = @read_only.clone
+              bad[:agree] = false
+              submit_password_change_form bad
+            end
+
+            it 'redirects back to /change_password and reports and error' do
+              page.current_path.should == '/change_password'
+              page.should have_content 'You must agree to the terms and conditions'
+            end
+
+            it 'does not update the directory' do
+              Directory.search "(uid=#{@read_only[:uid]})" do |entry|
+                entry[:userpassword].first.should == @read_only[:password_hash]
+                entry[:ituseagreementacceptdate].first.should == @read_only[:activated]
+                entry[:passwordchangedate].first.should == @read_only[:password_changed]
+              end
+            end
           end
 
           context 'when their account is inactive and their password is wrong' do

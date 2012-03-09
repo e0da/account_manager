@@ -6,6 +6,27 @@ objectClass: organizationalUnit
 ou: people
 
 #
+# admin: admin account
+#         - Should not be updated EVER
+#
+dn: uid=admin,ou=people,dc=example,dc=org
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: ggseperson
+cn: Directory Admin
+sn: Admin
+givenname: Directory
+mail: admin@example.org
+uid: admin
+# Password is "admin"
+userpassword: {SHA}0DPiKuNIrrVmD8IUCuw1hQxNqZc=
+ituseagreementacceptdate: 20051129194040Z
+passwordchangedate: 20051129194040Z
+
+
+#
 # aa729: read only active account
 #         - The account is already activated
 #         - The tests will make NO CHANGES to this account

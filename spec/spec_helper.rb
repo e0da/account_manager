@@ -36,7 +36,7 @@ def submit_password_change_form(user)
   fill_in 'Password', with: user[:password]
   fill_in 'New Password', with: user[:new_password]
   fill_in 'Verify New Password', with: user[:verify_password] || user[:new_password]
-  check 'agree'
+  check 'agree' if user[:agree]
   click_on 'Change My Password'
 end
 
@@ -54,31 +54,29 @@ def start_ladle_and_init_fixtures
   @read_only = {
     uid: 'aa729',
     password: 'smada',
-    new_password: 'rubberChickenHyperFight5'
+    new_password: 'rubberChickenHyperFight5',
+    agree: true
   }
 
   @active = {
     uid: 'bb459',
     password: 'niwdlab',
-    new_password: 'extraBiscuitsInMyBasket4'
+    new_password: 'extraBiscuitsInMyBasket4',
+    agree: true
   }
 
   @inactive = {
     uid: 'cc414',
     password: 'retneprac',
-    new_password: 'youCantStopTheSignal7'
+    new_password: 'youCantStopTheSignal7',
+    agree: true
   }
 
   @inactive_read_only = {
     uid: 'dd945',
     password: 'noswad',
-    new_password: 'owMyGibson12'
-  }
-
-  @bad = {
-    uid: 'bad_uid',
-    password: 'bad_password',
-    new_password: 'another_bad_password'
+    new_password: 'owMyGibson12',
+    agree: true
   }
 end
 

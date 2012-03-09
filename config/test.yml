@@ -3,5 +3,5 @@ host: localhost
 port: 3897
 base: dc=example,dc=org
 bind_dn: uid=%s,ou=people,dc=example,dc=org # the bind dn should have a %s where the uid goes
-admin_bind_dn: uid=aa729,ou=people,dc=example,dc=org
-admin_password: smada
+admin_bind_dn: uid=admin,ou=people,dc=example,dc=org
+admin_password: admin
