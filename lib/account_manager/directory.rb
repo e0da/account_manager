@@ -8,10 +8,12 @@ require 'account_manager/crypto'
 
 module AccountManager
   class Directory
+
+    INACTIVE_VALUE = 'activation required'
+    DISABLED_ROLE = 'cn=nsmanageddisabledrole,o=education.ucsb.edu'
+
     class << self
 
-      INACTIVE_VALUE = 'activation required'
-      DISABLED_ROLE = 'cn=nsmanageddisabledrole,o=education.ucsb.edu'
 
       # Read the configuration and cache it. Returns a hash of the
       # configuration. Call it within other static methods conf[:attribute].
@@ -85,14 +87,14 @@ module AccountManager
 
         temporary_activation = false
 
+        return :no_such_account if no_such_account uid
+
         unless activated? uid
           activate uid, timestamp
           temporary_activation = true
         end
 
-        if no_such_account uid
-          :no_such_account
-        elsif bind uid, old_password
+        if bind uid, old_password
           open_as uid, old_password do |ldap|
             dn = bind_dn(uid)
             ldap.replace_attribute dn, :userpassword, Crypto.hash_password(new_password)
@@ -129,7 +131,7 @@ module AccountManager
         open_as_admin do |ldap|
           operations = [
             [:replace, :ituseagreementacceptdate, timestamp],
-            [:delete, :nsroledn, 'cn=nsmanageddisabledrole,o=education.ucsb.edu'],
+            [:delete, :nsroledn, DISABLED_ROLE],
             [:delete, :nsaccountlock, nil]
           ]
           ldap.modify dn: bind_dn(uid), operations: operations
@@ -140,8 +142,8 @@ module AccountManager
         open_as_admin do |ldap|
           operations = [
             [:replace, :ituseagreementacceptdate, INACTIVE_VALUE],
-            [:delete, :nsroledn, DISABLED_ROLE],
-            [:delete, :nsaccountlock, true]
+            [:replace, :nsroledn, DISABLED_ROLE],
+            [:replace, :nsaccountlock, 'true']
           ]
           ldap.modify dn: bind_dn(uid), operations: operations
         end

@@ -14,12 +14,26 @@ module AccountManager
       stop_ladle
     end
 
-    describe 'routes' do
+    describe 'routes', type: :request do
 
-      describe 'GET /', type: :request  do
+      describe 'GET /' do
         it 'redirects to /change_password' do
           visit '/'
           page.current_path.should == '/change_password'
+        end
+      end
+
+      describe 'GET /stylesheets/screen.css' do
+        it 'retrieves a stylesheet' do
+          visit '/stylesheets/screen.css'
+          page.response_headers['Content-Type'].should match %r[text/css;\s?charset=utf-8]
+        end
+      end
+
+      describe 'GET /app.js' do
+        it 'retrieves a javascript' do
+          visit '/app.js'
+          page.response_headers['Content-Type'].should match %r[text/javascript;\s?charset=utf-8]
         end
       end
     end
@@ -56,9 +70,9 @@ module AccountManager
       it 'has a complete "password change on inactive account" example' do
         Directory.search "(uid=#{@inactive[:uid]})" do |entry|
           (@inactive[:password_hash] = entry[:userpassword]).should_not be nil
-          entry[:ituseagreementacceptdate].first.should match /activation required/
+          entry[:ituseagreementacceptdate].first.should match /#{Directory::INACTIVE_VALUE}/
           entry[:passwordchangedate].should == []
-          entry[:nsroledn].first.should == 'cn=nsmanageddisabledrole,o=education.ucsb.edu'
+          entry[:nsroledn].first.should == Directory::DISABLED_ROLE
           entry[:nsaccountlock].first.should == 'true'
         end
       end
@@ -125,7 +139,7 @@ module AccountManager
 
               it 'activates an inactive account' do
                 Directory.search "(uid=#{@inactive[:uid]})" do |entry|
-                  entry[:ituseagreementacceptdate].first.should_not == 'activation required'
+                  entry[:ituseagreementacceptdate].first.should_not == Directory::INACTIVE_VALUE
                   entry[:nsaccountlock].should == []
                   entry[:nsroledn].should == []
                 end
@@ -198,20 +212,24 @@ module AccountManager
             end
           end
 
+          context "when they don't agree to the terms and conditions" do
+            it 'redirects back to /change_password and reports and error'
+            it 'does not update the directory'
+          end
+
           context 'when their account is inactive and their password is wrong' do
 
             before :all do
               bad = @inactive_read_only.clone
               bad[:password] = 'wrong-password'
-              # submit_password_change_form bad
+              submit_password_change_form bad
             end
 
             it 'does not activate the account' do
-              pending "fix the before block. It kills Ladle."
               Directory.search "(uid=#{@inactive_read_only[:uid]})" do |entry|
-                entry[:ituseagreementacceptdate].should == ['activation required']
-                entry[:nsaccountlock].should == ['cn=nsmanageddisabledrole,o=education.ucsb.edu']
-                entry[:nsroledn].should == ['true']
+                entry[:ituseagreementacceptdate].should == [Directory::INACTIVE_VALUE]
+                entry[:nsroledn].should == [Directory::DISABLED_ROLE]
+                entry[:nsaccountlock].should == ['true']
               end
             end
 

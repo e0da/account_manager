@@ -45,18 +45,8 @@ module AccountManager
       alias to uri
     end
 
-    #
-    # assets
-    #
-    get '/app.css' do
-      sass :app
-    end
-
-    get '/stylesheets/:sheet.css' do
-      sass :"stylesheets/#{params[:sheet]}"
-    end
-
     get '/app.js' do
+      headers 'Content-Type' => 'text/javascript;charset=utf-8'
       coffee :app
     end
 
