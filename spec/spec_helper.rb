@@ -1,8 +1,8 @@
 require 'simplecov'
-SimpleCov.start
 SimpleCov.configure do
   add_filter 'spec'
 end
+SimpleCov.start
 
 $: << '.'
 
@@ -10,6 +10,12 @@ $: << '.'
 
 require 'account_manager'
 require 'capybara/rspec'
+
+RSpec.configure do |config|
+  config.treat_symbols_as_metadata_keys_with_true_values = true
+  config.run_all_when_everything_filtered = true
+  config.filter_run :focus
+end
 
 AccountManager::App.environment = :test
 
