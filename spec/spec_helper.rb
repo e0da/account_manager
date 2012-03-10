@@ -101,3 +101,10 @@ def stop_ladle
   @ladle.stop
 end
 
+def should_not_modify(user)
+  AccountManager::Directory.search "(uid=#{user[:uid]})" do |entry|
+    entry[:userpassword].first.should == user[:password_hash]
+    entry[:ituseagreementacceptdate].first.should == user[:activated]
+    entry[:passwordchangedate].first.should == user[:password_changed]
+  end
+end
