@@ -8,6 +8,7 @@ module AccountManager
 
     before :all do
       start_ladle_and_init_fixtures
+      load_users_initial_state
     end
 
     after :all do

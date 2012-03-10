@@ -108,3 +108,18 @@ def should_not_modify(user)
     entry[:passwordchangedate].first.should == user[:password_changed]
   end
 end
+
+#
+# TODO use this instead of the fixtures above; rename @dudes to @users and make
+# it all work.
+#
+def load_users_initial_state
+  @dudes = {}
+  AccountManager::Directory.search '(uid=*)' do |entry|
+    user = {}
+    entry.each do |attr|
+      user[attr] = entry[attr]
+    end
+    @dudes[entry[:uid].first.to_sym] = user
+  end
+end
