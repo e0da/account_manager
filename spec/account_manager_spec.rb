@@ -45,15 +45,15 @@ module AccountManager
       end
 
       describe 'GET /admin' do
-        it 'redirects to /admin/reset' do
+        it 'redirects to /admin_reset' do
           visit '/admin'
-          page.current_path.should == '/admin/reset'
+          page.current_path.should == '/admin_reset'
         end
       end
 
       describe 'GET /admin/reset' do
         it 'renders the admin reset page' do
-          visit '/admin/reset'
+          visit '/admin_reset'
           page.find('h2').text.should == "Admin: Reset a User's Password"
         end
       end
@@ -111,11 +111,11 @@ module AccountManager
 
       context 'a user' do
 
-        describe 'wants to change their password' do
+        describe 'changing their password' do
 
-          context 'when their account is already activated' do
+          context 'succeeds' do
 
-            describe 'changes their password' do
+            context 'when their account is already activated' do
 
               before :all do
                 submit_password_change_form @users[:active]
@@ -144,11 +144,8 @@ module AccountManager
                 end
               end
             end
-          end
 
-          context 'when their account is not activated' do
-
-            describe 'changes their password' do
+            context 'when their account is not activated' do
 
               before :all do
                 submit_password_change_form @users[:inactive]
@@ -181,105 +178,108 @@ module AccountManager
             end
           end
 
-          context 'when the account does not exist' do
+          context 'fails' do
 
-            before :all do
-              bad = @users[:read_only].clone
-              bad[:uid] = 'nobody'
-              submit_password_change_form bad
+            context 'when the account does not exist' do
+
+              before :all do
+                bad = @users[:read_only].clone
+                bad[:uid] = 'nobody'
+                submit_password_change_form bad
+              end
+
+              it 'redirects back to /change_password and reports an error' do
+                page.current_path.should == '/change_password'
+                page.should have_content 'Your username or password was incorrect'
+              end
+
             end
 
-            it 'redirects back to /change_password and reports an error' do
-              page.current_path.should == '/change_password'
-              page.should have_content 'Your username or password was incorrect'
-            end
+            context 'when their password is wrong' do
 
-          end
+              before :all do
+                bad = @users[:read_only].clone
+                bad[:password] = 'bad password'
+                submit_password_change_form bad
+              end
 
-          context 'when their password is wrong' do
+              it 'redirects back to /change_password and reports an error' do
+                page.current_path.should == '/change_password'
+                page.should have_content 'Your username or password was incorrect'
+              end
 
-            before :all do
-              bad = @users[:read_only].clone
-              bad[:password] = 'bad password'
-              submit_password_change_form bad
-            end
-
-            it 'redirects back to /change_password and reports an error' do
-              page.current_path.should == '/change_password'
-              page.should have_content 'Your username or password was incorrect'
-            end
-
-            it 'does not update the directory' do
-              Directory.search "(uid=#{@users[:read_only][:uid]})" do |entry|
-                entry[:userpassword].first.should == @users[:read_only][:password_hash]
-                entry[:ituseagreementacceptdate].first.should == @users[:read_only][:activated]
-                entry[:passwordchangedate].first.should == @users[:read_only][:password_changed]
+              it 'does not update the directory' do
+                Directory.search "(uid=#{@users[:read_only][:uid]})" do |entry|
+                  entry[:userpassword].first.should == @users[:read_only][:password_hash]
+                  entry[:ituseagreementacceptdate].first.should == @users[:read_only][:activated]
+                  entry[:passwordchangedate].first.should == @users[:read_only][:password_changed]
+                end
               end
             end
-          end
 
-          context "when their verify_password field doesn't match" do
+            context "when their verify_password field doesn't match" do
 
-            before :all do
-              bad = @users[:read_only].clone
-              bad[:verify_password] = 'does not match'
-              submit_password_change_form bad
-            end
+              before :all do
+                bad = @users[:read_only].clone
+                bad[:verify_password] = 'does not match'
+                submit_password_change_form bad
+              end
 
-            it 'redirects back to /change_password and reports an error' do
-              page.current_path.should == '/change_password'
-              page.should have_content 'Your new passwords do not match'
-            end
+              it 'redirects back to /change_password and reports an error' do
+                page.current_path.should == '/change_password'
+                page.should have_content 'Your new passwords do not match'
+              end
 
-            it 'does not update the directory' do
-              Directory.search "(uid=#{@users[:read_only][:uid]})" do |entry|
-                entry[:userpassword].first.should == @users[:read_only][:password_hash]
-                entry[:ituseagreementacceptdate].first.should == @users[:read_only][:activated]
-                entry[:passwordchangedate].first.should == @users[:read_only][:password_changed]
+              it 'does not update the directory' do
+                Directory.search "(uid=#{@users[:read_only][:uid]})" do |entry|
+                  entry[:userpassword].first.should == @users[:read_only][:password_hash]
+                  entry[:ituseagreementacceptdate].first.should == @users[:read_only][:activated]
+                  entry[:passwordchangedate].first.should == @users[:read_only][:password_changed]
+                end
               end
             end
-          end
 
-          context "when they don't agree to the terms and conditions" do
+            context "when they don't agree to the terms and conditions" do
 
-            before :all do
-              bad = @users[:read_only].clone
-              bad[:agree] = false
-              submit_password_change_form bad
-            end
+              before :all do
+                bad = @users[:read_only].clone
+                bad[:agree] = false
+                submit_password_change_form bad
+              end
 
-            it 'redirects back to /change_password and reports and error' do
-              page.current_path.should == '/change_password'
-              page.should have_content 'You must agree to the terms and conditions'
-            end
+              it 'redirects back to /change_password and reports and error' do
+                page.current_path.should == '/change_password'
+                page.should have_content 'You must agree to the terms and conditions'
+              end
 
-            it 'does not update the directory' do
-              Directory.search "(uid=#{@users[:read_only][:uid]})" do |entry|
-                entry[:userpassword].first.should == @users[:read_only][:password_hash]
-                entry[:ituseagreementacceptdate].first.should == @users[:read_only][:activated]
-                entry[:passwordchangedate].first.should == @users[:read_only][:password_changed]
+              it 'does not update the directory' do
+                Directory.search "(uid=#{@users[:read_only][:uid]})" do |entry|
+                  entry[:userpassword].first.should == @users[:read_only][:password_hash]
+                  entry[:ituseagreementacceptdate].first.should == @users[:read_only][:activated]
+                  entry[:passwordchangedate].first.should == @users[:read_only][:password_changed]
+                end
               end
             end
-          end
 
-          context 'when their account is inactive and their password is wrong' do
+            context 'when their account is inactive and their password is wrong' do
 
-            before :all do
-              bad = @users[:inactive_read_only].clone
-              bad[:password] = 'wrong-password'
-              submit_password_change_form bad
-            end
+              before :all do
+                bad = @users[:inactive_read_only].clone
+                bad[:password] = 'wrong-password'
+                submit_password_change_form bad
+              end
 
-            it 'redirects back to /change_password and reports and error' do
-              page.current_path.should == '/change_password'
-              page.should have_content 'Your username or password was incorrect'
-            end
+              it 'redirects back to /change_password and reports and error' do
+                page.current_path.should == '/change_password'
+                page.should have_content 'Your username or password was incorrect'
+              end
 
-            it 'does not activate the account' do
-              Directory.search "(uid=#{@users[:inactive_read_only][:uid]})" do |entry|
-                entry[:ituseagreementacceptdate].should == [Directory::INACTIVE_VALUE]
-                entry[:nsroledn].should == [Directory::DISABLED_ROLE]
-                entry[:nsaccountlock].should == ['true']
+              it 'does not activate the account' do
+                Directory.search "(uid=#{@users[:inactive_read_only][:uid]})" do |entry|
+                  entry[:ituseagreementacceptdate].should == [Directory::INACTIVE_VALUE]
+                  entry[:nsroledn].should == [Directory::DISABLED_ROLE]
+                  entry[:nsaccountlock].should == ['true']
+                end
               end
             end
           end

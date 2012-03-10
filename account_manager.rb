@@ -85,10 +85,10 @@ module AccountManager
     end
 
     get '/admin' do
-      redirect to '/admin/reset'
+      redirect to '/admin_reset'
     end
 
-    get '/admin/reset' do
+    get '/admin_reset' do
       slim :admin_reset
     end
 
