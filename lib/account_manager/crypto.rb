@@ -18,9 +18,7 @@ module AccountManager
       # hash is supplied, :ssha is used. If not salt is supplied but one is
       # required, a new salt is generated.
       #
-      def hash_password(password, opts=nil)
-
-        opts ||= {}
+      def hash_password(password, opts={})
         opts[:type] ||= opts[:salt] ? :ssha : default_hash_type
         opts[:salt] ||= new_salt if opts[:type] == :ssha
 
