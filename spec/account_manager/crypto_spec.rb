@@ -27,15 +27,21 @@ module AccountManager
     describe '.check_ssha_password' do
 
       before :all do
-        @hash = Crypto.hash_password 'doodle', type: :ssha
+        @hazh = Crypto.hash_password 'doodle', type: :ssha
       end
 
       it 'validates a correct password against an SSHA hash' do
-        Crypto.check_ssha_password('doodle', @hash).should be true
+        Crypto.check_ssha_password('doodle', @hazh).should be true
       end
 
       it 'does not validate an incorrect password against an SSHA hash' do
-        Crypto.check_ssha_password('Doodle', @hash).should be false
+        Crypto.check_ssha_password('Doodle', @hazh).should be false
+      end
+
+      it 'works with a really long salt' do
+        salt = 10.times.inject('') {|out| out << Crypto.new_salt}
+        hazh = Crypto.hash_password 'doodle', salt: salt
+        Crypto.check_password('doodle', hazh).should be true
       end
     end
 
@@ -43,27 +49,27 @@ module AccountManager
 
 
       before :all do
-        @hash = Crypto.hash_password 'doodle', type: :sha
+        @hazh = Crypto.hash_password 'doodle', type: :sha
       end
 
       it 'validates a correct password against an SHA hash' do
-        Crypto.check_sha_password('doodle', @hash).should be true
+        Crypto.check_sha_password('doodle', @hazh).should be true
       end
 
       it 'does not validate an incorrect password against an SHA hash' do
-        Crypto.check_sha_password('Doodle', @hash).should be false
+        Crypto.check_sha_password('Doodle', @hazh).should be false
       end
     end
 
     describe '.check_password' do
       it 'identifies and validates SSHA passwords' do
-        hash = Crypto.hash_password 'doodle', type: :ssha
-        Crypto.check_password 'doodle', hash
+        hazh = Crypto.hash_password 'doodle', type: :ssha
+        Crypto.check_password 'doodle', hazh
       end
 
       it 'identifies and validates SHA passwords' do
-        hash = Crypto.hash_password 'doodle', type: :sha
-        Crypto.check_password 'doodle', hash
+        hazh = Crypto.hash_password 'doodle', type: :sha
+        Crypto.check_password 'doodle', hazh
       end
 
       it 'complains if you try to use an unsupported password hash type' do
