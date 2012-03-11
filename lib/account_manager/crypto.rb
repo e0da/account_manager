@@ -38,7 +38,6 @@ module AccountManager
       #
       def check_ssha_password(password, original_hash)
         decoded = Base64.decode64 original_hash.gsub(/^{SSHA}/, '')
-        hash = decoded[0,20]
         salt = decoded[20,40]
         hash_password(password, salt: salt) == original_hash
       end
