@@ -8,10 +8,10 @@ module AccountManager
   class Crypto
     class << self
 
-      # get 16 random hex bytes
+      # get a string of the specified number of random hex characters
       #
-      def new_salt
-        20.times.inject('') {|t| t << rand(16).to_s(16)}
+      def new_salt(length=20)
+        length.times.inject('') {|t| t << rand(16).to_s(16)}
       end
 
       # Hash the given password. You can supply a hash type and a salt. If no

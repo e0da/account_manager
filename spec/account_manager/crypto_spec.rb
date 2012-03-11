@@ -3,8 +3,12 @@ require 'spec_helper'
 module AccountManager
   describe Crypto do
     describe '.new_salt' do
-      it 'returns a 20 character hex string' do
+      it 'returns a 20 character hex string by default' do
         Crypto.new_salt.should match /[a-f0-9]{20}/
+      end
+
+      it 'returns a salt of the specified length' do
+        Crypto.new_salt(10).length.should == 10
       end
     end
 
@@ -39,8 +43,7 @@ module AccountManager
       end
 
       it 'works with a really long salt' do
-        salt = 10.times.inject('') {|out| out << Crypto.new_salt}
-        hazh = Crypto.hash_password 'doodle', salt: salt
+        hazh = Crypto.hash_password 'doodle', salt: Crypto.new_salt(100)
         Crypto.check_password('doodle', hazh).should be true
       end
     end
