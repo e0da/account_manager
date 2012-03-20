@@ -257,34 +257,31 @@ module AccountManager
           end
         end
 
-        #
-        # TODO Uncomment this when I'm ready to deal with these specs. For now, all the yellow is annoying me.
-        #
-        # describe 'wants to reset their password' do
+        describe 'wants to reset their password' do
 
-        #   describe 'requests a reset token' do
-        #     it 'deletes any existing reset tokens'
-        #     it 'creates a new reset token'
-        #     it 'emails the reset token to the user'
-        #   end
+          describe 'requests a reset token' do
+            it 'deletes any existing reset tokens'
+            it 'creates a new reset token'
+            it 'emails the reset token to the user'
+          end
 
-        #   describe 'resets their password' do
-        #     context 'a successful attempt' do
-        #       it 'changes the password'
-        #       it 'deletes the reset token'
-        #     end
+          describe 'resets their password' do
+            context 'a successful attempt' do
+              it 'changes the password'
+              it 'deletes the reset token'
+            end
 
-        #     context 'an unsuccessful attempt' do
-        #       it 'does not update the directory'
-        #     end
+            context 'an unsuccessful attempt' do
+              it 'does not update the directory'
+            end
 
-        #     context 'the token is expired' do
-        #       it 'informs the user the token is expired'
-        #       it 'deletes the token'
-        #       it 'prompts the user to try again'
-        #     end
-        #   end
-        # end
+            context 'the token is expired' do
+              it 'informs the user the token is expired'
+              it 'deletes the token'
+              it 'prompts the user to try again'
+            end
+          end
+        end
       end
 
       context 'an administrator' do

@@ -161,8 +161,10 @@ module AccountManager
           end
 
           #
-          # If the password was successfuly set but the account is inactive,
-          # report so. Otherwise just report success.
+          # If we got an LDAP Insufficient Access Rights error, the admin user
+          # doesn't have the rights to perform this action. If the account
+          # isn't activated, we report that the password changed but the
+          # account is inactive. Otherwise just report success.
           #
           if result.message == 'Insufficient Access Rights'
             :not_admin
