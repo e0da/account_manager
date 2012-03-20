@@ -1,6 +1,7 @@
 require 'spec_helper'
 require 'ladle'
 require 'net-ldap'
+require 'ostruct'
 
 module AccountManager
 
@@ -390,7 +391,13 @@ module AccountManager
 
             context 'the supplied admin account is not an administrator' do
               it 'reports failure' do
-                pending "Need to figure out how to stub and test this"
+
+                #
+                # Fake an insufficient access error
+                #
+                struct = OpenStruct.new message: 'Insufficient Access Rights'
+                Net::LDAP.any_instance.stub(:get_operation_result).and_return(struct)
+
                 submit_admin_reset_form(
                   admin_uid: 'aa729',
                   admin_password: 'smada',

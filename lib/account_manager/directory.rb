@@ -150,19 +150,23 @@ module AccountManager
         # report a bind failure.
         #
         if can_bind? bind_uid, password
+          result = nil
           outcome = open_as bind_uid, password do |ldap|
             operations = [
               [:replace, :userpassword, Crypto.hash_password(new_password)],
               [:replace, :passwordchangedate, timestamp]
             ]
             ldap.modify dn: bind_dn(uid), operations: operations
+            result = ldap.get_operation_result
           end
 
           #
           # If the password was successfuly set but the account is inactive,
           # report so. Otherwise just report success.
           #
-          if outcome && !activated?(uid)
+          if result.message == 'Insufficient Access Rights'
+            :not_admin
+          elsif !activated?(uid)
             :success_inactive
           else
             :success
