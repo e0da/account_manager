@@ -75,11 +75,7 @@ module AccountManager
         redirect to '/change_password'
       end
 
-      case Directory.user_change_password(
-        params[:uid],
-        params[:password],
-        params[:new_password]
-      )
+      case Directory.change_password params
       when :success
         flash[:notice] = 'Your password has been changed'
       when :bind_failure, :no_such_account
@@ -99,12 +95,7 @@ module AccountManager
 
     post '/admin/reset' do
 
-      case Directory.admin_change_password(
-        params[:admin_uid],
-        params[:admin_password],
-        params[:uid],
-        params[:new_password]
-      )
+      case Directory.change_password params
       when :success
         flash[:notice] = "The user's password has been changed"
       end

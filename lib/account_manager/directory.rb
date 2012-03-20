@@ -2,13 +2,17 @@ require 'yaml'
 require 'net-ldap'
 require 'account_manager/crypto'
 
-#
-# TODO documentation
-#
-
 module AccountManager
+
+  #
+  # Encapsulate all directory operations and wrap some Net::LDAP functionality
+  # for use with this application (saves a lot of repetition).
+  #
   class Directory
 
+    #
+    # Strings used in account activation
+    #
     INACTIVE_VALUE = 'activation required'
     DISABLED_ROLE = 'cn=nsmanageddisabledrole,o=education.ucsb.edu'
 
@@ -24,6 +28,9 @@ module AccountManager
         @@conf ||= YAML.load_file File.expand_path("#{App.root}/config/#{App.environment}.yml", __FILE__)
       end
 
+      #
+      # Wrap Net::LDAP#open. Use the config from our file every time.
+      #
       def open
         Net::LDAP.open(
           host: conf['host'],
@@ -34,7 +41,9 @@ module AccountManager
         end
       end
 
-     def open_as_dn(dn, password)
+      #
+      # Wrap Net::LDAP#open. Open as the given dn and process the block.
+      def open_as_dn(dn, password)
         open do |ldap|
           ldap.auth dn, password
           ldap.bind
@@ -42,6 +51,10 @@ module AccountManager
         end
       end
 
+      #
+      # Wrap Net::LDAP#open. Open as the given uid (calculate the bind DN using
+      # the config file) and process the block.
+      #
       def open_as(uid, password)
         open_as_dn bind_dn(uid), password do |ldap|
           yield ldap
@@ -80,50 +93,64 @@ module AccountManager
         conf['bind_dn'] % uid
       end
 
+      #
+      # Get an LDAP friendly timestamp for right now
+      #
       def get_timestamp
         Time.now.strftime '%Y%m%d%H%M%SZ'
-      end
-
-      def admin_change_password(admin_uid, admin_password, uid, new_password)
-
-        activated = false
-
-        return :no_such_account if no_such_account uid
-
-        if bind admin_uid, admin_password
-          :success if open_as admin_uid, admin_password do |ldap|
-            operations = [
-              [:replace, :userpassword, Crypto.hash_password(new_password)],
-              [:replace, :passwordchangedate, get_timestamp]
-            ]
-            ldap.modify dn: bind_dn(uid), operations: operations
-          end
-        else
-          :bind_failure
-        end
-
       end
 
       #
       # Verify that the account exists; verify that the username and password
       # match; activate the account if it isn't active; AS THE USER, set the
-      # password and password change date.
+      # password and password change date. If this is an admin reset, the
+      # account is not activated, but the password can be set.
       #
-      def user_change_password(uid, old_password, new_password)
+      def change_password(args)
 
+        #
+        # Assign arguments
+        #
+        uid            = args[:uid]
+        new_password   = args[:new_password]
+        old_password   = args[:old_password]
+        admin          = args[:admin]
+        admin_password = args[:admin_password]
+
+        #
+        # Figure out if this is an admin reset and set the bind credentials
+        #
+        bind_uid = admin || uid
+        password = admin_password || old_password
+
+        #
+        # Get a timestamp and record whether this is a temporary activation
+        # (should it be deactivated if password change fails?)
+        #
         timestamp = get_timestamp
-
         temporary_activation = false
 
+        #
+        # Report that the account doesn't exist if it doesn't
+        #
         return :no_such_account if no_such_account uid
 
-        unless activated? uid
+        #
+        # If this is a user (non-admin), temporarily activate an inactive
+        # account so they can perform the password change themselves.
+        #
+        unless activated?(uid) || admin
           activate uid, timestamp
           temporary_activation = true
         end
 
-        if bind uid, old_password
-          :success if open_as uid, old_password do |ldap|
+        #
+        # If the user or admin can bind successfully, perform the password
+        # change. If they can't, deactivate any temporary activations and
+        # report a bind failure.
+        #
+        if can_bind? bind_uid, password
+          :success if open_as bind_uid, password do |ldap|
             operations = [
               [:replace, :userpassword, Crypto.hash_password(new_password)],
               [:replace, :passwordchangedate, timestamp]
@@ -136,6 +163,9 @@ module AccountManager
         end
       end
 
+      #
+      # Return true if the account exists
+      #
       def no_such_account(uid)
         no_such_account = true
         search "(uid=#{uid})" do |ldap|
@@ -144,8 +174,8 @@ module AccountManager
         no_such_account
       end
 
-      # Return true if the user identified by uid has a timestamp in the
-      # ituseagreementacceptdate attribute.
+      #
+      # Return true if the user is activated
       #
       def activated?(uid)
         activated = false
@@ -156,6 +186,9 @@ module AccountManager
         activated
       end
 
+      #
+      # Activate an account
+      #
       def activate(uid, timestamp)
         open_as_admin do |ldap|
           operations = [
@@ -167,6 +200,9 @@ module AccountManager
         end
       end
 
+      #
+      # Deactivate the account
+      #
       def deactivate(uid)
         open_as_admin do |ldap|
           operations = [
@@ -178,7 +214,10 @@ module AccountManager
         end
       end
 
-      def bind(uid, password)
+      #
+      # Return true if the user can bind
+      #
+      def can_bind?(uid, password)
         bound = false
         open do |ldap|
           ldap.auth bind_dn(uid), password
