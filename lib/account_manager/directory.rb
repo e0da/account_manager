@@ -15,6 +15,7 @@ module AccountManager
 
     class << self
 
+      #
       # Read the configuration and cache it. Returns a hash of the
       # configuration. Call it within other static methods, e.g.
       # conf[:attribute].
@@ -47,6 +48,7 @@ module AccountManager
         end
       end
 
+      #
       # Wrap Net::LDAP#open, bind as admin, then execute the block in the
       # context of the Net::LDAP#open block. Returns the return value of the
       # block.
@@ -57,6 +59,7 @@ module AccountManager
         end
       end
 
+      #
       # Wrap open_as_admin {|ldap| ldap.search(filter: filter)} and perform
       # searches while bound as admin, then execute the block (if given) in the
       # context of the Net::LDAP#search. Returns the list of entries.
@@ -69,6 +72,7 @@ module AccountManager
         end
       end
 
+      #
       # Calculate the bind DN using the config file and the supplied uid and
       # return it.
       #
@@ -76,15 +80,38 @@ module AccountManager
         conf['bind_dn'] % uid
       end
 
+      def get_timestamp
+        Time.now.strftime '%Y%m%d%H%M%SZ'
+      end
+
+      def admin_reset(admin_uid, admin_password, uid, new_password)
+
+        activated = false
+
+        return :no_such_account if no_such_account uid
+
+        if bind admin_uid, admin_password
+          :success if open_as admin_uid, admin_password do |ldap|
+            operations = [
+              [:replace, :userpassword, Crypto.hash_password(new_password)],
+              [:replace, :passwordchangedate, get_timestamp]
+            ]
+            ldap.modify dn: bind_dn(uid), operations: operations
+          end
+        else
+          :bind_failure
+        end
+
+      end
+
+      #
       # Verify that the account exists; verify that the username and password
       # match; activate the account if it isn't active; AS THE USER, set the
       # password and password change date.
       #
-      #
-      #
       def change_password(uid, old_password, new_password)
 
-        timestamp = Time.now.strftime '%Y%m%d%H%M%SZ'
+        timestamp = get_timestamp
 
         temporary_activation = false
 
@@ -96,12 +123,13 @@ module AccountManager
         end
 
         if bind uid, old_password
-          open_as uid, old_password do |ldap|
-            dn = bind_dn(uid)
-            ldap.replace_attribute dn, :userpassword, Crypto.hash_password(new_password)
-            ldap.replace_attribute dn, :passwordchangedate, timestamp
+          :success if open_as uid, old_password do |ldap|
+            operations = [
+              [:replace, :userpassword, Crypto.hash_password(new_password)],
+              [:replace, :passwordchangedate, timestamp]
+            ]
+            ldap.modify dn: bind_dn(uid), operations: operations
           end
-          :success
         else
           deactivate uid if temporary_activation
           :bind_failure

@@ -30,6 +30,15 @@ fieldset {
   border: none;
   padding-right: 1em; /* offset padding in inputs by doubling it */}
 
+fieldset hr {
+  border: 0;
+  color: #666;
+  background-color: #999;
+  height: 1px;
+  margin: 3em 0;
+  margin-right: -1.5em;
+}
+
 label {
   font-weight: bold;
   font-size: 1.1em;

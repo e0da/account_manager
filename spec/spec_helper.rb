@@ -49,6 +49,16 @@ def submit_password_change_form(user)
   click_on 'Change My Password'
 end
 
+def submit_admin_reset_form(data)
+  visit '/admin_reset'
+  fill_in 'Administrator Username', with: data[:admin_uid]
+  fill_in 'Administrator Password', with: data[:admin_password]
+  fill_in "User's Username", with: data[:uid]
+  fill_in 'New Password', with: data[:new_password]
+  fill_in 'Verify New Password', with: data[:verify_password] || data[:new_password]
+  click_on "Change User's Password"
+end
+
 def stop_ladle
   @ladle.stop
 end

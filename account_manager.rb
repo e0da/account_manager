@@ -92,6 +92,15 @@ module AccountManager
       slim :admin_reset
     end
 
+    post '/admin_reset' do
+
+      case Directory.admin_reset params[:admin_uid], params[:admin_password], params[:uid], params[:new_password]
+      when :success
+        flash[:notice] = "The user's password has been changed"
+      end
+      redirect to '/admin_reset'
+    end
+
     get '*' do
       redirect to DEFAULT_ROUTE
     end

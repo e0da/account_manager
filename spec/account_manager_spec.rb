@@ -64,7 +64,7 @@ module AccountManager
       describe '/admin/reset' do
         it 'renders the admin reset page' do
           visit '/admin_reset'
-          page.find('h2').text.should == "Admin: Reset a User's Password"
+          page.find('h2').text.should == "Administrators: Reset a User's Password"
         end
       end
 
@@ -288,7 +288,36 @@ module AccountManager
         describe "wants to reset a user's password" do
 
           describe 'succeeds' do
-            it 'reports success'
+
+            context 'when the account is activated' do
+
+              before :all do
+                @uid, @new_password = 'ee855', 'new_password'
+                submit_admin_reset_form(
+                  admin_uid: 'admin',
+                  admin_password: 'admin',
+                  uid: @uid,
+                  new_password: @new_password
+                )
+              end
+
+              it 'reports success' do
+                page.should have_content "The user's password has been changed"
+              end
+
+              it "change's the user's password" do
+                Directory.open_as_admin do |ldap|
+                  ldap.auth bind_dn(@uid), @new_password
+                  ldap.bind.should be true
+                end
+              end
+            end
+
+            context 'when the account is not activated' do
+              it 'reports success'
+              it 'informs the user that the account is not activated'
+              it 'does not activate the account'
+            end
           end
 
           context 'fails' do
@@ -301,7 +330,7 @@ module AccountManager
               it 'reports failure'
             end
 
-            context 'user passwords do not match' do
+            context 'new password and verify password do not match' do
               it 'reports failure'
             end
 

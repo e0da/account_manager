@@ -1,1 +1,29 @@
-h2 Admin: Reset a User's Password
+h2 Administrators: Reset a User's Password
+form method='post' action='admin_reset'
+  fieldset
+    == styled_flash
+
+    label for='admin_uid'
+      | Administrator Username
+      input type='text' id='admin_uid' name='admin_uid'
+
+    label for='admin_password'
+      | Administrator Password
+      input type='password' id='admin_password' name='admin_password'
+
+    hr
+
+    label for='uid'
+      | User's Username
+      input type='text' id='uid' name='uid'
+
+    label for='new_password'
+      | New Password
+      input type='password' id='new_password' name='new_password'
+
+    label for='verify_password'
+      | Verify New Password
+      input type='password' id='verify_password' name='verify_password'
+
+    button type='submit' name='submit'
+      | Change User's Password
