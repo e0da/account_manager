@@ -7,12 +7,21 @@ module AccountManager
   describe App do
 
     before :all do
-      start_ladle_and_init_fixtures
-      load_users_initial_state
+      start_ladle
+      load_fixtures
     end
 
     after :all do
       stop_ladle
+    end
+
+    describe 'testing environment sanity' do
+      it 'authenticates against the test directory' do
+        Directory.open_as_admin do |ldap|
+          ldap.auth bind_dn('admin'), 'admin'
+          ldap.bind.should be true
+        end
+      end
     end
 
     describe 'routes', type: :request do
@@ -67,57 +76,6 @@ module AccountManager
       end
     end
 
-    describe 'sanity' do
-
-      it 'authenticates' do
-        Directory.open_as_admin do |ldap|
-          ldap.auth bind_dn(@users[:read_only]), @users[:read_only][:password]
-          ldap.bind.should be true
-        end
-      end
-
-      it 'has a complete "read only" example' do
-        Directory.search "(uid=#{@users[:read_only][:uid]})" do |entry|
-          (@users[:read_only][:activated] = entry[:ituseagreementacceptdate].first).should_not be nil
-          (@users[:read_only][:password_hash] = entry[:userpassword].first).should_not be nil
-          (@users[:read_only][:password_changed] = entry[:passwordchangedate].first).should_not be nil
-          entry[:nsroledn].should be_empty
-          entry[:nsaccountlock].should be_empty
-        end
-      end
-
-      it 'has a complete "password change on active account" example' do
-        Directory.search "(uid=#{@users[:active][:uid]})" do |entry|
-          (@users[:active][:activated] = entry[:ituseagreementacceptdate].first).should_not be nil
-          (@users[:active][:password_hash] = entry[:userpassword].first).should_not be nil
-          (@users[:active][:password_changed] = entry[:passwordchangedate].first).should_not be nil
-          entry[:nsroledn].should be_empty
-          entry[:nsaccountlock].should be_empty
-        end
-      end
-
-      it 'has a complete "password change on inactive account" example' do
-        Directory.search "(uid=#{@users[:inactive][:uid]})" do |entry|
-          (@users[:inactive][:password_hash] = entry[:userpassword].first).should_not be nil
-          entry[:ituseagreementacceptdate].first.should match /#{Directory::INACTIVE_VALUE}/
-          entry[:passwordchangedate].first.should be nil
-          entry[:nsroledn].first.should == Directory::DISABLED_ROLE
-          entry[:nsaccountlock].first.should == 'true'
-        end
-      end
-
-      it 'has a complete "password change on inactive account" example' do
-        Directory.search "(uid=#{@users[:inactive_read_only][:uid]})" do |entry|
-          (@users[:inactive_read_only][:password_hash] = entry[:userpassword].first).should_not be nil
-          (@users[:inactive_read_only][:activated] = entry[:ituseagreementacceptdate].first).should_not be nil
-          entry[:ituseagreementacceptdate].first.should match /#{Directory::INACTIVE_VALUE}/
-          entry[:passwordchangedate].first.should be nil
-          entry[:nsroledn].first.should == Directory::DISABLED_ROLE
-          entry[:nsaccountlock].first.should == 'true'
-        end
-      end
-    end
-
 
     describe 'requests', type: :request do
 
@@ -130,7 +88,12 @@ module AccountManager
             context 'when their account is already activated' do
 
               before :all do
-                submit_password_change_form @users[:active]
+                @uid, @new_password = 'bb459', 'new_password'
+                submit_password_change_form(
+                  uid: @uid,
+                  password: 'niwdlab',
+                  new_password: @new_password
+                )
               end
 
               it 'reports success' do
@@ -139,20 +102,20 @@ module AccountManager
 
               it 'changes the password' do
                 Directory.open_as_admin do |ldap|
-                  ldap.auth bind_dn(@users[:active]), @users[:active][:new_password]
+                  ldap.auth bind_dn(@uid), @new_password
                   ldap.bind.should be true
                 end
               end
 
               it 'does not change the "ituseagreeementacceptdate" timestamp' do
-                Directory.search "(uid=#{@users[:active][:uid]})" do |entry|
-                  entry[:ituseagreementacceptdate].first.should == @users[:active][:activated]
+                Directory.search "(uid=#{@uid})" do |entry|
+                  entry[:ituseagreementacceptdate].should == @users[@uid.to_sym][:ituseagreementacceptdate]
                 end
               end
 
               it 'changes the "passwordchangedate" timestamp' do
-                Directory.search "(uid=#{@users[:active][:uid]})" do |entry|
-                  entry[:passwordchangedate].first.should_not == @users[:active][:password_changed]
+                Directory.search "(uid=#{@uid})" do |entry|
+                  entry[:passwordchangedate].should_not == @users[@uid.to_sym][:passwordchangedate]
                 end
               end
             end
@@ -160,7 +123,12 @@ module AccountManager
             context 'when their account is not activated' do
 
               before :all do
-                submit_password_change_form @users[:inactive]
+                @uid, @new_password = 'cc414', 'new_password'
+                submit_password_change_form(
+                  uid: @uid,
+                  password: 'retneprac',
+                  new_password: @new_password
+                )
               end
 
               it 'reports success' do
@@ -169,21 +137,21 @@ module AccountManager
 
               it 'changes the password' do
                 Directory.open_as_admin do |ldap|
-                  ldap.auth bind_dn(@users[:inactive]), @users[:inactive][:new_password]
+                  ldap.auth bind_dn(@uid), @new_password
                   ldap.bind.should be true
                 end
               end
 
               it 'activates the account' do
-                Directory.search "(uid=#{@users[:inactive][:uid]})" do |entry|
-                  entry[:ituseagreementacceptdate].first.should_not == Directory::INACTIVE_VALUE
-                  entry[:nsaccountlock].first.should be nil
-                  entry[:nsroledn].first.should be nil
+                Directory.search "(uid=#{@uid})" do |entry|
+                  entry[:ituseagreementacceptdate].should_not == [Directory::INACTIVE_VALUE]
+                  entry[:nsaccountlock].should == []
+                  entry[:nsroledn].should == []
                 end
               end
 
               it 'sets a "passwordchangedate" timestamp' do
-                Directory.search "(uid=#{@users[:inactive][:uid]})" do |entry|
+                Directory.search "(uid=#{@uid})" do |entry|
                   entry[:passwordchangedate].first.should match /\d{14}Z/
                 end
               end
@@ -194,13 +162,12 @@ module AccountManager
 
             context 'when the account does not exist' do
 
-              before :all do
-                bad = @users[:read_only].clone
-                bad[:uid] = 'nobody'
-                submit_password_change_form bad
-              end
-
               it 'reports failure' do
+                submit_password_change_form(
+                  uid: 'nobody',
+                  password: '',
+                  new_password: ''
+                )
                 page.should have_content 'Your username or password was incorrect'
               end
             end
@@ -208,9 +175,12 @@ module AccountManager
             context 'when their password is wrong' do
 
               before :all do
-                bad = @users[:read_only].clone
-                bad[:password] = 'bad password'
-                submit_password_change_form bad
+                @uid, @password, @new_password = 'aa729', 'bad password', 'new_password'
+                submit_password_change_form(
+                  uid: @uid,
+                  password: @password,
+                  new_password: @new_password
+                )
               end
 
               it 'reports failure' do
@@ -218,16 +188,20 @@ module AccountManager
               end
 
               it 'does not modify the user' do
-                should_not_modify @users[:read_only]
+                should_not_modify @uid
               end
             end
 
             context "when their verify_password field doesn't match" do
 
               before :all do
-                bad = @users[:read_only].clone
-                bad[:verify_password] = 'does not match'
-                submit_password_change_form bad
+                @uid = 'aa729'
+                submit_password_change_form(
+                  uid: @uid,
+                  password: 'smada',
+                  new_password: 'new_password',
+                  verify_password: 'bad_password'
+                )
               end
 
               it 'reports failure' do
@@ -235,16 +209,20 @@ module AccountManager
               end
 
               it 'does not modify the user' do
-                should_not_modify @users[:read_only]
+                should_not_modify @uid
               end
             end
 
             context "when they don't agree to the terms and conditions" do
 
               before :all do
-                bad = @users[:read_only].clone
-                bad[:agree] = false
-                submit_password_change_form bad
+                @uid = 'aa729'
+                submit_password_change_form(
+                  uid: @uid,
+                  password: 'smada',
+                  new_password: 'new_password',
+                  disagree: true
+                )
               end
 
               it 'reports failure' do
@@ -252,16 +230,19 @@ module AccountManager
               end
 
               it 'does not modify the user' do
-                should_not_modify @users[:read_only]
+                should_not_modify @uid
               end
             end
 
             context 'when their account is inactive and their password is wrong' do
 
               before :all do
-                bad = @users[:inactive_read_only].clone
-                bad[:password] = 'wrong-password'
-                submit_password_change_form bad
+                @uid = 'dd945'
+                submit_password_change_form(
+                  uid: @uid,
+                  password: 'bad_password',
+                  new_password: 'new_password',
+                )
               end
 
               it 'reports failure' do
@@ -269,7 +250,7 @@ module AccountManager
               end
 
               it 'does not modify the user' do
-                should_not_modify @users[:inactive_read_only]
+                should_not_modify @uid
               end
             end
           end

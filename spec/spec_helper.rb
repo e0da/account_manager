@@ -32,11 +32,11 @@ def start_ladle
     additional_classpath: jar,
     custom_schemas: 'edu.ucsb.education.account.GevirtzSchema'
   }
-  Ladle::Server.new(opts).start
+  @ladle = Ladle::Server.new(opts).start
 end
 
-def bind_dn(who)
-  AccountManager::Directory.bind_dn who[:uid]
+def bind_dn(uid)
+  AccountManager::Directory.bind_dn uid
 end
 
 def submit_password_change_form(user)
@@ -45,81 +45,49 @@ def submit_password_change_form(user)
   fill_in 'Password', with: user[:password]
   fill_in 'New Password', with: user[:new_password]
   fill_in 'Verify New Password', with: user[:verify_password] || user[:new_password]
-  check 'agree' if user[:agree]
+  check 'agree' unless user[:disagree]
   click_on 'Change My Password'
-end
-
-
-def start_ladle_and_init_fixtures
-  @ladle = start_ladle
-
-  #
-  # See notes in config/test.ldif for more information about individual
-  # test LDAP accounts. We're going to use different accounts with different
-  # qualities that fit our needs per test below so that we can run Ladle just
-  # one time.
-  #
-
-  @users = {
-
-    admin: {
-      uid: 'admin',
-      password: 'admin',
-    },
-
-    read_only: {
-      uid: 'aa729',
-      password: 'smada',
-      new_password: 'rubberChickenHyperFight5',
-      agree: true
-    },
-
-    active: {
-      uid: 'bb459',
-      password: 'niwdlab',
-      new_password: 'extraBiscuitsInMyBasket4',
-      agree: true
-    },
-
-    inactive: {
-      uid: 'cc414',
-      password: 'retneprac',
-      new_password: 'youCantStopTheSignal7',
-      agree: true
-    },
-
-    inactive_read_only: {
-      uid: 'dd945',
-      password: 'noswad',
-      new_password: 'owMyGibson12',
-      agree: true
-    },
-  }
 end
 
 def stop_ladle
   @ladle.stop
 end
 
-def should_not_modify(user)
-  AccountManager::Directory.search "(uid=#{user[:uid]})" do |entry|
-    entry[:userpassword].first.should == user[:password_hash]
-    entry[:ituseagreementacceptdate].first.should == user[:activated]
-    entry[:passwordchangedate].first.should == user[:password_changed]
+def should_not_modify(uid)
+  user = @users[uid.to_sym]
+  AccountManager::Directory.search "(uid=#{uid})" do |entry|
+    [
+      :userpassword,
+      :ituseagreementacceptdate,
+      :passwordchangedate
+    ].each do |sym|
+
+      # set any nil values to [] for comparison. Empty values from LDAP is
+      # never nil—just [].
+      #
+      user[sym] = [] if user[sym] == nil
+      entry[sym].should == user[sym]
+    end
   end
 end
 
 #
-# TODO use this instead of the fixtures above; rename @dudes to @users and make
-# it all work.
+# Cache initial values of every account in the directory so we can compare them
+# after they are (or are not) changed.
 #
-def load_users_initial_state
-  @dudes = {}
+# See notes in config/test.ldif for more information about individual
+# test LDAP accounts. We're going to use different accounts with different
+# qualities that fit our needs per test below so that we can run Ladle just
+# one time.
+#
+def load_fixtures
+
+  @users = {}
   AccountManager::Directory.search '(uid=*)' do |entry|
     user = {}
     entry.each do |attr|
       user[attr] = entry[attr]
     end
-    @dudes[entry[:uid].first.to_sym] = user
+    @users[entry[:uid].first.to_sym] = user
   end
 end

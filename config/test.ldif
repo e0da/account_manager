@@ -91,6 +91,11 @@ ituseagreementacceptdate: activation required
 nsroledn: cn=nsmanageddisabledrole,o=education.ucsb.edu
 nsaccountlock: true
 
+#
+# dd945: inactive read-only example
+#         - The account is NOT activated
+#         - The tests will make NO CHANGES to this account
+#
 dn: uid=dd945,ou=people,dc=example,dc=org
 objectClass: top
 objectClass: person
