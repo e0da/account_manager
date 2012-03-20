@@ -17,6 +17,7 @@ group :development, :test do
   gem 'guard-compass'
   gem 'sinatra-contrib'
   gem 'capybara'
+  gem 'launchy'
   gem 'libnotify'
   gem 'simplecov'
 end

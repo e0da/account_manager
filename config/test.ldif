@@ -92,7 +92,7 @@ nsroledn: cn=nsmanageddisabledrole,o=education.ucsb.edu
 nsaccountlock: true
 
 #
-# dd945: inactive read-only example
+# dd945: inactive read only example
 #         - The account is NOT activated
 #         - The tests will make NO CHANGES to this account
 #
@@ -113,6 +113,11 @@ ituseagreementacceptdate: activation required
 nsroledn: cn=nsmanageddisabledrole,o=education.ucsb.edu
 nsaccountlock: true
 
+#
+# ee855: active admin reset example
+#         - The account is activated
+#         - The administrator will change the password
+# 
 dn: uid=ee855,ou=people,dc=example,dc=org
 objectClass: top
 objectClass: person
@@ -126,10 +131,15 @@ mail: elizabeth@example.org
 uid: ee855
 # Password is "nosreme"
 userpassword: {SHA}pheE9wd/iTps6f8bJjM6AePjwrU=
-ituseagreementacceptdate: activation required
-nsroledn: cn=nsmanageddisabledrole,o=education.ucsb.edu
-nsaccountlock: true
+ituseagreementacceptdate: 20051129194040Z
+passwordchangedate: 20051129194040Z
 
+#
+# ff531: inactive admin reset example
+#         - The account is NOT activated
+#         - The administrator will change the password
+#         - The account should not become activated
+# 
 dn: uid=ff531,ou=people,dc=example,dc=org
 objectClass: top
 objectClass: person
@@ -147,6 +157,11 @@ ituseagreementacceptdate: activation required
 nsroledn: cn=nsmanageddisabledrole,o=education.ucsb.edu
 nsaccountlock: true
 
+#
+# gg855: read only admin reset account
+#         - The account is NOT activated
+#         - The tests will make NO CHANGES to this account
+#
 dn: uid=gg855,ou=people,dc=example,dc=org
 objectClass: top
 objectClass: person

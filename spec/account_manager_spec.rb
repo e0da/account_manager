@@ -256,31 +256,34 @@ module AccountManager
           end
         end
 
-        describe 'wants to reset their password' do
+        #
+        # TODO Uncomment this when I'm ready to deal with these specs. For now, all the yellow is annoying me.
+        #
+        # describe 'wants to reset their password' do
 
-          describe 'requests a reset token' do
-            it 'deletes any existing reset tokens'
-            it 'creates a new reset token'
-            it 'emails the reset token to the user'
-          end
+        #   describe 'requests a reset token' do
+        #     it 'deletes any existing reset tokens'
+        #     it 'creates a new reset token'
+        #     it 'emails the reset token to the user'
+        #   end
 
-          describe 'resets their password' do
-            context 'a successful attempt' do
-              it 'changes the password'
-              it 'deletes the reset token'
-            end
+        #   describe 'resets their password' do
+        #     context 'a successful attempt' do
+        #       it 'changes the password'
+        #       it 'deletes the reset token'
+        #     end
 
-            context 'an unsuccessful attempt' do
-              it 'does not update the directory'
-            end
+        #     context 'an unsuccessful attempt' do
+        #       it 'does not update the directory'
+        #     end
 
-            context 'the token is expired' do
-              it 'informs the user the token is expired'
-              it 'deletes the token'
-              it 'prompts the user to try again'
-            end
-          end
-        end
+        #     context 'the token is expired' do
+        #       it 'informs the user the token is expired'
+        #       it 'deletes the token'
+        #       it 'prompts the user to try again'
+        #     end
+        #   end
+        # end
       end
 
       context 'an administrator' do
@@ -314,28 +317,88 @@ module AccountManager
             end
 
             context 'when the account is not activated' do
-              it 'reports success'
-              it 'informs the user that the account is not activated'
-              it 'does not activate the account'
+
+              before :all do
+                @uid, @new_password = 'ff531', 'new_password'
+                submit_admin_reset_form(
+                  admin_uid: 'admin',
+                  admin_password: 'admin',
+                  uid: @uid,
+                  new_password: @new_password
+                )
+              end
+
+              it 'reports success and that the account is not activated' do
+                page.should have_content "The user's password has been changed"
+                page.should have_content "The account is not activated"
+              end
+
+              it 'does not activate the account' do
+                Directory.activated?(@uid).should be false
+              end
+
+              it 'changes the password' do
+
+                #
+                # XXX in the production environment, you can't bind  if you're
+                # not activated. That doesn't matter for the test. Binding is
+                # just an easy way to demonstrate that the password works.
+                #
+                Directory.can_bind?(@uid, @new_password).should be true
+              end
             end
           end
 
           context 'fails' do
 
             context 'admin fails authentication' do
-              it 'reports failure'
+              it 'reports failure' do
+                submit_admin_reset_form(
+                  admin_uid: 'admin',
+                  admin_password: 'BAD PASSWORD',
+                  uid: 'gg855',
+                  new_password: 'new_password'
+                )
+                page.should have_content 'Administrator username or password was incorrect'
+              end
             end
 
             context 'user account does not exist' do
-              it 'reports failure'
+              it 'reports failure' do
+                submit_admin_reset_form(
+                  admin_uid: 'admin',
+                  admin_password: 'admin',
+                  uid: 'FAKE_PERSON',
+                  new_password: 'new_password'
+                )
+                page.should have_content "Couldn't find that user in the directory"
+              end
             end
 
             context 'new password and verify password do not match' do
-              it 'reports failure'
+              it 'reports failure' do
+                submit_admin_reset_form(
+                  admin_uid: 'admin',
+                  admin_password: 'admin',
+                  uid: 'gg855',
+                  new_password: 'new_password',
+                  verify_password: 'something_else'
+                )
+                page.should have_content "The new passwords do not match"
+              end
             end
 
-            context 'the account is not activated' do
-              it 'reports failure'
+            context 'the supplied admin account is not an administrator' do
+              it 'reports failure' do
+                pending "Need to figure out how to stub and test this"
+                submit_admin_reset_form(
+                  admin_uid: 'aa729',
+                  admin_password: 'smada',
+                  uid: 'gg855',
+                  new_password: 'new_password',
+                )
+                page.should have_content "The supplied administrator account cannot perform this action"
+              end
             end
           end
         end
