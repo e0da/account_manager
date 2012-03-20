@@ -55,15 +55,15 @@ module AccountManager
       end
 
       describe '/admin' do
-        it 'redirects to /admin_reset' do
+        it 'redirects to /admin/reset' do
           visit '/admin'
-          page.current_path.should == '/admin_reset'
+          page.current_path.should == '/admin/reset'
         end
       end
 
       describe '/admin/reset' do
         it 'renders the admin reset page' do
-          visit '/admin_reset'
+          visit '/admin/reset'
           page.find('h2').text.should == "Administrators: Reset a User's Password"
         end
       end
@@ -89,7 +89,7 @@ module AccountManager
 
               before :all do
                 @uid, @new_password = 'bb459', 'new_password'
-                submit_password_change_form(
+                submit_user_password_change_form(
                   uid: @uid,
                   password: 'niwdlab',
                   new_password: @new_password
@@ -124,7 +124,7 @@ module AccountManager
 
               before :all do
                 @uid, @new_password = 'cc414', 'new_password'
-                submit_password_change_form(
+                submit_user_password_change_form(
                   uid: @uid,
                   password: 'retneprac',
                   new_password: @new_password
@@ -163,7 +163,7 @@ module AccountManager
             context 'when the account does not exist' do
 
               it 'reports failure' do
-                submit_password_change_form(
+                submit_user_password_change_form(
                   uid: 'nobody',
                   password: '',
                   new_password: ''
@@ -176,7 +176,7 @@ module AccountManager
 
               before :all do
                 @uid, @password, @new_password = 'aa729', 'bad password', 'new_password'
-                submit_password_change_form(
+                submit_user_password_change_form(
                   uid: @uid,
                   password: @password,
                   new_password: @new_password
@@ -196,7 +196,7 @@ module AccountManager
 
               before :all do
                 @uid = 'aa729'
-                submit_password_change_form(
+                submit_user_password_change_form(
                   uid: @uid,
                   password: 'smada',
                   new_password: 'new_password',
@@ -217,7 +217,7 @@ module AccountManager
 
               before :all do
                 @uid = 'aa729'
-                submit_password_change_form(
+                submit_user_password_change_form(
                   uid: @uid,
                   password: 'smada',
                   new_password: 'new_password',
@@ -238,7 +238,7 @@ module AccountManager
 
               before :all do
                 @uid = 'dd945'
-                submit_password_change_form(
+                submit_user_password_change_form(
                   uid: @uid,
                   password: 'bad_password',
                   new_password: 'new_password',

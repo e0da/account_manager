@@ -84,7 +84,7 @@ module AccountManager
         Time.now.strftime '%Y%m%d%H%M%SZ'
       end
 
-      def admin_reset(admin_uid, admin_password, uid, new_password)
+      def admin_change_password(admin_uid, admin_password, uid, new_password)
 
         activated = false
 
@@ -109,7 +109,7 @@ module AccountManager
       # match; activate the account if it isn't active; AS THE USER, set the
       # password and password change date.
       #
-      def change_password(uid, old_password, new_password)
+      def user_change_password(uid, old_password, new_password)
 
         timestamp = get_timestamp
 

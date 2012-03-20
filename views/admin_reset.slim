@@ -1,14 +1,14 @@
 h2 Administrators: Reset a User's Password
-form method='post' action='admin_reset'
+form method='post' action="#{@action}"
   fieldset
     == styled_flash
 
     label for='admin_uid'
-      | Administrator Username
+      | Administrator's Username
       input type='text' id='admin_uid' name='admin_uid'
 
     label for='admin_password'
-      | Administrator Password
+      | Administrator's Password
       input type='password' id='admin_password' name='admin_password'
 
     hr
