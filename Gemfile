@@ -8,6 +8,9 @@ gem 'coffee-script'
 gem 'therubyracer'
 gem 'slim'
 gem 'sass'
+gem 'data_mapper'
+gem 'sqlite3'
+gem 'dm-sqlite-adapter'
 
 group :development, :test do
   gem 'ladle'

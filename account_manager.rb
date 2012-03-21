@@ -9,6 +9,7 @@ require 'compass'
 require 'coffee-script'
 
 require 'account_manager/directory'
+require 'account_manager/models'
 
 #
 # TODO documentation
@@ -19,6 +20,11 @@ module AccountManager
 
     DEFAULT_ROUTE = '/change_password'
 
+    configure :development do
+      register Sinatra::Reloader
+      # DataMapper::Logger.new $stdout, :debug
+    end
+
     configure do
       enable :sessions
       register Sinatra::Flash
@@ -28,13 +34,11 @@ module AccountManager
         config.sass_dir = 'views'
       end
 
-      set :haml, { :format => :html5 }
       set :sass, Compass.sass_engine_options
 
-    end
-
-    configure :development do
-      register Sinatra::Reloader
+      DataMapper.setup :default, "sqlite://#{File.expand_path '.'}/db/#{App.environment}.db"
+      DataMapper.finalize
+      DataMapper.auto_upgrade!
     end
 
     helpers do

@@ -12,78 +12,78 @@ module AccountManager
       end
     end
 
-    describe '.hash_password' do
-      it 'creates a SSHA password hash' do
-        Crypto.hash_password('doodle', type: :ssha).should match /^{SSHA}/
+    describe '.hash' do
+      it 'creates a SSHA hash' do
+        Crypto.hash('doodle', type: :ssha).should match /^{SSHA}/
       end
 
-      it 'creates a SHA password hash' do
-        Crypto.hash_password('doodle', type: :sha).should match /^{SHA}/
+      it 'creates a SHA hash' do
+        Crypto.hash('doodle', type: :sha).should match /^{SHA}/
       end
 
       it 'should complain if you pass it an unsupported hash type' do
         expect {
-          Crypto.hash_password('doodle', type: :md5)
-        }.should raise_error "Unsupported password hash type md5"
+          Crypto.hash('doodle', type: :md5)
+        }.should raise_error "Unsupported hash type md5"
       end
     end
 
-    describe '.check_ssha_password' do
+    describe '.check_ssha' do
 
       before :all do
-        @hazh = Crypto.hash_password 'doodle', type: :ssha
+        @hazh = Crypto.hash 'doodle', type: :ssha
       end
 
-      it 'validates a correct password against an SSHA hash' do
-        Crypto.check_ssha_password('doodle', @hazh).should be true
+      it 'validates a correct input against an SSHA hash' do
+        Crypto.check_ssha('doodle', @hazh).should be true
       end
 
-      it 'does not validate an incorrect password against an SSHA hash' do
-        Crypto.check_ssha_password('Doodle', @hazh).should be false
+      it 'does not validate an incorrect input against an SSHA hash' do
+        Crypto.check_ssha('Doodle', @hazh).should be false
       end
 
       it 'works with a really long salt' do
-        hazh = Crypto.hash_password 'doodle', salt: Crypto.new_salt(100)
-        Crypto.check_password('doodle', hazh).should be true
+        hazh = Crypto.hash 'doodle', salt: Crypto.new_salt(100)
+        Crypto.check('doodle', hazh).should be true
       end
     end
 
-    describe '.check_sha_password' do
+    describe '.check_sha' do
 
 
       before :all do
-        @hazh = Crypto.hash_password 'doodle', type: :sha
+        @hazh = Crypto.hash 'doodle', type: :sha
       end
 
-      it 'validates a correct password against an SHA hash' do
-        Crypto.check_sha_password('doodle', @hazh).should be true
+      it 'validates a correct input against an SHA hash' do
+        Crypto.check_sha('doodle', @hazh).should be true
       end
 
-      it 'does not validate an incorrect password against an SHA hash' do
-        Crypto.check_sha_password('Doodle', @hazh).should be false
+      it 'does not validate an incorrect input against an SHA hash' do
+        Crypto.check_sha('Doodle', @hazh).should be false
       end
     end
 
-    describe '.check_password' do
-      it 'identifies and validates SSHA passwords' do
-        hazh = Crypto.hash_password 'doodle', type: :ssha
-        Crypto.check_password 'doodle', hazh
+    describe '.check' do
+      it 'identifies and validates SSHA input' do
+        hazh = Crypto.hash 'doodle', type: :ssha
+        Crypto.check 'doodle', hazh
       end
 
-      it 'identifies and validates SHA passwords' do
-        hazh = Crypto.hash_password 'doodle', type: :sha
-        Crypto.check_password 'doodle', hazh
+      it 'identifies and validates SHA input' do
+        hazh = Crypto.hash 'doodle', type: :sha
+        Crypto.check 'doodle', hazh
       end
 
-      it 'complains if you try to use an unsupported password hash type' do
+      it 'complains if you try to use an unsupported hash type' do
         expect {
-          Crypto.check_password 'doodle', '{MD5}somehash'
-        }.should raise_error 'Unsupported password hash type md5'
+          Crypto.check 'doodle', '{MD5}somehash'
+        }.should raise_error 'Unsupported hash type md5'
       end
 
       it "complains if you don't have a hash prefix string such as {SHA} in your hash" do
         expect {
-          Crypto.check_password 'doodle', 'badhash'
+          Crypto.check 'doodle', 'badhash'
         }.should raise_error 'No hash prefix. Expected something like {SHA} at the beginning of the hash.'
       end
     end

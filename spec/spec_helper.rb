@@ -1,7 +1,5 @@
 require 'simplecov'
-SimpleCov.configure do
-  add_filter 'spec'
-end
+SimpleCov.configure { add_filter 'spec' }
 SimpleCov.start
 
 $: << '.'
@@ -11,15 +9,12 @@ $: << '.'
 require 'account_manager'
 require 'capybara/rspec'
 
-RSpec.configure do |config|
-  config.treat_symbols_as_metadata_keys_with_true_values = true
-  config.run_all_when_everything_filtered = true
-  config.filter_run :focus
-end
-
 AccountManager::App.environment = :test
 
 Capybara.app = AccountManager::App
+
+
+
 
 def start_ladle
   ldif = File.expand_path "../../config/test.ldif", __FILE__
@@ -33,6 +28,10 @@ def start_ladle
     custom_schemas: 'edu.ucsb.education.account.GevirtzSchema'
   }
   @ladle = Ladle::Server.new(opts).start
+end
+
+def stop_ladle
+  @ladle.stop
 end
 
 def bind_dn(uid)
@@ -57,10 +56,6 @@ def submit_admin_reset_form(data)
   fill_in 'New Password', with: data[:new_password]
   fill_in 'Verify New Password', with: data[:verify_password] || data[:new_password]
   click_on "Change User's Password"
-end
-
-def stop_ladle
-  @ladle.stop
 end
 
 def should_not_modify(uid)

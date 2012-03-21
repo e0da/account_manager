@@ -21,8 +21,7 @@ module AccountManager
 
       #
       # Read the configuration and cache it. Returns a hash of the
-      # configuration. Call it within other static methods, e.g.
-      # conf[:attribute].
+      # configuration. Call it within other static methods, e.g. conf[:host].
       #
       def conf
         @@conf ||= YAML.load_file File.expand_path("#{App.root}/config/#{App.environment}.yml", __FILE__)
@@ -153,7 +152,7 @@ module AccountManager
           result = nil
           outcome = open_as bind_uid, password do |ldap|
             operations = [
-              [:replace, :userpassword, Crypto.hash_password(new_password)],
+              [:replace, :userpassword, Crypto.hash(new_password)],
               [:replace, :passwordchangedate, timestamp]
             ]
             ldap.modify dn: bind_dn(uid), operations: operations
