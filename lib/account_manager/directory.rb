@@ -2,6 +2,8 @@ require 'yaml'
 require 'net-ldap'
 require 'base64'
 
+ALPHANUM = (('a'..'z').to_a + ('A'..'Z').to_a + (0..9).to_a)
+
 module AccountManager
 
   #
@@ -107,11 +109,15 @@ module AccountManager
         App.environment == :production ? :ssha : :sha
       end
 
+      def random_alphanum
+        ALPHANUM[rand(ALPHANUM.length)]
+      end
+
       #
       # Get a string of random hex characters of the specified length
       #
-      def new_salt(length=20)
-        length.times.inject('') {|i| i << rand(16).to_s(16)}
+      def new_salt(length=31)
+        length.times.inject('') {|i| i << random_alphanum}
       end
 
       #
