@@ -64,7 +64,7 @@ def stop_ladle
 end
 
 def should_not_modify(uid)
-  user = @users[uid.to_sym]
+  user = @users[uid]
   AccountManager::Directory.search "(uid=#{uid})" do |entry|
     [
       :userpassword,
@@ -98,6 +98,6 @@ def load_fixtures
     entry.each do |attr|
       user[attr] = entry[attr]
     end
-    @users[entry[:uid].first.to_sym] = user
+    @users[entry[:uid].first] = user
   end
 end

@@ -1,7 +1,6 @@
 require 'spec_helper'
 require 'ladle'
 require 'net-ldap'
-require 'ostruct'
 
 module AccountManager
 
@@ -18,10 +17,7 @@ module AccountManager
 
     describe 'testing environment sanity' do
       it 'authenticates against the test directory' do
-        Directory.open_as_admin do |ldap|
-          ldap.auth bind_dn('admin'), 'admin'
-          ldap.bind.should be true
-        end
+        Directory.can_bind?('admin', 'admin').should be true
       end
     end
 
@@ -102,21 +98,18 @@ module AccountManager
               end
 
               it 'changes the password' do
-                Directory.open_as_admin do |ldap|
-                  ldap.auth bind_dn(@uid), @new_password
-                  ldap.bind.should be true
-                end
+                Directory.can_bind?(@uid, @new_password).should be true
               end
 
               it 'does not change the "ituseagreeementacceptdate" timestamp' do
                 Directory.search "(uid=#{@uid})" do |entry|
-                  entry[:ituseagreementacceptdate].should == @users[@uid.to_sym][:ituseagreementacceptdate]
+                  entry[:ituseagreementacceptdate].should == @users[@uid][:ituseagreementacceptdate]
                 end
               end
 
               it 'changes the "passwordchangedate" timestamp' do
                 Directory.search "(uid=#{@uid})" do |entry|
-                  entry[:passwordchangedate].should_not == @users[@uid.to_sym][:passwordchangedate]
+                  entry[:passwordchangedate].should_not == @users[@uid][:passwordchangedate]
                 end
               end
             end
@@ -137,18 +130,11 @@ module AccountManager
               end
 
               it 'changes the password' do
-                Directory.open_as_admin do |ldap|
-                  ldap.auth bind_dn(@uid), @new_password
-                  ldap.bind.should be true
-                end
+                Directory.can_bind?(@uid, @new_password).should be true
               end
 
               it 'activates the account' do
-                Directory.search "(uid=#{@uid})" do |entry|
-                  entry[:ituseagreementacceptdate].should_not == [Directory::INACTIVE_VALUE]
-                  entry[:nsaccountlock].should == []
-                  entry[:nsroledn].should == []
-                end
+                Directory.activated?(@uid).should be true
               end
 
               it 'sets a "passwordchangedate" timestamp' do
@@ -176,11 +162,11 @@ module AccountManager
             context 'when their password is wrong' do
 
               before :all do
-                @uid, @password, @new_password = 'aa729', 'bad password', 'new_password'
+                @uid = 'aa729'
                 submit_user_password_change_form(
                   uid: @uid,
-                  password: @password,
-                  new_password: @new_password
+                  password: 'bad_password',
+                  new_password: 'new_password'
                 )
               end
 
@@ -307,10 +293,7 @@ module AccountManager
               end
 
               it "change's the user's password" do
-                Directory.open_as_admin do |ldap|
-                  ldap.auth bind_dn(@uid), @new_password
-                  ldap.bind.should be true
-                end
+                Directory.can_bind?(@uid, @new_password).should be true
               end
             end
 
