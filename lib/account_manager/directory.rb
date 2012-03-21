@@ -2,8 +2,6 @@ require 'yaml'
 require 'net-ldap'
 require 'base64'
 
-ALPHANUM = (('a'..'z').to_a + ('A'..'Z').to_a + (0..9).to_a)
-
 module AccountManager
 
   #
@@ -11,6 +9,10 @@ module AccountManager
   # for use with this application (saves a lot of repetition).
   #
   class Directory
+
+    #
+    # All alphanumeric characters
+    ALPHANUM = [*'a'..'z', *'A'..'Z', *0..9]
 
     #
     # Strings used in account activation
