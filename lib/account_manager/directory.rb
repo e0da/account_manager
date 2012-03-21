@@ -126,10 +126,10 @@ module AccountManager
       # The returned hash has a token at the beginning that describes what kind
       # of hash it is, such as {MD5}juICeYORXseKzEUCfYdDFg==.
       #
-      def hash(input, type=default_hash_type, salt=new_salt)
+      def hash(input, type=default_hash_type, ssha_salt=new_salt)
         case type
         when :ssha
-          '{SSHA}'+Base64.encode64(Digest::SHA1.digest(input + salt) + salt).chomp
+          '{SSHA}'+Base64.encode64(Digest::SHA1.digest(input + ssha_salt) + ssha_salt).chomp
         else
           Net::LDAP::Password.generate type, input
         end
@@ -146,8 +146,8 @@ module AccountManager
         raise "Malformed hash. Need {SHA} or something at the beginning" unless $1
         type = $1.downcase.to_sym
 
-        salt = Base64.decode64(hash.gsub(/^{.+}/, ''))[20..-1]
-        hash(input, type, salt) == hash
+        ssha_salt = Base64.decode64(hash.gsub(/^{.+}/, ''))[20..-1]
+        hash(input, type, ssha_salt) == hash
       end
 
       #
