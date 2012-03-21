@@ -246,12 +246,20 @@ module AccountManager
         describe 'wants to reset their password' do
 
           describe 'requests a reset token' do
-            it 'deletes any existing reset tokens'
-            it 'creates a new reset token'
-            it 'emails the reset token to the user'
+
+            context 'when their account is activated' do
+              it 'deletes any existing reset tokens'
+              it 'creates a new reset token'
+              it 'emails the reset token to the user'
+            end
+
+            context 'when their account is not activated' do
+              it 'informs the user and does nothing'
+            end
           end
 
           describe 'resets their password' do
+
             context 'a successful attempt' do
               it 'changes the password'
               it 'deletes the reset token'
@@ -272,7 +280,7 @@ module AccountManager
 
       context 'an administrator' do
 
-        describe "wants to reset a user's password" do
+        describe "resetting a user's password" do
 
           describe 'succeeds' do
 
@@ -333,58 +341,90 @@ module AccountManager
           context 'fails' do
 
             context 'admin fails authentication' do
-              it 'reports failure' do
+
+              before :all do
                 submit_admin_reset_form(
                   admin_uid: 'admin',
                   admin_password: 'BAD PASSWORD',
-                  uid: 'gg855',
+                  uid: @uid='gg855',
                   new_password: 'new_password'
                 )
+              end
+
+              it 'reports failure' do
                 page.should have_content 'Administrator username or password was incorrect'
               end
+
+              it 'does not modify the user' do
+                should_not_modify @uid
+              end
+
             end
 
             context 'user account does not exist' do
-              it 'reports failure' do
+
+              before :all do
                 submit_admin_reset_form(
                   admin_uid: 'admin',
                   admin_password: 'admin',
-                  uid: 'FAKE_PERSON',
+                  uid: @uid='FAKE_PERSON',
                   new_password: 'new_password'
                 )
+              end
+
+              it 'reports failure' do
                 page.should have_content "Couldn't find that user in the directory"
               end
             end
 
             context 'new password and verify password do not match' do
-              it 'reports failure' do
+
+              before :all do
                 submit_admin_reset_form(
                   admin_uid: 'admin',
                   admin_password: 'admin',
-                  uid: 'gg855',
+                  uid: @uid='gg855',
                   new_password: 'new_password',
                   verify_password: 'something_else'
                 )
+              end
+
+              it 'reports failure' do
                 page.should have_content "The new passwords do not match"
               end
+
+              it 'does not modify the user' do
+                should_not_modify @uid
+              end
+
             end
 
             context 'the supplied admin account is not an administrator' do
-              it 'reports failure' do
+
+              before :all do
 
                 #
                 # Fake an insufficient access error
                 #
-                struct = OpenStruct.new message: 'Insufficient Access Rights'
-                Net::LDAP.any_instance.stub(:get_operation_result).and_return(struct)
+                Net::LDAP.any_instance.stub(:modify).and_return false
+                Net::LDAP.any_instance
+                  .stub(:get_operation_result)
+                  .and_return OpenStruct.new(code: 50, message: 'Insufficient Access Rights')
 
                 submit_admin_reset_form(
                   admin_uid: 'aa729',
                   admin_password: 'smada',
-                  uid: 'gg855',
+                  uid: @uid='gg855',
                   new_password: 'new_password',
                 )
+              end
+
+              it 'reports failure' do
                 page.should have_content "The supplied administrator account cannot perform this action"
+              end
+
+              it 'does not modify the user' do
+                should_not_modify @uid
               end
             end
           end

@@ -131,7 +131,7 @@ module AccountManager
         temporary_activation = false
 
         #
-        # Report that the account doesn't exist if it doesn't
+        # Indicate that the account doesn't exist if it doesn't
         #
         return :no_such_account if no_such_account uid
 
@@ -147,7 +147,7 @@ module AccountManager
         #
         # If the user or admin can bind successfully, perform the password
         # change. If they can't, deactivate any temporary activations and
-        # report a bind failure.
+        # indicate a bind failure.
         #
         if can_bind? bind_uid, password
           result = nil
@@ -163,8 +163,8 @@ module AccountManager
           #
           # If we got an LDAP Insufficient Access Rights error, the admin user
           # doesn't have the rights to perform this action. If the account
-          # isn't activated, we report that the password changed but the
-          # account is inactive. Otherwise just report success.
+          # isn't activated, we indicate that the password changed but the
+          # account is inactive. Otherwise just indicate success.
           #
           if result.message == 'Insufficient Access Rights'
             :not_admin
