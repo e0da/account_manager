@@ -1,6 +1,6 @@
 require 'yaml'
 require 'net-ldap'
-require 'account_manager/crypto'
+require 'base64'
 
 module AccountManager
 
@@ -100,6 +100,51 @@ module AccountManager
       end
 
       #
+      # If this is a production environment, default to SSHA for hashes.
+      # Otherwise, default to SHA.
+      #
+      def default_hash_type
+        App.environment == :production ? :ssha : :sha
+      end
+
+      #
+      # Get a string of random hex characters of the specified length
+      #
+      def new_salt(length=20)
+        length.times.inject('') {|i| i << rand(16).to_s(16)}
+      end
+
+      #
+      # Return a hash of the given string. Supports SSHA as well as SHA and MD5
+      # via Net::LDAP::Password. Default determined by self.default_hash_type.
+      # The returned hash has a token at the beginning that describes what kind
+      # of hash it is, such as {MD5}juICeYORXseKzEUCfYdDFg==.
+      #
+      def hash(input, type=default_hash_type, salt=new_salt)
+        case type
+        when :ssha
+          '{SSHA}'+Base64.encode64(Digest::SHA1.digest(input + salt) + salt).chomp
+        else
+          Net::LDAP::Password.generate type, input
+        end
+      end
+
+      #
+      # Verify input against hash. Supported hash types are SSHA as well as SHA
+      # and MD5 via Net::LDAP::Password. The hash type is determined
+      # automatically by a token at the beginning of the hash, such as
+      # {SHA}Pi6V9a2XDq36fhfq9z2pcCSqU1k=
+      #
+      def verify_hash(input, hash)
+        hash.match /^{(.+)}/
+        raise "Malformed hash. Need {SHA} or something at the beginning" unless $1
+        type = $1.downcase.to_sym
+
+        salt = Base64.decode64(hash.gsub(/^{.+}/, ''))[20..-1]
+        hash(input, type, salt) == hash
+      end
+
+      #
       # Verify that the account exists; verify that the username and password
       # match; activate the account if it isn't active; AS THE USER, set the
       # password and password change date. If this is an admin reset, the
@@ -152,7 +197,7 @@ module AccountManager
           result = nil
           outcome = open_as bind_uid, password do |ldap|
             operations = [
-              [:replace, :userpassword, Crypto.hash(new_password)],
+              [:replace, :userpassword, hash(new_password)],
               [:replace, :passwordchangedate, timestamp]
             ]
             ldap.modify dn: bind_dn(uid), operations: operations
