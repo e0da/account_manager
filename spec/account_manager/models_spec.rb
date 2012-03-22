@@ -20,9 +20,7 @@ module AccountManager
 
       it 'returns true if the token is expired' do
         @token.expires_at = DateTime.now.prev_day
-        @token.save
         @token.expired?.should be true
-        pp @token
       end
     end
   end
