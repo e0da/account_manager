@@ -11,8 +11,9 @@ module AccountManager
   class Directory
 
     #
-    # All alphanumeric characters
-    ALPHANUM = [*'a'..'z', *'A'..'Z', *0..9]
+    # POSIX crypt(3) characters
+    #
+    SALT = [*'a'..'z', *'A'..'Z', *0..9, '.', '/']
 
     #
     # Strings used in account activation
@@ -46,6 +47,7 @@ module AccountManager
 
       #
       # Wrap Net::LDAP#open. Open as the given dn and process the block.
+      #
       def open_as_dn(dn, password)
         open do |ldap|
           ldap.auth dn, password
@@ -112,10 +114,10 @@ module AccountManager
       end
 
       #
-      # Get a string of random alphanumeric characters of the specified length
+      # Get a string of random POSIX crypt(3)-friendly salt characters
       #
       def new_salt(length=31)
-        length.times.inject('') { |i| i << ALPHANUM[rand(ALPHANUM.length)] }
+        length.times.inject('') { |i| i << SALT[rand(SALT.length)] }
       end
 
       #
@@ -286,7 +288,6 @@ module AccountManager
           ldap.auth bind_dn(uid), password
           bound = ldap.bind
         end
-
         bound
       end
     end

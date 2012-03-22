@@ -1,29 +1,23 @@
 require 'data_mapper'
 require 'digest'
+require 'dm-timestamps'
 
 module AccountManager
   class Token
-
-    #
-    # Constants for date comparison
-    #
-    SECOND = 1
-    MINUTE = 60 * SECOND
-    HOUR   = 60 * MINUTE
-    DAY    = 24 * HOUR
-
     include DataMapper::Resource
 
     property :id,         Serial
     property :uid,        String,   required: true, unique: true
-    property :expires_at, DateTime, required: true
+    property :created_at, DateTime
+
+    property :expires_at, DateTime, required: true,
+      default: lambda {|r,p| DateTime.now.next_day}
+
+    property :slug,       String,   required: true, length: 32,
+      default: lambda {|r,p| Digest::MD5.hexdigest r.to_s+rand.to_s}
 
     def expired?
-      expires_at >= DateTime.now
-    end
-
-    def hash
-      Digest::SHA1.hexdigest uid + expires_at.to_s
+      DateTime.now > expires_at
     end
   end
 end
