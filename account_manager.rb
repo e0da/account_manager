@@ -22,7 +22,7 @@ module AccountManager
 
     configure :development do
       register Sinatra::Reloader
-      # DataMapper::Logger.new $stdout, :debug
+      DataMapper::Logger.new $stdout, :debug
     end
 
     configure do

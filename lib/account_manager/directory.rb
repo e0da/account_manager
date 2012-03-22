@@ -107,49 +107,44 @@ module AccountManager
       # If this is a production environment, default to SSHA for hashes.
       # Otherwise, default to SHA.
       #
-      def default_hash_type
+      def default_hash_scheme
         App.environment == :production ? :ssha : :sha
       end
 
-      def random_alphanum
-        ALPHANUM[rand(ALPHANUM.length)]
-      end
-
       #
-      # Get a string of random hex characters of the specified length
+      # Get a string of random alphanumeric characters of the specified length
       #
       def new_salt(length=31)
-        length.times.inject('') {|i| i << random_alphanum}
+        length.times.inject('') { |i| i << ALPHANUM[rand(ALPHANUM.length)] }
       end
 
       #
-      # Return a hash of the given string. Supports SSHA as well as SHA and MD5
-      # via Net::LDAP::Password. Default determined by self.default_hash_type.
-      # The returned hash has a token at the beginning that describes what kind
-      # of hash it is, such as {MD5}juICeYORXseKzEUCfYdDFg==.
+      # Return a hash of the given string. Supports SSHA and whatever
+      # Net::LDAP::Password supports. Default determined by
+      # self.default_hash_scheme. The hash is returned in the RFC 2307 format,
+      # e.g. {MD5}juICeYORXseKzEUCfYdDFg==
       #
-      def hash(input, type=default_hash_type, ssha_salt=new_salt)
-        case type
+      def hash(input, scheme=default_hash_scheme, ssha_salt=new_salt)
+        case scheme
         when :ssha
           '{SSHA}'+Base64.encode64(Digest::SHA1.digest(input + ssha_salt) + ssha_salt).chomp
         else
-          Net::LDAP::Password.generate type, input
+          Net::LDAP::Password.generate scheme, input
         end
       end
 
       #
-      # Verify input against hash. Supported hash types are SSHA as well as SHA
-      # and MD5 via Net::LDAP::Password. The hash type is determined
-      # automatically by a token at the beginning of the hash, such as
-      # {SHA}Pi6V9a2XDq36fhfq9z2pcCSqU1k=
+      # Verify input against hash. Input must be a valid RFC 2307 format password hash, such as 
+      # {SHA}Pi6V9a2XDq36fhfq9z2pcCSqU1k=. Supported hash schemes are SSHA and
+      # whatever Net::LDAP::Password supports.
       #
       def verify_hash(input, hash)
         hash.match /^{(.+)}/
         raise "Malformed hash. Need {SHA} or something at the beginning" unless $1
-        type = $1.downcase.to_sym
+        scheme = $1.downcase.to_sym
 
         ssha_salt = Base64.decode64(hash.gsub(/^{.+}/, ''))[20..-1]
-        hash(input, type, ssha_salt) == hash
+        hash(input, scheme, ssha_salt) == hash
       end
 
       #
