@@ -13,7 +13,7 @@ module AccountManager
     #
     # POSIX crypt(3) characters
     #
-    SALT = [*'a'..'z', *'A'..'Z', *0..9, '.', '/']
+    SALT = [*'a'..'z', *'A'..'Z', *'0'..'9', '.', '/']
 
     #
     # Strings used in account activation
@@ -32,6 +32,7 @@ module AccountManager
         @@conf ||= YAML.load_file File.expand_path("#{App.root}/config/#{App.environment}.yml", __FILE__)
       end
 
+
       #
       # Wrap Net::LDAP#open. Use the config from our file every time.
       #
@@ -45,6 +46,7 @@ module AccountManager
         end
       end
 
+
       #
       # Wrap Net::LDAP#open. Open as the given dn and process the block.
       #
@@ -56,6 +58,7 @@ module AccountManager
         end
       end
 
+
       #
       # Wrap Net::LDAP#open. Open as the given uid (calculate the bind DN using
       # the config file) and process the block.
@@ -65,6 +68,7 @@ module AccountManager
           yield ldap
         end
       end
+
 
       #
       # Wrap Net::LDAP#open, bind as admin, then execute the block in the
@@ -76,6 +80,7 @@ module AccountManager
           yield ldap
         end
       end
+
 
       #
       # Wrap open_as_admin {|ldap| ldap.search(filter: filter)} and perform
@@ -90,6 +95,7 @@ module AccountManager
         end
       end
 
+
       #
       # Calculate the bind DN using the config file and the supplied uid and
       # return it.
@@ -98,12 +104,6 @@ module AccountManager
         conf['bind_dn'] % uid
       end
 
-      #
-      # Get an LDAP friendly timestamp for right now
-      #
-      def get_timestamp
-        Time.now.strftime '%Y%m%d%H%M%SZ'
-      end
 
       #
       # If this is a production environment, default to SSHA for hashes.
@@ -113,12 +113,14 @@ module AccountManager
         App.environment == :production ? :ssha : :sha
       end
 
+
       #
       # Get a string of random POSIX crypt(3)-friendly salt characters
       #
       def new_salt(length=31)
         length.times.inject('') { |i| i << SALT[rand(SALT.length)] }
       end
+
 
       #
       # Return a hash of the given string. Supports SSHA and whatever
@@ -135,6 +137,7 @@ module AccountManager
         end
       end
 
+
       #
       # Verify input against hash. Input must be a valid RFC 2307 format password hash, such as 
       # {SHA}Pi6V9a2XDq36fhfq9z2pcCSqU1k=. Supported hash schemes are SSHA and
@@ -147,6 +150,26 @@ module AccountManager
 
         ssha_salt = Base64.decode64(hash.gsub(/^{.+}/, ''))[20..-1]
         hash(input, scheme, ssha_salt) == hash
+      end
+
+
+      #
+      # Get a timestamp of the current time in LDAP-friendly format
+      #
+      def new_timestamp
+        Time.now.strftime '%Y%m%d%H%M%SZ'
+      end
+
+
+      #
+      # Get user's account activation timestamp
+      #
+      def get_activation_timestamp(uid)
+        timestamp = nil
+        Directory.search "(uid=#{uid})" do |entry|
+          timestamp = entry[:ituseagreementacceptdate].first
+        end
+        timestamp
       end
 
       #
@@ -176,13 +199,13 @@ module AccountManager
         # Get a timestamp and record whether this is a temporary activation
         # (should it be deactivated if password change fails?)
         #
-        timestamp = get_timestamp
+        timestamp = new_timestamp
         temporary_activation = false
 
         #
         # Indicate that the account doesn't exist if it doesn't
         #
-        return :no_such_account if no_such_account uid
+        return :no_such_account if no_such_account? uid
 
         #
         # If this is a user (non-admin), temporarily activate an inactive
@@ -228,16 +251,18 @@ module AccountManager
         end
       end
 
+
       #
       # Return true if the account exists
       #
-      def no_such_account(uid)
+      def no_such_account?(uid)
         no_such_account = true
         search "(uid=#{uid})" do |ldap|
           no_such_account = false
         end unless uid == ''
         no_such_account
       end
+
 
       #
       # Return true if the user is activated
@@ -251,6 +276,7 @@ module AccountManager
         activated
       end
 
+
       #
       # Activate an account
       #
@@ -262,8 +288,9 @@ module AccountManager
             [:delete, :nsaccountlock, nil]
           ]
           ldap.modify dn: bind_dn(uid), operations: operations
-        end
+        end unless activated? uid
       end
+
 
       #
       # Deactivate the account
@@ -278,6 +305,7 @@ module AccountManager
           ldap.modify dn: bind_dn(uid), operations: operations
         end
       end
+
 
       #
       # Return true if the user can bind

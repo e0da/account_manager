@@ -49,7 +49,7 @@ end
 
 
 def stop_ladle
-  @ladle.kill
+  @ladle.stop
 end
 
 
