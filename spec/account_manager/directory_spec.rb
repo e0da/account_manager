@@ -1,11 +1,6 @@
 require 'spec_helper'
 require 'net-ldap'
 
-#
-# Most of the coverage for Directory is provided by account_manager, so I'm
-# just going to spec the parts that aren't being covered by that yet.
-#
-
 module AccountManager
 
   describe Directory do
