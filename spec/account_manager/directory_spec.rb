@@ -14,6 +14,8 @@ module AccountManager
     POTATO_BACON_SSHA = '{SSHA}0gnO5WpohpUGoltXZrjjlEYRSOhiYWNvbg=='
     POTATO_SHA = '{SHA}Pi6V9a2XDq36fhfq9z2pcCSqU1k='
     POTATO_MD5 = '{MD5}juICeYORXseKzEUCfYdDFg=='
+
+
     describe '.conf' do
       it 'loads the configuration' do
         Directory.conf['host'].should == 'localhost'
