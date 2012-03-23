@@ -8,14 +8,6 @@ module AccountManager
     before(:all) { start_ladle }
     after(:all)  { stop_ladle  }
 
-    #
-    # 'potato' salted with 'bacon', and 'potato' unsalted
-    #
-    POTATO_BACON_SSHA = '{SSHA}0gnO5WpohpUGoltXZrjjlEYRSOhiYWNvbg=='
-    POTATO_SHA = '{SHA}Pi6V9a2XDq36fhfq9z2pcCSqU1k='
-    POTATO_MD5 = '{MD5}juICeYORXseKzEUCfYdDFg=='
-
-
     describe '.conf' do
       it 'loads the configuration' do
         Directory.conf['host'].should == 'localhost'
@@ -127,11 +119,22 @@ module AccountManager
       end
 
       it 'creates a salt from the list of approved characters' do
+
+        # a salt of length (all possible salt chars).length^2 is very, very
+        # likely to contain at least one of every possible salt character.
+        #
         Directory.new_salt(Directory::SALT.length * Directory::SALT.length).split('').each do |c|
           Directory::SALT.should include c
         end
       end
     end
+
+    #
+    # 'potato' salted with 'bacon', and 'potato' unsalted
+    #
+    POTATO_BACON_SSHA = '{SSHA}0gnO5WpohpUGoltXZrjjlEYRSOhiYWNvbg=='
+    POTATO_SHA = '{SHA}Pi6V9a2XDq36fhfq9z2pcCSqU1k='
+    POTATO_MD5 = '{MD5}juICeYORXseKzEUCfYdDFg=='
 
     describe '.hash' do
       it 'creates a valid SSHA hash' do
