@@ -22,13 +22,17 @@ Capybara.app = AccountManager::App
 module Ladle
   class Server
     def kill
+      @ds_in.close # suppress broken pipe warning
       Process.kill 9, @process.pid
+    rescue NoMethodError # suppress @ds_in == nil warning
     end
   end
 end
 
 
-
+#
+# Start test LDAP server
+#
 def start_ladle
   ldif = File.expand_path "../../config/test.ldif", __FILE__
   jar = File.expand_path '../../support/gevirtz_schema/target/gevirtz-schema-1.0-SNAPSHOT.jar', __FILE__
@@ -43,13 +47,16 @@ def start_ladle
   @ladle = Ladle::Server.new(opts).start
 end
 
+
 def stop_ladle
   @ladle.kill
 end
 
+
 def bind_dn(uid)
   AccountManager::Directory.bind_dn uid
 end
+
 
 def submit_user_password_change_form(user)
   visit '/change_password'
