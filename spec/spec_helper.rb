@@ -16,21 +16,6 @@ Capybara.app = AccountManager::App
 
 
 #
-# Add a kill method to Ladle so we don't have to wait for the server to quit
-# cleanly. We start from scratch every time. Who cares how it exits?
-#
-module Ladle
-  class Server
-    def kill
-      @ds_in.close # suppress broken pipe warning
-      Process.kill 9, @process.pid
-    rescue NoMethodError # suppress @ds_in == nil warning
-    end
-  end
-end
-
-
-#
 # Start test LDAP server
 #
 def start_ladle
