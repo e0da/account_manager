@@ -1,8 +1,8 @@
 # Add lib to LOAD_PATH
-$: << '.' << 'lib'
+$: << '.'
 
 require 'sinatra'
-require 'account_manager'
+require 'app'
 
 map '/account' do
   run AccountManager::App

@@ -1,5 +1,3 @@
-$: << 'lib'
-
 require 'sinatra/base'
 require 'sinatra/reloader'
 require 'sinatra/flash'
@@ -7,9 +5,7 @@ require 'slim'
 require 'sass'
 require 'compass'
 require 'coffee-script'
-
-require 'account_manager/directory'
-require 'account_manager/models'
+require 'data_mapper'
 
 #
 # TODO documentation
@@ -26,6 +22,10 @@ module AccountManager
     end
 
     configure do
+      set :root, File.expand_path('../../..', __FILE__)
+        puts '#'*100
+      puts settings.root
+        puts '#'*100
       enable :sessions
       register Sinatra::Flash
       Slim::Engine.set_default_options pretty: true

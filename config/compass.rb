@@ -1,4 +1,4 @@
-require './account_manager'
+require './app'
 
 # Compass Configuration
 
