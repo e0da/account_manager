@@ -1,5 +1,13 @@
 require 'ladle'
 
+module Ladle
+  class Server
+    def kill
+      Process.kill 9, @process.pid
+    end
+  end
+end
+
 task ladle: 'ladle:start'
 namespace :ladle do
 
@@ -15,6 +23,7 @@ namespace :ladle do
       custom_schemas: 'edu.ucsb.education.account.GevirtzSchema'
     }
     @ladle = Ladle::Server.new(opts).start
+    trap('SIGINT') { @ladle.kill and exit }
     sleep
   end
 

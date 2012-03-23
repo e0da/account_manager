@@ -8,11 +8,24 @@ $: << '.'
 
 require 'account_manager'
 require 'capybara/rspec'
+require 'ladle'
 
 AccountManager::App.environment = :test
 
 Capybara.app = AccountManager::App
 
+
+#
+# Add a kill method to Ladle so we don't have to wait for the server to quit
+# cleanly. We start from scratch every time. Who cares how it exits?
+#
+module Ladle
+  class Server
+    def kill
+      Process.kill 9, @process.pid
+    end
+  end
+end
 
 
 
@@ -31,7 +44,7 @@ def start_ladle
 end
 
 def stop_ladle
-  @ladle.stop
+  @ladle.kill
 end
 
 def bind_dn(uid)
