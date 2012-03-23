@@ -15,6 +15,7 @@ namespace :ladle do
       custom_schemas: 'edu.ucsb.education.account.GevirtzSchema'
     }
     @ladle = Ladle::Server.new(opts).start
+    puts "(Ctrl-C to stop server)"
     sleep
   end
 
