@@ -260,6 +260,15 @@ module AccountManager
             new_password: 'beepbeep'
           ).should be :bind_failure
         end
+
+        it 'does not activate an inactive account when the user fails to bind' do
+          Directory.change_password(
+            uid: @uid='dd945',
+            old_password: 'wakkawakka',
+            new_password: 'beepbeep'
+          ).should be :bind_failure
+          Directory.activated?(@uid).should be false
+        end
       end
     end
 
