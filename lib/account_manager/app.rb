@@ -90,7 +90,6 @@ module AccountManager
     end
 
     get '/admin/reset' do
-      @action = '/admin/reset'
       slim :admin_reset
     end
 
@@ -115,6 +114,10 @@ module AccountManager
         flash[:error] = "Couldn't find that user in the directory"
       end
       redirect to '/admin/reset'
+    end
+
+    get '/reset' do
+      slim :reset
     end
 
     get '*' do

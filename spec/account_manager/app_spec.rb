@@ -65,6 +65,13 @@ module AccountManager
         end
       end
 
+      describe '/reset' do
+        it 'renders the password reset page' do
+          visit '/reset'
+          page.find('h2').text.should == 'Reset Your Password'
+        end
+      end
+
       describe 'any other route' do
         it 'redirects to /' do
           visit '/somewhere_totally_fake'
@@ -248,9 +255,7 @@ module AccountManager
           describe 'requests a reset token' do
 
             context 'when their account is activated' do
-              it 'deletes any existing reset tokens'
-              it 'creates a new reset token'
-              it 'emails the reset token to the user'
+              it 'emails a new reset token to the user'
             end
 
             context 'when their account is not activated' do
