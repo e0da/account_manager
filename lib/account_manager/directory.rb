@@ -162,14 +162,10 @@ module AccountManager
 
 
       #
-      # Get user's account activation timestamp
+      # Account activation timestamp
       #
-      def get_activation_timestamp(uid)
-        timestamp = nil
-        Directory.search "(uid=#{uid})" do |entry|
-          timestamp = entry[:ituseagreementacceptdate].first
-        end
-        timestamp
+      def activation_timestamp(uid)
+        first uid, :ituseagreementacceptdate
       end
 
       #
@@ -268,12 +264,9 @@ module AccountManager
       # Return true if the user is activated
       #
       def activated?(uid)
-        activated = false
-        search "(uid=#{uid})" do |entry|
-          activated = !entry[:ituseagreementacceptdate].first.match(/#{INACTIVE_VALUE}/)
-        end
-
-        activated
+        !activation_timestamp(uid).match(/#{INACTIVE_VALUE}/)
+      rescue NoMethodError # when there's no activation timestamp
+        false
       end
 
 
@@ -317,6 +310,35 @@ module AccountManager
           bound = ldap.bind
         end
         bound
+      end
+
+
+      #
+      # Return the user's first mail forwarding address.
+      #
+      def forwarding_address(uid)
+        first uid, :mailforwardingaddress
+      end
+
+
+      #
+      # Return the user's first mail address.
+      #
+      def mail(uid)
+        first uid, :mail
+      end
+
+      #
+      # Return the first value of the specified attribute for the specified
+      # uid.
+      #
+      def first(uid, attr)
+        ret = nil
+        search "(uid=#{uid})" do |entry|
+          ret = entry[attr].first
+        end
+
+        ret
       end
     end
   end

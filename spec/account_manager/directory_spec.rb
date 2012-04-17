@@ -170,7 +170,7 @@ module AccountManager
       end
     end
 
-    describe '.get_activation_timestamp' do
+    describe '.activation_timestamp' do
       it "gets the user's activation timestamp" do
         Directory.search "(uid=admin)" do |entry|
           entry[:ituseagreementacceptdate].should == ['20051129194040Z']
@@ -303,18 +303,18 @@ module AccountManager
 
       it 'does nothing to an active account' do
         uid = 'aa729'
-        timestamp = Directory.get_activation_timestamp(uid)
+        timestamp = Directory.activation_timestamp(uid)
         Directory.activated?(uid).should be true
         Directory.activate uid, Directory.new_timestamp
         Directory.activated?(uid).should be true
-        Directory.get_activation_timestamp(uid).should == timestamp
+        Directory.activation_timestamp(uid).should == timestamp
       end
     end
 
     describe '.deactivate' do
       it 'deactivates an active account' do
         uid = 'aa729'
-        timestamp = Directory.get_activation_timestamp(uid)
+        timestamp = Directory.activation_timestamp(uid)
         Directory.activated?(uid).should be true
         Directory.deactivate uid
         Directory.activated?(uid).should be false
@@ -336,6 +336,26 @@ module AccountManager
 
       it 'returns fallse if the credentials are incorrect' do
         Directory.can_bind?('admin', 'schmadmin').should be false
+      end
+    end
+
+    describe '.forwarding_address' do
+      it "returns the user's mail forwarding address" do
+        Directory.forwarding_address('admin').should be nil
+        Directory.forwarding_address('aa729').should == 'aa729@example.com'
+      end
+    end
+
+    describe '.mail' do
+      it "returns the user's mail address" do
+        Directory.mail('admin').should == 'admin@example.org'
+      end
+    end
+
+    describe '.first' do
+      it "returns the first value for the given attribute of the given uid" do
+        Directory.first('admin', 'mail').should == 'admin@example.org'
+        Directory.first('admin', 'mailforwardingaddress').should be nil
       end
     end
   end

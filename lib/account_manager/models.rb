@@ -24,8 +24,6 @@ module AccountManager
 
     def email
       mail_conf = conf['mail']
-      require 'pp'
-      pp mail_conf
       from = mail_conf['from']
       to = Directory.forwarding_address(@uid)
       account = Directory.mail(@uid)
