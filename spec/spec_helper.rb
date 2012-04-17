@@ -43,7 +43,7 @@ def bind_dn(uid)
 end
 
 
-def submit_user_password_change_form(user)
+def submit_change_password_form(user)
   visit '/change_password'
   fill_in 'Username', with: user[:uid]
   fill_in 'Password', with: user[:password]
@@ -61,6 +61,12 @@ def submit_admin_reset_form(data)
   fill_in 'New Password', with: data[:new_password]
   fill_in 'Verify New Password', with: data[:verify_password] || data[:new_password]
   click_on "Change User's Password"
+end
+
+def submit_reset_password_form(user)
+  visit '/reset'
+  fill_in 'Username', with: user
+  click_on 'Reset My Password'
 end
 
 def should_not_modify(uid)

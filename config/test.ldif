@@ -41,6 +41,7 @@ cn: Alexandra Adams
 sn: Adams
 givenName: Alexandra
 mail: alexandra@example.org
+mailforwardingaddress: aa729@example.com
 uid: aa729
 # Password is "smada"
 userpassword: {SHA}pGlmZX1VOEdHHb30HZezeVNFxGM=

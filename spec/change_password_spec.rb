@@ -17,7 +17,7 @@ module AccountManager
 
       before :all do
         @uid, @new_password = 'bb459', 'new_password'
-        submit_user_password_change_form(
+        submit_change_password_form(
           uid: @uid,
           password: 'niwdlab',
           new_password: @new_password
@@ -49,7 +49,7 @@ module AccountManager
 
       before :all do
         @uid, @new_password = 'cc414', 'new_password'
-        submit_user_password_change_form(
+        submit_change_password_form(
           uid: @uid,
           password: 'retneprac',
           new_password: @new_password
@@ -78,7 +78,7 @@ module AccountManager
     context 'when the account does not exist' do
 
       it 'reports failure' do
-        submit_user_password_change_form(
+        submit_change_password_form(
           uid: 'nobody',
           password: '',
           new_password: ''
@@ -91,7 +91,7 @@ module AccountManager
 
       before :all do
         @uid = 'aa729'
-        submit_user_password_change_form(
+        submit_change_password_form(
           uid: @uid,
           password: 'bad_password',
           new_password: 'new_password'
@@ -111,7 +111,7 @@ module AccountManager
 
       before :all do
         @uid = 'aa729'
-        submit_user_password_change_form(
+        submit_change_password_form(
           uid: @uid,
           password: 'smada',
           new_password: 'new_password',
@@ -132,7 +132,7 @@ module AccountManager
 
       before :all do
         @uid = 'aa729'
-        submit_user_password_change_form(
+        submit_change_password_form(
           uid: @uid,
           password: 'smada',
           new_password: 'new_password',
@@ -153,7 +153,7 @@ module AccountManager
 
       before :all do
         @uid = 'dd945'
-        submit_user_password_change_form(
+        submit_change_password_form(
           uid: @uid,
           password: 'bad_password',
           new_password: 'new_password',
