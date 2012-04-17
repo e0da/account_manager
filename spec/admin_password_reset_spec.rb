@@ -13,7 +13,6 @@ module AccountManager
       stop_ladle
     end
 
-
     describe 'success' do
 
       context 'when the account is activated' do
