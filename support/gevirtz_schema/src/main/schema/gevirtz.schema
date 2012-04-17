@@ -10,6 +10,7 @@
 #              | 1.3.6.1.4.1.18060.0.4.1.2.1002 | passwordchangedate       |
 #              | 1.3.6.1.4.1.18060.0.4.1.2.1003 | nsroledn                 |
 #              | 1.3.6.1.4.1.18060.0.4.1.2.1004 | nsaccountlock            |
+#              | 1.3.6.1.4.1.18060.0.4.1.2.1005 | mailforwardingaddress    |
 #              +--------------------------------+--------------------------+
 #
 #              +--------------------------------+--------------------------+
@@ -20,35 +21,41 @@
 #
 # =============================================================================
 
-attributetype ( 1.3.6.1.4.1.18060.0.4.1.2.1001 
-	NAME 'ituseagreementacceptdate' 
-	DESC 'ituseagreementacceptdate' 
-	SYNTAX 1.3.6.1.4.1.1466.115.121.1.24 
-	SINGLE-VALUE 
+attributetype ( 1.3.6.1.4.1.18060.0.4.1.2.1001
+	NAME 'ituseagreementacceptdate'
+	DESC 'ituseagreementacceptdate'
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.24
+	SINGLE-VALUE
  )
 
-attributetype ( 1.3.6.1.4.1.18060.0.4.1.2.1002 
-	NAME 'passwordchangedate' 
-	DESC 'Password reset TimeStamp' 
-	SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 
+attributetype ( 1.3.6.1.4.1.18060.0.4.1.2.1002
+	NAME 'passwordchangedate'
+	DESC 'Password reset TimeStamp'
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.15
  )
 
-attributetype ( 1.3.6.1.4.1.18060.0.4.1.2.1003 
+attributetype ( 1.3.6.1.4.1.18060.0.4.1.2.1003
   NAME 'nsroledn'
   DESC 'Sun ONE defined attribute type'
   SYNTAX 1.3.6.1.4.1.1466.115.121.1.12
  )
 
-attributetype ( 1.3.6.1.4.1.18060.0.4.1.2.1004 
+attributetype ( 1.3.6.1.4.1.18060.0.4.1.2.1004
   NAME 'nsaccountlock'
   DESC 'Operational attribute for Account Inactivation'
   SYNTAX 1.3.6.1.4.1.1466.115.121.1.15
  )
 
-objectclass ( 1.3.6.1.4.1.18060.0.4.1.3.1001 
-	NAME 'ggseperson' 
-	DESC 'ggseperson' 
+attributetype ( 1.3.6.1.4.1.18060.0.4.1.2.1005
+  NAME 'mailforwardingaddress'
+  DESC 'Mail forwarding address'
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.15
+ )
+
+objectclass ( 1.3.6.1.4.1.18060.0.4.1.3.1001
+	NAME 'ggseperson'
+	DESC 'ggseperson'
 	SUP person
-	STRUCTURAL 
-	MAY ( ituseagreementacceptdate $ passwordchangedate $ nsroledn $ nsaccountlock ) 
+	STRUCTURAL
+	MAY ( ituseagreementacceptdate $ passwordchangedate $ nsroledn $ nsaccountlock $ mailforwardingaddress )
  )
