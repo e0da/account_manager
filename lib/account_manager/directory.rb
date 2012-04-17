@@ -333,12 +333,12 @@ module AccountManager
       # uid.
       #
       def first(uid, attr)
-        ret = nil
+        first = nil
         search "(uid=#{uid})" do |entry|
-          ret = entry[attr].first
+          first = entry[attr].first
         end
 
-        ret
+        first
       end
     end
   end
