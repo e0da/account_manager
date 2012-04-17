@@ -168,6 +168,7 @@ module AccountManager
         first uid, :ituseagreementacceptdate
       end
 
+
       #
       # Verify that the account exists; verify that the username and password
       # match; activate the account if it isn't active; AS THE USER, set the
@@ -327,6 +328,7 @@ module AccountManager
       def mail(uid)
         first uid, :mail
       end
+
 
       #
       # Return the first value of the specified attribute for the specified

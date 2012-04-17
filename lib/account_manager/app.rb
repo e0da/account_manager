@@ -7,10 +7,6 @@ require 'compass'
 require 'coffee-script'
 require 'data_mapper'
 
-#
-# TODO documentation
-#
-
 module AccountManager
   class App < Sinatra::Base
 
@@ -18,7 +14,6 @@ module AccountManager
 
     configure :development do
       register Sinatra::Reloader
-      # DataMapper::Logger.new $stdout, :debug
     end
 
     configure do
