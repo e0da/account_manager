@@ -23,4 +23,5 @@ group :development, :test do
   gem 'launchy'
   gem 'libnotify'
   gem 'simplecov'
+  gem 'mailtrap', :git => 'https://github.com/justinforce/mailtrap'
 end

@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'mailtrap/log_parser'
 
 module AccountManager
 
@@ -23,8 +24,10 @@ module AccountManager
           @uid = 'aa729'
           submit_reset_password_form @uid
           Token.count.should be 1
-          # verify mail sent?
-          page.should have_content "Password reset instructions have been emailed to the forwarding address on file for #{@uid}."
+          # page.should have_content "Password reset instructions have been emailed to the forwarding address on file for #{@uid}."
+
+          require 'pp'
+          pp Mailtrap::LogParser.parse('/var/tmp/mailtrap.log')
         end
       end
 

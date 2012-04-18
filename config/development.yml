@@ -11,5 +11,5 @@ admin_password: admin
 
 mail:
   host: localhost
-  port: 25
+  port: 2525
   from: help@example.org
