@@ -63,3 +63,5 @@ module AccountManager
     end
   end
 end
+
+DataMapper.finalize # all models are defined

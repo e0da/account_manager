@@ -20,16 +20,21 @@ module AccountManager
       set :root, File.expand_path('../../..', __FILE__)
       enable :sessions
       register Sinatra::Flash
+
       Slim::Engine.set_default_options pretty: true
+
       Compass.configuration do |config|
         config.project_path = File.dirname(__FILE__)
         config.sass_dir = 'views'
       end
-
       set :sass, Compass.sass_engine_options
 
+      #
+      # Set up the database. It's ok to do it from scratch every time. Tokens
+      # only last 24 hours, and we don't care if we lose one when we restart
+      # the app. That's why we just auto_upgrade! every time.
+      #
       DataMapper.setup :default, "sqlite://#{File.expand_path '.'}/db/#{App.environment}.db"
-      DataMapper.finalize
       DataMapper.auto_upgrade!
     end
 
