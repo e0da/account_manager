@@ -256,7 +256,7 @@ module AccountManager
         it 'fails and returns :bind_failure when the user fails to bind' do
           Directory.change_password(
             uid: 'aa729',
-            old_password: 'wakkawakka',
+            old_password: 'nopenope',
             new_password: 'beepbeep'
           ).should be :bind_failure
         end
