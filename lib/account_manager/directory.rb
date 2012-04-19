@@ -177,7 +177,7 @@ module AccountManager
           #
           if result.message == 'Insufficient Access Rights'
             :not_admin
-          elsif !activated?(uid)
+          elsif deactivated?(uid)
             :success_inactive
           else
             :success
@@ -208,6 +208,14 @@ module AccountManager
         !activation_timestamp(uid).match(/#{INACTIVE_VALUE}/)
       rescue NoMethodError # when there's no activation timestamp
         false
+      end
+
+
+      #
+      # Return false if the user is activated
+      #
+      def deactivated?(uid)
+        !activated?(uid)
       end
 
 
