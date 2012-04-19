@@ -1,6 +1,5 @@
 require 'yaml'
 require 'net-ldap'
-require 'base64'
 
 module AccountManager
 
