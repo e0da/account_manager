@@ -106,54 +106,6 @@ module AccountManager
 
 
       #
-      # If this is a production environment, default to SSHA for hashes.
-      # Otherwise, default to SHA.
-      #
-      def default_hash_scheme
-        App.environment == :production ? :ssha : :sha
-      end
-
-
-      #
-      # Get a string of random POSIX crypt(3)-friendly salt characters
-      #
-      def new_salt(length=31)
-        length.times.inject('') { |i| i << SALT[rand(SALT.length)] }
-      end
-
-
-      #
-      # Return a hash of the given string. Supports SSHA and whatever
-      # Net::LDAP::Password supports. Default determined by
-      # self.default_hash_scheme. The hash is returned in the RFC 2307 format,
-      # e.g. {MD5}juICeYORXseKzEUCfYdDFg==
-      #
-      def hash(input, scheme=default_hash_scheme, ssha_salt=new_salt)
-        case scheme
-        when :ssha
-          '{SSHA}'+Base64.encode64(Digest::SHA1.digest(input + ssha_salt) + ssha_salt).chomp
-        else
-          Net::LDAP::Password.generate scheme, input
-        end
-      end
-
-
-      #
-      # Verify input against hash. Input must be a valid RFC 2307 format password hash, such as 
-      # {SHA}Pi6V9a2XDq36fhfq9z2pcCSqU1k=. Supported hash schemes are SSHA and
-      # whatever Net::LDAP::Password supports.
-      #
-      def verify_hash(input, hash)
-        hash.match /^{(.+)}/
-        raise "Malformed hash. Need {SHA} or something at the beginning" unless $1
-        scheme = $1.downcase.to_sym
-
-        ssha_salt = Base64.decode64(hash.gsub(/^{.+}/, ''))[20..-1]
-        hash(input, scheme, ssha_salt) == hash
-      end
-
-
-      #
       # Get a timestamp of the current time in LDAP-friendly format
       #
       def new_timestamp
