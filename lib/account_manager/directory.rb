@@ -274,7 +274,7 @@ module AccountManager
       #
       # Activate an account
       #
-      def activate(uid, timestamp)
+      def activate(uid, timestamp=new_timestamp)
         open_as_admin do |ldap|
           operations = [
             [:replace, :ituseagreementacceptdate, timestamp],
