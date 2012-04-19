@@ -9,10 +9,6 @@ module AccountManager
   #
   class Directory
 
-    #
-    # POSIX crypt(3) characters
-    #
-    SALT = [*'a'..'z', *'A'..'Z', *'0'..'9', '.', '/']
 
     #
     # Strings used in account activation
