@@ -222,7 +222,7 @@ module AccountManager
           result = nil
           outcome = open_as bind_uid, password do |ldap|
             operations = [
-              [:replace, :userpassword, hash(new_password)],
+              [:replace, :userpassword, new_password],
               [:replace, :passwordchangedate, timestamp]
             ]
             ldap.modify dn: bind_dn(uid), operations: operations
