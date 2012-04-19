@@ -128,7 +128,6 @@ module AccountManager
       #
       def change_password(args)
 
-        #
         # Assign arguments
         #
         uid            = args[:uid]
@@ -137,25 +136,21 @@ module AccountManager
         admin          = args[:admin]
         admin_password = args[:admin_password]
 
-        #
         # Figure out if this is an admin reset and set the bind credentials
         #
         bind_uid = admin || uid
         password = admin_password || old_password
 
-        #
         # Get a timestamp and record whether this is a temporary activation
         # (should it be deactivated if password change fails?)
         #
         timestamp = new_timestamp
         temporary_activation = false
 
-        #
         # Indicate that the account doesn't exist if it doesn't
         #
         return :no_such_account if no_such_account? uid
 
-        #
         # If this is a user (non-admin), temporarily activate an inactive
         # account so they can perform the password change themselves.
         #
@@ -164,7 +159,6 @@ module AccountManager
           temporary_activation = true
         end
 
-        #
         # If the user or admin can bind successfully, perform the password
         # change. If they can't, deactivate any temporary activations and
         # indicate a bind failure.
@@ -180,7 +174,6 @@ module AccountManager
             result = ldap.get_operation_result
           end
 
-          #
           # If we got an LDAP Insufficient Access Rights error, the admin user
           # doesn't have the rights to perform this action. If the account
           # isn't activated, we indicate that the password changed but the
