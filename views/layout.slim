@@ -5,12 +5,25 @@ html
     link href==uri('/stylesheets/screen.css') media='screen, projection' rel='stylesheet' type='text/css'
     /[if IE]
       link href==uri('/stylesheets/ie.css') media='screen, projection' rel='stylesheet' type='text/css'
+    script src='//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js'
 
-  body.blueprint
-    header
-      h1 Manage Your Gevirtz Account
-      nav
-    #content
-      == yield
-    footer
+  body
+    .container
+      .header
+        h1 Manage Your Gevirtz Account
+      .nav
+        ul
+          li
+            a href==url('/change_password') Change Password
+          li
+            a href==url('/reset') Reset Password
+          li
+            | More
+            ul
+              li
+                a href==url('/admin/reset') Adminstrator Reset Password
+
+      .content
+        == yield
+      .footer
     script src==url('/app.js')
