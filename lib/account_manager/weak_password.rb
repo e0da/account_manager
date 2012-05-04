@@ -30,4 +30,8 @@ class ::String
   def weak_password?
     length < 8 || weighted_entropy < 25
   end
+
+  def strong_password?
+    !weak_password?
+  end
 end

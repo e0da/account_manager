@@ -6,6 +6,10 @@ describe ::String do
     ::String.method_defined?(:weak_password?).should be true
   end
 
+  it 'has a strong_password? method' do
+    ::String.method_defined?(:strong_password?).should be true
+  end
+
   describe '#weak_password?' do
     {
       'aaaaaaaa'            => [ 4+(2*7),              true  ],
