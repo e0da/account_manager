@@ -48,14 +48,19 @@ module AccountManager
       alias to uri
     end
 
+    #
+    # routes
+    #
     get '/app.js' do
       headers 'Content-Type' => 'text/javascript;charset=utf-8'
       coffee :app
     end
 
-    #
-    # routes
-    #
+    get '/password_strength/:password' do
+      headers 'Content-Type' => 'application/json;charset=utf-8'
+      params[:password].strong_password? ? '1' : '0'
+    end
+
     get '/' do
       redirect to DEFAULT_ROUTE
     end

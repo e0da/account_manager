@@ -25,6 +25,18 @@ module AccountManager
       end
     end
 
+    describe '/password_strength' do
+      it 'redirects if no argument is supplied' do
+        visit '/password_strength'
+        page.current_path.should == App::DEFAULT_ROUTE
+      end
+
+      it 'retrieves JSON' do
+        visit '/password_strength/moop'
+        page.response_headers['Content-Type'].should match %r[application/json;\s?charset=utf-8]
+      end
+    end
+
     describe '/change_password' do
       it 'should render the Change Password template' do
         visit '/change_password'
