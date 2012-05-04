@@ -76,6 +76,11 @@ module AccountManager
         redirect to '/change_password'
       end
 
+      if params[:new_password].weak_password?
+        flash[:error] = 'Your new password is too weak'
+        redirect to '/change_password'
+      end
+
       case Directory.change_password(params)
       when :success
         flash[:notice] = 'Your password has been changed'

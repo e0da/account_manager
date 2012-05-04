@@ -16,7 +16,7 @@ module AccountManager
     context 'when their account is already activated' do
 
       before :all do
-        @uid, @new_password = 'bb459', 'new_password'
+        @uid, @new_password = 'bb459', 'Strong Enough!'
         submit_change_password_form(
           uid: @uid,
           password: 'niwdlab',
@@ -81,7 +81,7 @@ module AccountManager
         submit_change_password_form(
           uid: 'nobody',
           password: '',
-          new_password: ''
+          new_password: 'Strong Enough!'
         )
         page.should have_content 'Your username or password was incorrect'
       end
@@ -166,6 +166,46 @@ module AccountManager
 
       it 'does not modify the user' do
         should_not_modify @uid
+      end
+    end
+
+    context 'when their password is weak' do
+
+      before :all do
+        @uid = 'hh153'
+        submit_change_password_form(
+          uid: @uid,
+          password: 'dleiftah',
+          new_password: 'weak'
+        )
+      end
+
+      it 'reports failure' do
+        page.should have_content 'Your new password is too weak'
+      end
+
+      it 'does not modify the user' do
+        should_not_modify @uid
+      end
+    end
+
+    context 'when their password is strong' do
+
+      before :all do
+        @uid, @new_password = 'ii711', 'Strong Pa55word!'
+        submit_change_password_form(
+          uid: @uid,
+          password: 'margni',
+          new_password: @new_password
+        )
+      end
+
+      it 'reports success' do
+        page.should have_content 'Your password has been changed'
+      end
+
+      it 'changes the password' do
+        Directory.can_bind?(@uid, @new_password).should be true
       end
     end
   end
