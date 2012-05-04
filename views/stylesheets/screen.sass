@@ -8,13 +8,15 @@ body
 
 .container
   +container
-  width: $blueprint-container-size
   margin: auto
   
 .header, .footer
   +column(12, last)
   +prepend(4)
   text-align: center
+
+.header
+  padding-top: 1.5em
 
 .nav
   +column(4)
@@ -26,9 +28,9 @@ body
   +column(11, last)
   +clearfix
   +prepend(1)
-  background: white
+  @include gradient-bg(#f0f0f0, darken(white, 10%))
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5)
   border-radius: 5px
-  box-shadow: inset 0 0 5px rgba(0, 0, 0, 1)
 
 label
   display: block
@@ -38,78 +40,62 @@ label
   line-height: 1.1em
   margin-top: 1.5em
 
-
-
-
-
 input
   display: block
   clear: left
+  &[type=text], &[type=password]
+    border: 0
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.5)
 
-.header
-  padding-top: 1.5em
+    // must be offset in fieldset
+    padding: 0.5em
+    font-size: 1.5em
+    &:focus
+      box-shadow: inset 0 1px 5px #3366cc
+      outline: none
+  &[type=checkbox]
+    line-height: 1.1em
+    vertical-align: middle
+    margin-top: 0
+    margin-right: 0.5em
+    margin-left: 0
+
+button[type=submit]
+  $submit_color: #58c830
+  cursor: pointer
+  margin-top: 2em
+  float: right
+  font-size: 1.2em
+  margin-right: -2em
+  padding: 0.5em
+  color: white
+  font-weight: bold
+  border: 1px outset darken($submit_color, 10%)
+    radius: 2px
+  text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.4)
+  @include no-user-select
+  @include grad($submit_color)
+  &:hover
+    @include grad(lighten($submit_color, 5%))
+  &:active
+    @include grad(darken($submit_color, 5%))
+
+
 
 h1, h2
   text-align: center
+
+h1
   color: #eeeeee
   text-shadow: 0 0 5px rgba(0, 0, 0, 0.5)
 
-.content
-  @include gradient-bg(#f0f0f0, darken(white, 10%))
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5)
-  border-radius: 5px
-
 form
-  +column(10, true)
+  +column(6, true)
+  +prepend(2)
+  +append(2)
 
-// fieldset {
-//   margin: auto;
-//   width: 80%;
-//   border: none;
-//   padding-right: 1em; /* offset padding in inputs by doubling it */}
-
-// fieldset hr {
-//   border: 0;
-//   color: #666;
-//   background-color: #999;
-//   height: 1px;
-//   margin: 3em 0;
-//   margin-right: -1.5em;
-// }
-
-// input {
-//   &[type=text], &[type=password] {
-//     display: block;
-//     width: 100%;
-//     border: 0;
-//     box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.5);
-//     padding: 0.5em; // must be offset in fieldset
-//     font-size: 1.5em;
-//     &:focus {
-//       box-shadow: inset 0 1px 5px #3366cc;
-//       outline: none; } }
-//   &[type=checkbox] {
-//     line-height: 1.1em;
-//     vertical-align: middle;
-//     margin-top: 0;
-//     margin-right: 0.5em;
-//     margin-left: 0; } }
-
-// button[type=submit] {
-//   cursor: pointer;
-//   margin-top: 2em;
-//   float: right;
-//   font-size: 1.2em;
-//   margin-right: -2em;
-//   padding: 0.5em;
-//   color: white;
-//   font-weight: bold;
-//   border: 1px outset darken($submit_color, 10%) {
-//     radius: 2px; };
-//   text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.4);
-//   @include no-user-select;
-//   @include grad($submit_color);
-//   &:hover {
-//     @include grad(lighten($submit_color, 5%)); }
-//   &:active {
-//     @include grad(darken($submit_color, 5%)); } }
+hr
+  border: 0
+  color: #666
+  background-color: #999
+  height: 1px
