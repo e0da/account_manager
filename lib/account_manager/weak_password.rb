@@ -1,6 +1,7 @@
 class ::String
 
   def weighted_entropy
+
     #
     # This is based in part on NIST Special Publication 800-63, but we're going
     # to skip the dictionary part. This doesn't hurt us since it's just a bonus
@@ -27,6 +28,6 @@ class ::String
   end
 
   def weak_password?
-    weighted_entropy < 25
+    length < 8 || weighted_entropy < 25
   end
 end
