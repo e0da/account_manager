@@ -180,6 +180,11 @@ ituseagreementacceptdate: activation required
 nsroledn: cn=nsmanageddisabledrole,o=education.ucsb.edu
 nsaccountlock: true
 
+#
+# hh153: weak password test
+#         - The account is already activated
+#         - The test will fail to change the password
+#
 dn: uid=hh153,ou=people,dc=example,dc=org
 objectClass: top
 objectClass: person
@@ -197,6 +202,11 @@ ituseagreementacceptdate: activation required
 nsroledn: cn=nsmanageddisabledrole,o=education.ucsb.edu
 nsaccountlock: true
 
+#
+# ii711: strong password test
+#         - The account is already activated
+#         - The test will change the password
+#
 dn: uid=ii711,ou=people,dc=example,dc=org
 objectClass: top
 objectClass: person
