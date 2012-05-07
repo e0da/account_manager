@@ -8,47 +8,61 @@ body
 
 .container
   +container
-  margin: auto
+  margin: span(1) auto
+  // +showgrid
   
 .header, .footer
-  +column(12, last)
-  +prepend(4)
-  text-align: center
+  +column(10, true)
+  +prepend(3)
+  +append(3)
+  +last
 
-.header
-  padding-top: 1.5em
 
 .nav
-  +column(4)
+  +column(3)
   text-align: right
+  padding-top: span(1)
+
   ul
     list-style: none
+    color: white
+    margin-right: 0
+
+  a
+    color: white
+    text-decoration: none
+
 
 .content
-  +column(11, last)
-  +clearfix
+  +column(9, true)
   +prepend(1)
+  +clearfix
+  margin-bottom: span(1)
+  background: white
   @include gradient-bg(#f0f0f0, darken(white, 10%))
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.5)
   border-radius: 5px
+  // +showgrid
 
 label
   display: block
   clear: right
   font-weight: bold
-  font-size: 1.1em
-  line-height: 1.1em
-  margin-top: 1.5em
+  font-size: 1.2em
+  line-height: 1.2em
+  margin-top: span(1)
 
 input
   display: block
   clear: left
+  margin: 0
   &[type=text], &[type=password]
     border: 0
     box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.5)
+    width: span(5)
 
     // must be offset in fieldset
-    padding: 0.5em
+    padding: 10px
     font-size: 1.5em
     &:focus
       box-shadow: inset 0 1px 5px #3366cc
@@ -56,17 +70,14 @@ input
   &[type=checkbox]
     line-height: 1.1em
     vertical-align: middle
-    margin-top: 0
-    margin-right: 0.5em
-    margin-left: 0
 
 button[type=submit]
   $submit_color: #58c830
+  +column(4)
+  +prepend(2)
+  margin-top: span(1)
   cursor: pointer
-  margin-top: 2em
-  float: right
   font-size: 1.2em
-  margin-right: -2em
   padding: 0.5em
   color: white
   font-weight: bold
@@ -81,18 +92,25 @@ button[type=submit]
     @include grad(darken($submit_color, 5%))
 
 
+input[type=checkbox]
+  +pull(1/2)
+
+label[for=agree]
+  padding-top: span(1)
+  +push(1/2)
+
 
 h1, h2
+  line-height: 1em
+  color: #eeeeee
+  text-shadow: 0 0 5px rgba(0, 0, 0, 0.5)
   text-align: center
 
 h1
-  color: #eeeeee
-  text-shadow: 0 0 5px rgba(0, 0, 0, 0.5)
+  font-size: 3em
 
-form
-  +column(6, true)
-  +prepend(2)
-  +append(2)
+h2
+  font-size: 2em
 
 hr
   border: 0

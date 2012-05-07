@@ -66,6 +66,7 @@ module AccountManager
     end
 
     get '/change_password' do
+      @title = 'Change Your Password'
       slim :change_password
     end
 
@@ -100,6 +101,7 @@ module AccountManager
     end
 
     get '/admin/reset' do
+      @title = 'Administrator Reset Password'
       slim :admin_reset
     end
 
@@ -127,6 +129,7 @@ module AccountManager
     end
 
     get '/reset' do
+      @title = 'Reset Your Password'
       slim :reset
     end
 
