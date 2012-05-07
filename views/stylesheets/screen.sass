@@ -9,7 +9,6 @@ body
 .container
   +container
   margin: span(1) auto
-  // +showgrid
   
 .header, .footer
   +column(10, true)
@@ -34,36 +33,40 @@ body
 
 
 .content
+  +container
   +column(9, true)
   +prepend(1)
-  +clearfix
+  padding: span(1)
   margin-bottom: span(1)
   background: white
   @include gradient-bg(#f0f0f0, darken(white, 10%))
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.5)
   border-radius: 5px
-  // +showgrid
+
+fieldset
+  +column(6)
 
 label
   display: block
   clear: right
   font-weight: bold
-  font-size: 1.2em
-  line-height: 1.2em
-  margin-top: span(1)
+  font-size: 1.1em
+  line-height: 1.1em
 
 input
   display: block
+  +box-sizing(border-box)
   clear: left
   margin: 0
+  margin-bottom: span(3/4)
   &[type=text], &[type=password]
     border: 0
     box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.5)
-    width: span(5)
+    width: 100%
 
     // must be offset in fieldset
-    padding: 10px
-    font-size: 1.5em
+    padding: 7px 5px
+    font-size: 1em
     &:focus
       box-shadow: inset 0 1px 5px #3366cc
       outline: none
@@ -72,9 +75,12 @@ input
     vertical-align: middle
 
 button[type=submit]
+  clear: both
+  float: right
+  display: block
   $submit_color: #58c830
-  +column(4)
-  +prepend(2)
+  width: span(4)
+  margin-left: span(1)
   margin-top: span(1)
   cursor: pointer
   font-size: 1.2em
@@ -91,14 +97,9 @@ button[type=submit]
   &:active
     @include grad(darken($submit_color, 5%))
 
-
-input[type=checkbox]
-  +pull(1/2)
-
-label[for=agree]
-  padding-top: span(1)
-  +push(1/2)
-
+#agree
+  float: left
+  margin-right: 1em
 
 h1, h2
   line-height: 1em
