@@ -7,7 +7,7 @@ error = (msg) ->
   flash = $('.flash.error')
   if flash.length == 0
     flash = $('<div id=flash><ul class="flash error"></ul></div>').find('.flash.error') if flash.length == 0
-    $('#content').prepend flash
+    form.prepend flash
   flash.append $("<li>#{msg}</li>")
 
 validate_form = ->
@@ -31,7 +31,7 @@ validate_form = ->
 
 $ ->
   $('#nav ul ul').hide()
-  $('#nav .more').click ->
+  $('#nav .more').text('...').click ->
     $('#nav ul ul').toggle()
 
   form = $('form')
