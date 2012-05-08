@@ -56,8 +56,9 @@ module AccountManager
       coffee :app
     end
 
-    get '/password_strength/:password' do
+    get '/password_strength/:password?' do
       headers 'Content-Type' => 'application/json;charset=utf-8'
+      params[:password] ||= ''
       params[:password].strong_password? ? '1' : '0'
     end
 
