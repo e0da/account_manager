@@ -54,7 +54,7 @@ $ ->
 
   new_password.keyup (e) ->
     $.getJSON "password_strength/#{new_password.val()}", (strong) ->
-      desc = if strong then 'strong' else 'weak'
-      color = if strong then '#0c0' else '#c00'
+      desc = if strong then 'strong!' else 'weak :('
+      color = if strong then '#4FB32B' else '#f00'
       $('#password_feedback').text(desc).css(color: color)
       new_password.data 'strong', (if strong then true else false)
