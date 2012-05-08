@@ -6,18 +6,19 @@ body
     repeat: no-repeat
     attachment: fixed
 
-.container
+#container
   +container
   margin: 20px auto
   
-.header, .footer
+#header, #footer
   +column(10, true)
   +prepend(3)
   +append(3)
   +last
 
 
-.nav
+#nav
+  +no-user-select
   +column(3)
   text-align: right
   padding-top: span(1)
@@ -33,7 +34,7 @@ body
     color: white
     text-decoration: none
 
-.content
+#content
   +container
   +column(9, true)
   +prepend(1)
@@ -76,11 +77,12 @@ input
     line-height: 13px
     vertical-align: middle
 
-button[type=submit]
+$submit_color: #58c830
+
+button
   clear: both
   display: block
   width: 100%
-  $submit_color: #58c830
   cursor: pointer
   font-size: 14px
   padding: 10px
@@ -95,6 +97,15 @@ button[type=submit]
     @include grad(lighten($submit_color, 5%))
   &:active
     @include grad(darken($submit_color, 5%))
+
+button.disabled
+  color: #aaa
+  @include grad(desaturate($submit_color, 80%))
+  border: 1px outset desaturate(darken($submit_color, 5%), 100%)
+  &:hover
+    @include grad(desaturate($submit_color, 80%))
+  &:active
+    @include grad(desaturate($submit_color, 80%))
 
 #agree
   float: left
@@ -121,7 +132,9 @@ hr
 .flash
   padding: 1em
   border-radius: 5px
-  list-style: none
+
+.flash li
+  margin-left: 2em
 
 .flash.error
   border: 1px solid #c00
@@ -132,3 +145,11 @@ hr
   border: 1px solid #0c0
   background: #efe
   color: #0c0
+
+#new_password
+  padding-right: 4em
+
+#password_feedback
+  float: right
+  margin: -4em 1em
+  font-weight: bold

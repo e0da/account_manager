@@ -8,11 +8,11 @@ html
     script src='//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js'
 
   body
-    .container
-      .header
+    #container
+      #header
         h1 Manage Your Gevirtz Account
         h2 ==@title
-      .nav
+      #nav
         ul
           li
             a href==url('/change_password') Change Password
@@ -24,7 +24,7 @@ html
               li
                 a href==url('/admin/reset') Admin Reset
 
-      .content
+      #content
         == yield
-      .footer
+      #footer
     script src==url('/app.js')

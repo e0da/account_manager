@@ -1,64 +1,60 @@
-complain = (msg) ->
-  flash 'error', msg
+form = null
+new_password = null
+validation = false
+flash = null
 
-flash = (type, msg) ->
-  list = $('#flash ul')
-  if list.length == 0
-    list = $("<ul class=\"flash #{type}\">")
-    div = $('<div id=flash>')
-    div.append(list)
-    $('.content').prepend(div)
-
-  list.append $("<li>#{msg}</li>")
-
-remove_flash = ->
-  $('#flash').remove()
-
-check_password_strength = ->
-  $.getJSON "password_strength/#{$('#new_password').val()}", (data) ->
-    form = $('form')
-    if data == 1 then form.trigger 'weak_password' else form.trigger 'strong_password'
-
-blanks = ->
-  has_blanks = false
-  has_blanks = true for f in $('input:text[value=""], input:password[value=""]')
-  has_blanks
+error = (msg) ->
+  flash = $('.flash.error')
+  if flash.length == 0
+    flash = $('<div id=flash><ul class="flash error"></ul></div>').find('.flash.error') if flash.length == 0
+    $('#content').prepend flash
+  flash.append $("<li>#{msg}</li>")
 
 validate_form = ->
-  remove_flash()
-  form = $('form')
-  form.trigger 'blank_fields' if blanks()
-  form.trigger 'agree_not_checked' if $('#agree:checked').length == 0
-  form.trigger 'password_mismatch' if $('#new_password').val() != $('#verify_password').val()
-  check_password_strength()
-  form.submit() unless $('#flash').length > 0
 
-bind_form_validations = ->
+  flash.remove() if flash
+  valid = true
+  if $(':text[value=""], :password[value=""]').length > 0
+    valid = false
+    error 'You must fill every field.'
+  if $('#agree').length == 1 and $('#agree:checked').length == 0
+    valid = false
+    error 'You must agree to the terms and conditions.'
+  if $('#new_password').val() != $('#verify_password').val()
+    valid = false
+    error 'Your new passwords do not match.'
+  if new_password.length > 0 and !new_password.data('strong')
+    valid = false
+    error 'Your new password is too weak.'
 
-  $('form').bind 'blank_fields', (e) ->
-    complain 'All fields are required'
-
-  $('form').bind 'agree_not_checked', (e) ->
-    complain 'You must agree to the terms and conditions'
-
-  $('form').bind 'password_mismatch', (e) ->
-    complain 'Your new passwords do not match'
-
-  $('form').bind 'weak_password', (e) ->
-    complain 'Your new password is too weak'
-
-  $('form').bind 'strong_password', (e) ->
-    
-
-  $('button[type=submit]').attr('disabled', 'disabled').click (e) ->
-    e.preventDefault()
-    validate_form()
-
-hide_admin_in_nav = ->
-  $('.nav ul ul').hide()
-  $('.nav .more').text('...').click ->
-    $('.nav ul ul').toggle()
+  form.data('valid', valid)
 
 $ ->
-  hide_admin_in_nav()
-  bind_form_validations()
+  $('#nav ul ul').hide()
+  $('#nav .more').click ->
+    $('#nav ul ul').toggle()
+
+  form = $('form')
+  new_password = $('#new_password')
+  form.submit (e) ->
+    validation = true
+    validate_form()
+    if form.data 'valid'
+      form.submit()
+    else
+      e.preventDefault()
+
+  form.bind 'keyup mouseup', (e) ->
+    validate_form() if validation
+
+  # handle this separately
+  $('#agree').click ->
+    validation = true
+    validate_form()
+
+  new_password.keyup (e) ->
+    $.getJSON "password_strength/#{new_password.val()}", (strong) ->
+      desc = if strong then 'strong' else 'weak'
+      color = if strong then '#0c0' else '#c00'
+      $('#password_feedback').text(desc).css(color: color)
+      new_password.data 'strong', (if strong then true else false)
