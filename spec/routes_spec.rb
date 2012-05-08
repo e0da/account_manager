@@ -54,7 +54,7 @@ module AccountManager
     describe '/admin/reset' do
       it 'renders the admin reset page' do
         visit '/admin/reset'
-        page.find('h2').text.should == "Administrators: Reset a User's Password"
+        page.find('h2').text.should == "Administrator: Reset a User's Password"
       end
     end
 

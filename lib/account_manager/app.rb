@@ -101,7 +101,7 @@ module AccountManager
     end
 
     get '/admin/reset' do
-      @title = 'Administrator Reset Password'
+      @title = "Administrator: Reset a User's Password"
       slim :admin_reset
     end
 
