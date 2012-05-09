@@ -7,7 +7,7 @@ error = (msg) ->
   flash = $('.flash.error')
   if flash.length == 0
     flash = $('<div id=flash><ul class="flash error"></ul></div>').find('.flash.error') if flash.length == 0
-    form.prepend flash
+    $('#help').append flash
   flash.append $("<li>#{msg}</li>")
 
 validate_form = ->
@@ -56,5 +56,17 @@ $ ->
     $.getJSON "password_strength/#{new_password.val()}", (strong) ->
       desc = if strong then 'strong!' else 'weak :('
       color = if strong then '#4FB32B' else '#f00'
+      console.log $('#password_feedback')
       $('#password_feedback').text(desc).css(color: color)
       new_password.data 'strong', (if strong then true else false)
+
+  # keep #help and the form the same height
+  $(window).resize ->
+    max = 0
+    console.log max
+    $('form, #help').each ->
+      max = Math.max max, $(this).height()
+    $('form, #help').height max
+    console.log max
+
+  $(window).resize()

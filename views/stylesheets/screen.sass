@@ -43,6 +43,9 @@ body
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.5)
   border-radius: 5px
 
+h2
+  text-align: center
+
 form
   +prepend(1)
   +column(10)
@@ -112,7 +115,7 @@ button.disabled
   float: left
   margin-right: 7px
 
-h1, h2
+h1
   color: #eeeeee
   text-shadow: 0 0 5px rgba(0, 0, 0, 0.5)
   text-align: center
@@ -132,6 +135,7 @@ hr
   cursor: pointer
 
 .flash
+  margin: 3em 1em
   padding: 1em
   border-radius: 5px
 
@@ -164,5 +168,11 @@ hr
   border: 1px solid #ddd
   padding: 1em
 
-#help li
-  margin-left: 1em
+  h3
+    border-bottom: 1px solid #ddd
+
+  li
+    margin-left: 1em
+
+  h4
+    margin-bottom: 0.25em

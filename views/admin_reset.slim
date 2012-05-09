@@ -1,4 +1,8 @@
 form method='post' action="#{uri '/admin/reset'}"
+  h2
+    | Administrator:
+    br
+    | Reset a User's Password
   fieldset
     == styled_flash
 
@@ -20,9 +24,15 @@ form method='post' action="#{uri '/admin/reset'}"
       | New Password
       input type='password' id='new_password' name='new_password'
 
+    #password_feedback
+
     label for='verify_password'
       | Verify New Password
       input type='password' id='verify_password' name='verify_password'
 
     button type='submit' name='submit'
       | Change User's Password
+
+#help
+  h3 Help
+  h4 Problems
