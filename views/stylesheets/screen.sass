@@ -6,6 +6,11 @@ body
     repeat: no-repeat
     attachment: fixed
 
+a
+  color: #69c
+  text-decoration: none
+  font-weight: bold
+
 #container
   +container
   margin: 20px auto
@@ -128,14 +133,16 @@ hr
   margin: 40px 0
 
 #flash
-  +container
   margin: 0 0 2em
 
 .more
   cursor: pointer
 
+#problems
+  color: #c00
+  border-bottom: 1px solid #c00
+
 .flash
-  margin: 3em 1em
   padding: 1em
   border-radius: 5px
 
@@ -148,9 +155,9 @@ hr
   color: #c00
 
 .flash.notice
-  border: 1px solid #0c0
+  border: 1px solid #070
   background: #efe
-  color: #0c0
+  color: #070
 
 #new_password
   padding-right: 4em
@@ -175,4 +182,4 @@ hr
     margin-left: 1em
 
   h4
-    margin-bottom: 0.25em
+    margin: 1em 0

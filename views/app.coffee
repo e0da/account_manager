@@ -9,10 +9,14 @@ error = (msg) ->
     flash = $('<div id=flash><ul class="flash error"></ul></div>').find('.flash.error') if flash.length == 0
     $('#help').append flash
   flash.append $("<li>#{msg}</li>")
+  $('#problems').show()
+  $(window).resize() # in case the size of the container changed
 
 validate_form = ->
 
   flash.remove() if flash
+  $('#problems').hide()
+
   valid = true
   if $(':text[value=""], :password[value=""]').length > 0
     valid = false
@@ -30,6 +34,7 @@ validate_form = ->
   form.data('valid', valid)
 
 $ ->
+  $('#problems').hide()
   $('#nav ul ul').hide()
   $('#nav .more').text('...').click ->
     $('#nav ul ul').toggle()
