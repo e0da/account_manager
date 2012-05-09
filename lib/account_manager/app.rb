@@ -56,10 +56,10 @@ module AccountManager
       coffee :app
     end
 
-    get '/password_strength/:password?' do
-      headers 'Content-Type' => 'application/json;charset=utf-8'
+    post '/password_strength' do
+      headers 'Content-Type' => 'text/plain;charset=utf-8'
       params[:password] ||= ''
-      params[:password].strong_password? ? '1' : '0'
+      unescape(params[:password]).strong_password? ? '1' : '0'
     end
 
     get '/' do

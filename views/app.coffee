@@ -58,20 +58,18 @@ $ ->
     validate_form()
 
   new_password.keyup (e) ->
-    $.getJSON "password_strength/#{new_password.val()}", (strong) ->
+    $.post 'password_strength', {password: new_password.val()}, (strong) ->
+      strong = parseInt(strong)
       desc = if strong then 'strong!' else 'weak :('
       color = if strong then '#4FB32B' else '#f00'
-      console.log $('#password_feedback')
       $('#password_feedback').text(desc).css(color: color)
       new_password.data 'strong', (if strong then true else false)
 
   # keep #help and the form the same height
   $(window).resize ->
     max = 0
-    console.log max
     $('form, #help').each ->
       max = Math.max max, $(this).height()
     $('form, #help').height max
-    console.log max
 
   $(window).resize()

@@ -25,15 +25,10 @@ module AccountManager
       end
     end
 
-    describe '/password_strength' do
-      it 'redirects if no argument is supplied' do
-        visit '/password_strength'
-        page.current_path.should == App::DEFAULT_ROUTE
-      end
-
-      it 'retrieves JSON' do
-        visit '/password_strength/moop'
-        page.response_headers['Content-Type'].should match %r[application/json;\s?charset=utf-8]
+    describe 'POST /password_strength' do
+      it 'retrieves plain text' do
+        page.driver.post '/password_strength', { params: { password: 'moop' } }
+        page.response_headers['Content-Type'].should match %r[text/plain;\s?charset=utf-8]
       end
     end
 
@@ -54,7 +49,7 @@ module AccountManager
     describe '/admin/reset' do
       it 'renders the admin reset page' do
         visit '/admin/reset'
-        page.find('h2').text.should == "Administrator: Reset a User's Password"
+        page.find('h2').text.should match /Administrator:(\s+)?Reset a User's Password/
       end
     end
 
