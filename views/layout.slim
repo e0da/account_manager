@@ -7,6 +7,7 @@ html
     /[if IE]
       link href==uri('/stylesheets/ie.css') media='screen, projection' rel='stylesheet' type='text/css'
     script src='//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js'
+    script src==url('/app.js')
 
   body
     #container
@@ -27,4 +28,8 @@ html
       #content
         == yield
       #footer
-    script src==url('/app.js')
+        p
+          | Copyright &copy; 2012
+          a href='http://www.universityofcalifornia.edu/regents/welcome.html'  The Regents
+          |  of the
+          a href='http://www.universityofcalifornia.edu/'  University of California

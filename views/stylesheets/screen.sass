@@ -42,7 +42,6 @@ a
   +box-sizing(border-box)
   +column(20)
   padding: span(1) 0
-  margin-bottom: span(1)
   background: white
   @include gradient-bg(#f0f0f0, darken(white, 10%))
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.5)
@@ -50,6 +49,14 @@ a
 
 h2
   text-align: center
+
+#footer
+  color: #ccc
+  text-align: center
+  padding-top: 10px
+
+  a
+    color: #eee
 
 form
   +prepend(1)
@@ -120,9 +127,11 @@ button.disabled
   float: left
   margin-right: 7px
 
-h1
+h1, #nav
   color: #eeeeee
   text-shadow: 0 0 5px rgba(0, 0, 0, 0.5)
+
+h1
   text-align: center
 
 hr
@@ -170,14 +179,20 @@ hr
 
 #help
   +column(9, true)
+  +clearfix
   +box-sizing(border-box)
   background: #fefefe
   border: 1px solid #ddd
   padding: 1em
 
+  p
+    margin-left: 1em
+
   h3
     border-bottom: 1px solid #ddd
 
+  ul
+    margin: 0
   li
     margin-left: 1em
 
