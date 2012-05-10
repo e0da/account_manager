@@ -8,27 +8,27 @@ form method='post' action="#{uri '/admin/reset'}"
 
     label for='admin'
       | Administrator Username
-      input type='text' id='admin' name='admin'
+      input type='text' id='admin' name='admin' autocomplete='off'
 
     label for='admin_password'
       | Administrator Password
-      input type='password' id='admin_password' name='admin_password'
+      input type='password' id='admin_password' name='admin_password' autocomplete='off'
 
     hr
 
     label for='uid'
       | User's Username
-      input type='text' id='uid' name='uid'
+      input type='text' id='uid' name='uid' autocomplete='off'
 
     label for='new_password'
       | New Password
-      input type='password' id='new_password' name='new_password'
+      input type='password' id='new_password' name='new_password' autocomplete='off'
 
     #password_feedback
 
     label for='verify_password'
       | Verify New Password
-      input type='password' id='verify_password' name='verify_password'
+      input type='password' id='verify_password' name='verify_password' autocomplete='off'
 
     button type='submit' name='submit'
       | Change User's Password
