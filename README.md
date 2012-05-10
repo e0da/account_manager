@@ -11,6 +11,13 @@
 
 Edit `config/production.example.yml` to fit your environment.
 
+### For Development ###
+
+You need to build the custom schema for Ladle.
+
+    cd support/gevirtz_schema
+    mvn clean && mvn package
+
 ## Running ##
 
 ### Production ###
