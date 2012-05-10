@@ -61,7 +61,7 @@ $ ->
     $.post 'password_strength', {password: new_password.val()}, (strong) ->
       strong = parseInt(strong)
       desc = if strong then 'strong!' else 'weak :('
-      color = if strong then '#4FB32B' else '#f00'
+      color = if strong then '#080' else '#f00'
       $('#password_feedback').text(desc).css(color: color)
       new_password.data 'strong', (if strong then true else false)
 
@@ -73,3 +73,6 @@ $ ->
     $('form, #help').height max
 
   $(window).resize()
+
+  # autofocus on first input on page
+  $('input:first').focus()
