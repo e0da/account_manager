@@ -53,13 +53,6 @@ module AccountManager
       end
     end
 
-    describe '/reset' do
-      it 'renders the password reset page' do
-        visit '/reset'
-        page.find('h2').text.should == 'Reset Your Password'
-      end
-    end
-
     describe 'any other route' do
       it 'redirects to /' do
         visit '/somewhere_totally_fake'

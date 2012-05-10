@@ -129,24 +129,6 @@ module AccountManager
       redirect to '/admin/reset'
     end
 
-    get '/reset' do
-      @title = 'Reset Your Password'
-      slim :reset
-    end
-
-    post '/reset' do
-      uid = params[:uid]
-      case Token.request_for(uid)
-      when :account_inactive
-        flash[:error] = 'Your account is not activated.' if Directory.activated?(uid) == false
-      when :success
-        flash[:notice] = "Password reset instructions have been emailed to the forwarding address on file for #{uid}."
-      when :no_forwarding_address
-        flash[:error] = "There is no email forwarding address on file for #{uid}."
-      end
-      redirect to '/reset'
-    end
-
     get '*' do
       redirect to DEFAULT_ROUTE
     end
