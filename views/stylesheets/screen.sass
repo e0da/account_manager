@@ -1,6 +1,8 @@
 @import base
+@import url(http://fonts.googleapis.com/css?family=Open+Sans)
 
 body
+  font-family: 'Open Sans', Helvetica, Arial, sans-serif
   +grad(#69c)
   background:
     repeat: no-repeat
@@ -173,9 +175,8 @@ hr
 
 #password_feedback
   float: right
-  margin: -2em 1em
+  margin: -2.1em 1em
   font-weight: bold
-  text-shadow: 0 0 3px rgba(0, 0, 0, 0.2)
 
 #help
   +column(9, true)
@@ -197,4 +198,13 @@ hr
     margin-left: 1em
 
   h4
-    margin: 1em 0
+    margin: 1em 0 0.3em
+
+#page_shadow
+  position: fixed
+  height: 100%
+  width: 100%
+  bottom: 0
+  right: 0
+  z-index: -1
+  box-shadow: inset 0 0 200px rgba(0, 0, 0, 0.4)
