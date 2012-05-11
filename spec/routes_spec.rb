@@ -54,11 +54,31 @@ module AccountManager
     end
 
     describe '/reset' do
-      it 'renders the password reset page' do
+      it 'renders the request password reset page' do
         visit '/reset'
         page.find('h2').text.should == 'Reset Your Password'
+        page.should have_css 'input[type=text]', count: 1
       end
     end
+
+    describe '/reset/:token' do
+      context 'when the token exists' do
+        it 'renders the password reset page' do
+          visit '/reset/token'
+          page.find('h2').text.should == 'Reset Your Password'
+          page.should have_css 'input[type=password]', count: 2
+        end
+      end
+
+      context 'when the token does not exist' do
+        it 'informs the user' do
+          visit '/reset/token'
+          page.find('h2').text.should == 'Reset Your Password'
+          page.should have_content 'The password link you followed does not exist or has expired.'
+        end
+      end
+    end
+
 
     describe 'any other route' do
       it 'redirects to /' do

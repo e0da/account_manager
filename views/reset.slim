@@ -1,16 +1,24 @@
-form method='post' action="#{uri '/reset'}" autocomplete='off'
+form method='post' action="#{uri}" autocomplete='off'
+  - require 'pp'
+  - pp uri
   h2 Reset Your Password
   fieldset
     == styled_flash
 
-    label for='uid'
-      | Username
-      input type='text' id='uid' name='uid' autocomplete='off'
+    label for='new_password'
+      | New Password
+      input type='password' id='new_password' name='new_password' autocomplete='off'
 
-    button type='submit' name='submit'
-      | Reset My Password
+    #password_feedback
+
+    label for='verify_password'
+      | Verify New Password
+      input type='password' id='verify_password' name='verify_password' autocomplete='off'
+
+    button type='submit'
+      | Change My Password
 
 #help
   h3 Help
 
-  h4#problems Problems
+  h4#problems Problemsorm

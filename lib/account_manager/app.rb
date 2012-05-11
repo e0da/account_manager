@@ -67,7 +67,6 @@ module AccountManager
     end
 
     get '/change_password' do
-      @title = 'Change Your Password'
       slim :change_password
     end
 
@@ -102,7 +101,6 @@ module AccountManager
     end
 
     get '/admin/reset' do
-      @title = "Administrator: Reset a User's Password"
       slim :admin_reset
     end
 
@@ -129,9 +127,13 @@ module AccountManager
       redirect to '/admin/reset'
     end
 
-    get '/reset' do
-      @title = 'Reset Your Password'
-      slim :reset
+    get '/reset/?:token?' do
+      token = params[:token]
+      if token.nil?
+        slim :request_reset
+      else
+        slim :reset
+      end
     end
 
     post '/reset' do

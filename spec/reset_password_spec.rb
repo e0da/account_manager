@@ -17,27 +17,40 @@ module AccountManager
 
       context 'when their account is activated and they have an email forwarding address set' do
 
-        it 'destroys any existing tokens'
+        it 'destroys any existing tokens' do
+          @uid = 'aa729'
+          submit_reset_password_form @uid
+          original_slug = Token.first(uid: @uid).slug
+          submit_reset_password_form @uid
+          new_slug = Token.first(uid: @uid).slug
+          original_slug.should_not == new_slug
+          Token.all(uid: @uid).count.should be 1
+        end
 
         it 'emails a new reset token to the user and notifies them' do
           @uid = 'aa729'
           submit_reset_password_form @uid
-          Token.count.should be 1
+          Token.all(uid: @uid).count.should be 1
           page.should have_content "Password reset instructions have been emailed to the forwarding address on file for #{@uid}."
         end
       end
 
       context 'when their account is not activated' do
         it 'informs the user and does nothing' do
-          lambda do
-            submit_reset_password_form 'dd946'
-          end.should_not change Token, :count
+          @uid = 'dd946'
+          Token.all(uid: @uid).destroy
+          submit_reset_password_form 'dd946'
+          Token.all(uid: @uid).count.should be 0
           page.should have_content 'Your account is not activated.'
         end
       end
 
       context 'when no email forwarding address is set' do
-        it 'informs the user and does nothing'
+        it 'informs the user and does nothing' do
+          @uid = 'bb459'
+          submit_reset_password_form @uid
+          Token.all(uid: @uid).count.should be 0
+        end
       end
     end
 
