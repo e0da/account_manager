@@ -1,12 +1,15 @@
 @import base
 @import url(//fonts.googleapis.com/css?family=Open+Sans)
 
-body
-  font-family: 'Open Sans', Helvetica, Arial, sans-serif
+html
   +grad(#69c)
   background:
+    position: bottom
     repeat: no-repeat
     attachment: fixed
+
+body
+  font-family: 'Open Sans', Helvetica, Arial, sans-serif
 
 a
   color: #69c
@@ -47,7 +50,7 @@ a
   background: white
   @include gradient-bg(#f0f0f0, darken(white, 10%))
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.5)
-  border-radius: 5px
+  +border-radius(5px)
 
 h2
   text-align: center
@@ -131,7 +134,7 @@ button.disabled
 
 h1, #nav
   color: #eeeeee
-  text-shadow: 0 0 5px rgba(0, 0, 0, 0.5)
+  text-shadow: rgba(0, 0, 0, 0.5) 0 0 5px
 
 h1
   text-align: center
@@ -155,7 +158,7 @@ hr
 
 .flash
   padding: 1em
-  border-radius: 5px
+  +border-radius(5px)
 
 .flash li
   margin-left: 2em
