@@ -6,6 +6,8 @@ $: << '.'
 
 # TODO documentation
 
+require 'sinatra'
+require 'rack/test'
 require 'account_manager'
 require 'capybara/rspec'
 require 'ladle'
@@ -14,6 +16,9 @@ AccountManager::App.environment = :test
 
 Capybara.app = AccountManager::App
 
+RSpec.configure do |config|
+  config.include Rack::Test::Methods
+end
 
 #
 # Start test LDAP server
@@ -43,12 +48,17 @@ def bind_dn(uid)
 end
 
 
-def submit_change_password_form(user)
+def submit_change_password_form(user=nil)
+
+  user ||= {}
+  user[:new_password] ||= 'Strong New Password! Yes!'
+  user[:verify_password] ||= user[:new_password]
+
   visit '/change_password'
-  fill_in 'Username', with: user[:uid]
-  fill_in 'Password', with: user[:password]
+  fill_in 'Username', with: user[:uid] || 'some_user'
+  fill_in 'Password', with: user[:password] || 'some_password'
   fill_in 'New Password', with: user[:new_password]
-  fill_in 'Verify New Password', with: user[:verify_password] || user[:new_password]
+  fill_in 'Verify New Password', with: user[:verify_password]
   check 'agree' unless user[:disagree]
   click_on 'Change My Password'
 end

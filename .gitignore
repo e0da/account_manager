@@ -5,3 +5,4 @@ config/development.yml
 config/test.yml
 *.log
 coverage
+capybara-*.html
