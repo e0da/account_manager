@@ -116,10 +116,13 @@ button
   @include grad($submit_color)
   &:hover
     @include grad(lighten($submit_color, 5%))
-  &:active
+  &:active, &.disabled
     @include grad(darken($submit_color, 5%))
 
-button.disabled
+.disabled input
+  background: #ddd
+
+.disabled button
   color: #aaa
   @include grad(desaturate($submit_color, 80%))
   border: 1px outset desaturate(darken($submit_color, 5%), 100%)

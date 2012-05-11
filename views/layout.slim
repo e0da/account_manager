@@ -7,7 +7,7 @@ html
     /[if IE]
       link href==uri('/stylesheets/ie.css') media='screen, projection' rel='stylesheet' type='text/css'
     script src='//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js'
-    script src==url('/app.js')
+    script src==uri('/app.js')
 
   body
     #container
@@ -16,14 +16,14 @@ html
       #nav
         ul
           li
-            a href==url('/change_password') Change Password
+            a href==uri('/change_password') Change Password
           li
             a href==url('/reset') Reset Password
           li
             .more title='more' more
             ul
               li
-                a href==url('/admin/reset') Admin Reset
+                a href==uri('/admin/reset') Admin Reset
 
       #content
         == yield

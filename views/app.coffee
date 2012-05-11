@@ -3,6 +3,12 @@ new_password = null
 validation = false
 flash = null
 
+enable = (el) ->
+  el.removeClass('disabled').attr('disabled', null)
+
+disable = (el) ->
+  el.addClass('disabled').attr('disabled', 'disabled')
+
 error = (msg) ->
   flash = $('.flash.error')
   if flash.length == 0
@@ -14,6 +20,7 @@ error = (msg) ->
 
 validate_form = ->
 
+  $('#flash').remove()
   flash.remove() if flash
   $('#problems').hide()
 
@@ -40,14 +47,17 @@ $ ->
     $('#nav ul ul').toggle()
 
   form = $('form')
+  button = $('button')
   new_password = $('#new_password')
   form.submit (e) ->
+    disable form
     validation = true
     validate_form()
     if form.data 'valid'
       form.submit()
     else
       e.preventDefault()
+    enable form
 
   form.bind 'keyup mouseup', (e) ->
     validate_form() if validation
@@ -69,6 +79,7 @@ $ ->
   $(window).resize ->
     max = 0
     $('form, #help').each ->
+      $(this).height 'auto'
       max = Math.max max, $(this).height()
     $('form, #help').height max
 
