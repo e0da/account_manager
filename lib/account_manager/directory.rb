@@ -1,5 +1,6 @@
 require 'yaml'
 require 'net-ldap'
+require 'account_manager/configurable'
 
 module AccountManager
 
@@ -8,6 +9,7 @@ module AccountManager
   # for use with this application (saves a lot of repetition).
   #
   class Directory
+    extend Configurable
 
 
     #
@@ -18,15 +20,6 @@ module AccountManager
 
 
     class << self
-
-      #
-      # Read the configuration and cache it. Returns a hash of the
-      # configuration. Call it within other static methods, e.g. conf[:host].
-      #
-      def conf
-        @@conf ||= YAML.load_file File.expand_path("#{App.root}/config/#{App.environment}.yml", __FILE__)
-      end
-
 
       #
       # Wrap Net::LDAP#open. Use the config from our file every time.
