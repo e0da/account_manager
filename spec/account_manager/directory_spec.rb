@@ -116,49 +116,82 @@ module AccountManager
       end
 
       context "when an admin changes a user's password" do
-        it 'fails and returns :not_admin if the "admin" lacks admin rights' do
 
-          #
-          # We stub this because the rights are controlled by directory ACLs in
-          # production, and simulating the ACLs for testing would be too
-          # cumbersome.
-          #
-          Net::LDAP.any_instance.stub(:modify)
-          Net::LDAP.any_instance
-          .stub(:get_operation_result)
-          .and_return(OpenStruct.new(message: 'Insufficient Access Rights'))
+        context 'when the "admin" lacks admin rights' do
 
-          Directory.change_password(
-            uid: 'aa729',
-            admin: 'admin',
-            admin_password: 'admin',
-          ).should be :not_admin
-          Directory.can_bind?('aa729', 'smada').should be true
+          it 'fails and returns :not_admin' do
+
+            #
+            # We stub this because the rights are controlled by directory ACLs in
+            # production, and simulating the ACLs for testing would be too
+            # cumbersome.
+            #
+            Net::LDAP.any_instance.stub(:modify)
+            Net::LDAP.any_instance
+              .stub(:get_operation_result)
+              .and_return(OpenStruct.new(message: 'Insufficient Access Rights'))
+
+            Directory.change_password(
+              uid: 'aa729',
+              admin: 'admin',
+              admin_password: 'admin',
+            ).should be :not_admin
+            Directory.can_bind?('aa729', 'smada').should be true
+          end
         end
 
-        it 'fails and returns :bind_failure if admin fails bind' do
-          Directory.change_password(
-            admin: 'admin',
-            admin_password: 'wakkawakka',
-            uid: 'aa729',
-            new_password: 'turbopassword'
-          ).should be :bind_failure
-          Directory.can_bind?('aa729', 'smada').should be true
+        context 'when the admin fails to bind' do
+
+          it 'fails and returns :bind_failure' do
+            Directory.change_password(
+              admin: 'admin',
+              admin_password: 'wakkawakka',
+              uid: 'aa729',
+              new_password: 'turbopassword'
+            ).should be :bind_failure
+            Directory.can_bind?('aa729', 'smada').should be true
+          end
         end
 
-        it 'does not activate an inactive account and returns :success_inactive' do
-          Directory.change_password(
-            admin: 'admin',
-            admin_password: 'admin',
-            uid: 'cc414',
-            new_password: 'wakkawakka'
-          ).should be :success_inactive
-          Directory.can_bind?('cc414', 'wakkawakka').should be true
-          Directory.activated?('cc414').should be false
+        context 'when the account is inactive' do
+
+          it 'returns :success_inactive' do
+            Directory.change_password(
+              admin: 'admin',
+              admin_password: 'admin',
+              uid: 'cc414',
+              new_password: 'wakkawakka'
+            ).should be :success_inactive
+            Directory.can_bind?('cc414', 'wakkawakka').should be true
+          end
+
+          it 'does not activate the account' do
+            Directory.activated?('cc414').should be false
+          end
+        end
+
+        context 'when the account does not exist' do
+
+          it 'returns :no_such_account' do
+            Directory.change_password(
+              admin: 'admin',
+              admin_password: 'admin',
+              uid: 'blahblahblah',
+              new_password: ''
+            ).should be :no_such_account
+          end
         end
       end
 
       context 'when a user changes their password' do
+
+        def ronk
+          puts :ronk
+        end
+
+        before :all do
+          @origdate = Directory.first 'aa729', :passwordchangedate
+        end
 
         before :each do
 
@@ -170,18 +203,44 @@ module AccountManager
             uid: 'aa729',
             new_password: 'smada'
           )
-        end
 
-        it 'activates the accound and returns :success when it works' do
-          Directory.deactivate 'aa729'
-          Directory.activated?('aa729').should be false
-          Directory.change_password(
+          @outcome = Directory.change_password(
             uid: 'aa729',
             old_password: 'smada',
             new_password: 'wakkawakka'
-          ).should be :success
-          Directory.can_bind?('aa729', 'wakkawakka').should be true
-          Directory.activated?('aa729').should be true
+          )
+        end
+
+        context "when it's successful" do
+
+          it 'returns :success when it works' do
+            @outcome.should be :success
+          end
+
+          it 'changes the password' do
+            Directory.can_bind?('aa729', 'wakkawakka').should be true
+          end
+
+          it 'changes the "passwordchangedate" timestamp' do
+            Directory.change_password(
+              uid: 'aa729',
+              old_password: 'smada',
+              new_password: 'wakkawakka'
+            )
+            Directory.first('aa729', :passwordchangedate).should_not == @origdate
+          end
+
+          context 'when the account is not activated' do
+            it 'activates the account' do
+              Directory.deactivate 'aa729'
+              Directory.change_password(
+                uid: 'aa729',
+                old_password: 'wakkawakka',
+                new_password: 'wakkawakka'
+              ).should be :success
+              Directory.activated?('aa729').should be true
+            end
+          end
         end
 
         it 'fails and returns :bind_failure when the user fails to bind' do
