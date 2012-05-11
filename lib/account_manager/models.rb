@@ -3,6 +3,7 @@ require 'digest'
 require 'dm-timestamps'
 require 'net/smtp'
 require 'account_manager/directory'
+require 'account_manager/configurable'
 
 MailTemplate = <<END
 From: %s
@@ -17,6 +18,7 @@ END
 module AccountManager
   class Token
     include DataMapper::Resource
+    extend Configurable
 
     property :id,         Serial
     property :uid,        String,   required: true, unique: true
@@ -33,14 +35,6 @@ module AccountManager
     end
 
     class << self
-
-      #
-      # Read the configuration and cache it. Returns a hash of the
-      # configuration. Call it within other static methods, e.g. conf[:host].
-      #
-      def conf
-        @@conf ||= YAML.load_file File.expand_path("#{App.root}/config/#{App.environment}.yml", __FILE__)
-      end
 
       def request_for(app, uid)
 
