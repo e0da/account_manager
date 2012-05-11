@@ -16,10 +16,7 @@ module AccountManager
 
         it 'reports success and that the account is not activated' do
           Directory.stub change_password: :success_inactive
-          submit_admin_reset_form(
-            uid: 'ff531',
-            new_password: 'new_password'
-          )
+          submit_admin_reset_form
           page.should have_content "The user's password has been changed"
           page.should have_content "The account is not activated"
         end
@@ -32,7 +29,7 @@ module AccountManager
 
         it 'reports failure' do
           Directory.stub change_password: :bind_failure
-          submit_admin_reset_form admin_password: 'BAD PASSWORD'
+          submit_admin_reset_form
           page.should have_content 'Administrator username or password was incorrect'
         end
       end
@@ -63,6 +60,13 @@ module AccountManager
           Directory.stub change_password: :not_admin
           submit_admin_reset_form
           page.should have_content "The supplied administrator account cannot perform this action"
+        end
+      end
+
+      context 'when the password is weak' do
+        it 'reports failure' do
+          submit_admin_reset_form new_password: 'a'
+          page.should have_content 'The new password is too weak'
         end
       end
     end

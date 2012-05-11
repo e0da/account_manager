@@ -10,7 +10,7 @@ module AccountManager
 
       it 'reports failure' do
         Directory.stub change_password: :no_such_account
-        submit_change_password_form uid: 'nobody'
+        submit_change_password_form
         page.should have_content 'Your username or password was incorrect'
       end
     end
@@ -19,7 +19,7 @@ module AccountManager
 
       it 'reports failure' do
         Directory.stub change_password: :bind_failure
-        submit_change_password_form old_password: 'bad'
+        submit_change_password_form
         page.should have_content 'Your username or password was incorrect'
       end
     end
