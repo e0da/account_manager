@@ -72,6 +72,7 @@ module AccountManager
 
       context 'when the token does not exist' do
         it 'informs the user' do
+          pending 'rewrite Token specs'
           visit '/reset/token'
           page.find('h2').text.should == 'Reset Your Password'
           page.should have_content 'The password link you followed does not exist or has expired.'
