@@ -57,4 +57,5 @@ or just
 ## Copyright ##
 
 Copyright (c) 2012 Justin Force
+
 Licensed under the MIT License
