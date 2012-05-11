@@ -5,7 +5,6 @@ require 'slim'
 require 'sass'
 require 'compass'
 require 'coffee-script'
-require 'data_mapper'
 
 module AccountManager
   class App < Sinatra::Base
@@ -28,14 +27,6 @@ module AccountManager
         config.sass_dir = 'views'
       end
       set :sass, Compass.sass_engine_options
-
-      #
-      # Set up the database. It's ok to do it from scratch every time. Tokens
-      # only last 24 hours, and we don't care if we lose one when we restart
-      # the app. That's why we just auto_upgrade! every time.
-      #
-      DataMapper.setup :default, "sqlite://#{File.expand_path '.'}/db/#{App.environment}.db"
-      DataMapper.auto_upgrade!
     end
 
     helpers do
