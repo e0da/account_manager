@@ -1,5 +1,6 @@
 .rvmrc
 .sass-cache
 config/production.yml
+config/development.yml
 *.log
 coverage
