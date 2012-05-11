@@ -9,7 +9,9 @@ From: %s
 To: %s
 Subject: Password reset for %s
 
-Your password reset token is %s
+To reset your password, visit the following link and create a new one:
+
+    %s
 END
 
 module AccountManager
@@ -40,7 +42,7 @@ module AccountManager
         @@conf ||= YAML.load_file File.expand_path("#{App.root}/config/#{App.environment}.yml", __FILE__)
       end
 
-      def request_for(uid)
+      def request_for(app, uid)
 
         return :account_inactive if Directory.activated?(uid) == false
 
@@ -55,7 +57,7 @@ module AccountManager
         account = Directory.mail(uid)
         slug = Token.first(uid: uid).slug
 
-        mail = MailTemplate % [from, to, account, slug]
+        mail = MailTemplate % [from, to, account, conf['reset_url'] % slug]
 
         return :success if Net::SMTP.start mail_conf['host'], mail_conf['port']  do |smtp|
           smtp.starttls if smtp.capable_starttls?

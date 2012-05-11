@@ -9,6 +9,8 @@ bind_dn: uid=%s,ou=people,dc=example,dc=org # the bind dn should have a %s where
 admin_bind_dn: uid=admin,ou=people,dc=example,dc=org
 admin_password: admin
 
+reset_url: http://localhost:9292/account/reset/%s
+
 mail:
   host: localhost
   port: 2525
