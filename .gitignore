@@ -2,5 +2,6 @@
 .sass-cache
 config/production.yml
 config/development.yml
+config/test.yml
 *.log
 coverage
