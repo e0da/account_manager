@@ -169,6 +169,18 @@ module AccountManager
             Directory.activated?('cc414').should be false
           end
         end
+
+        context 'when the account does not exist' do
+
+          it 'returns :no_such_account' do
+            Directory.change_password(
+              admin: 'admin',
+              admin_password: 'admin',
+              uid: 'blahblahblah',
+              new_password: ''
+            ).should be :no_such_account
+          end
+        end
       end
 
       context 'when a user changes their password' do
