@@ -140,7 +140,7 @@ module AccountManager
       when :account_inactive
         flash[:error] = 'Your account is not activated.' if Directory.activated?(uid) == false
       when :success
-        flash[:notice] = "Password reset instructions have been emailed to the forwarding address on file for #{uid}."
+        flash[:notice] = "Password reset instructions have been emailed to the forwarding address on file for <strong>#{uid}</strong>."
       when :no_forwarding_address
         flash[:error] = "There is no email forwarding address on file for #{uid}."
       end

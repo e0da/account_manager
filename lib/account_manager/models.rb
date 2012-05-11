@@ -4,6 +4,14 @@ require 'dm-timestamps'
 require 'net/smtp'
 require 'account_manager/directory'
 
+MailTemplate = <<END
+From: %s
+To: %s
+Subject: Password reset for %s
+
+Your password reset token is %s
+END
+
 module AccountManager
   class Token
     include DataMapper::Resource
@@ -27,16 +35,11 @@ module AccountManager
       from = mail_conf['from']
       to = Directory.forwarding_address(@uid)
       account = Directory.mail(@uid)
+      return :no_forwarding_address if to.nil?
 
-      mail = %[
-        From: #{from}
-        To: #{to}
-        Subject: Password reset for #{account}
+      mail = MailTemplate % [from, to, account, @slug]
 
-        Your password reset token is #{@slug}
-      ]
-
-      Net::SMTP.start mail_conf['host'], mail_conf['port']  do |smtp|
+      return :success if Net::SMTP.start mail_conf['host'], mail_conf['port']  do |smtp|
         smtp.starttls if smtp.capable_starttls?
         smtp.authenticate mail_conf['user'], mail_conf['password'] if mail_conf['password']
         smtp.send_message mail, from, to

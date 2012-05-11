@@ -20,7 +20,6 @@ module AccountManager
         it 'destroys any existing tokens'
 
         it 'emails a new reset token to the user and notifies them' do
-          pending "Haven't set up email testing environment yet."
           @uid = 'aa729'
           submit_reset_password_form @uid
           Token.count.should be 1
