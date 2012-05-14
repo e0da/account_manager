@@ -1,3 +1,5 @@
+require 'rubygems'
+require 'bundler/setup'
 require 'ladle'
 require 'find'
 require 'timeout'
@@ -14,11 +16,13 @@ end
 
 LadlePidFile = 'tmp/ladle.pid'
 
-desc 'Start the app'
+desc 'Run the default server task, server:start'
+task server: ['server:start']
+
 namespace :server do
 
   desc 'Start the server'
-  task :start => [:css] do
+  task start: [:css] do
     Rake::Task['ladle:start'].invoke if development?
     `passenger start --daemon`
   end
@@ -30,11 +34,11 @@ namespace :server do
   end
 
   desc 'Restart the server'
-  task :restart => [:stop, :start]
+  task restart: [:stop, :start]
 end
 
 desc 'Build CSS from source'
-task :css => ['compass:compile']
+task css: ['compass:compile']
 
 namespace :compass do
   desc 'Compile compass to CSS'
@@ -48,7 +52,9 @@ namespace :compass do
   end
 end
 
+desc 'Run the default Ladle task, ladle:start'
 task ladle: 'ladle:start'
+
 namespace :ladle do
 
   desc 'Start Ladle on port 3898'
@@ -92,7 +98,7 @@ namespace :ladle do
   end
 
   desc 'Restart Ladle server'
-  task :restart => [:stop, :start]
+  task restart: [:stop, :start]
 
   desc 'remove Ladle tmp dirs'
   task :clean do
@@ -102,7 +108,13 @@ namespace :ladle do
   end
 end
 
+desc 'Run the default production task, production:server:start'
+task production: ['production:server:start']
+
 namespace :production do
+
+  desc 'Run the default production:server task, production:server:start'
+  task server: ['production:server:start']
 
   namespace :server do
     
@@ -119,6 +131,26 @@ namespace :production do
     end
 
     desc 'Restart the production server'
-    task :restart => [:stop, :start]
+    task restart: [:stop, :start]
+  end
+end
+
+desc 'Run the default guard task, guard:all'
+task guard: ['guard:all']
+
+namespace :guard do
+  desc 'Run and rerun rspec as needed'
+  task :rspec do
+    `bundle exec guard -g rspec`
+  end
+
+  desc 'Run and rurun frontend prep as needed (build CSS, etc.)'
+  task :frontend do
+    `bundle exec guard -g frontend`
+  end
+
+  desc 'Run and rerun all guard groups as needed'
+  task :all do
+    `bundle exec guard`
   end
 end
