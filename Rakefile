@@ -1,5 +1,14 @@
 require 'ladle'
 
+desc 'Deploy the app'
+task :deploy => [:css] do
+end
+
+desc 'Build CSS from Compass source'
+task :css do
+  `compass compile --output-style compressed --force`
+end
+
 task ladle: 'ladle:start'
 namespace :ladle do
 
