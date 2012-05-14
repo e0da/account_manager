@@ -67,7 +67,7 @@ $ ->
     validation = true
     validate_form()
 
-  new_password.keyup (e) ->
+  new_password.bind 'keyup mouseup', (e) ->
     $.post 'password_strength', {password: new_password.val()}, (strong) ->
       strong = parseInt(strong)
       desc = if strong then 'strong!' else 'weak :('
