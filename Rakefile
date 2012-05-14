@@ -104,3 +104,24 @@ namespace :ladle do
     end
   end
 end
+
+namespace :production do
+
+  namespace :server do
+    
+    desc 'Start the production server'
+    task :start do
+      ENV['RACK_ENV'] = 'production'
+      Rake::Task['server:start'].invoke
+    end
+
+    desc 'Stop the production server'
+    task :stop do
+      ENV['RACK_ENV'] = 'production'
+      Rake::Task['server:stop'].invoke
+    end
+
+    desc 'Restart the production server'
+    task :restart => [:stop, :start]
+  end
+end
