@@ -3,6 +3,7 @@ require 'bundler/setup'
 require 'ladle'
 require 'find'
 require 'timeout'
+require 'rspec/core/rake_task'
 
 ENV['RACK_ENV'] ||= 'development'
 
@@ -132,25 +133,5 @@ namespace :production do
 
     desc 'Restart the production server'
     task restart: [:stop, :start]
-  end
-end
-
-desc 'Run the default guard task, guard:all'
-task guard: ['guard:all']
-
-namespace :guard do
-  desc 'Run and rerun rspec as needed'
-  task :rspec do
-    `bundle exec guard -g rspec`
-  end
-
-  desc 'Run and rurun frontend prep as needed (build CSS, etc.)'
-  task :frontend do
-    `bundle exec guard -g frontend`
-  end
-
-  desc 'Run and rerun all guard groups as needed'
-  task :all do
-    `bundle exec guard`
   end
 end
