@@ -73,25 +73,25 @@ module AccountManager
     post '/change_password' do
 
       unless params[:agree]
-        flash[:error] = 'You must agree to the terms and conditions'
+        flash[:error] = 'You must agree to the terms and conditions.'
         redirect to '/change_password'
       end
       
       if params[:new_password] != params[:verify_password]
-        flash[:error] = 'Your new passwords do not match'
+        flash[:error] = 'Your new passwords do not match.'
         redirect to '/change_password'
       end
 
       if params[:new_password].weak_password?
-        flash[:error] = 'Your new password is too weak'
+        flash[:error] = 'Your new password is too weak.'
         redirect to '/change_password'
       end
 
       case Directory.change_password(params)
       when :success
-        flash[:notice] = 'Your password has been changed'
+        flash[:notice] = 'Your password has been changed.'
       when :bind_failure, :no_such_account
-        flash[:error]  = 'Your username or password was incorrect'
+        flash[:error]  = 'Your username or password was incorrect.'
       end
       redirect to '/change_password'
     end
@@ -107,27 +107,27 @@ module AccountManager
     post '/admin/reset' do
 
       if params[:new_password] != params[:verify_password]
-        flash[:error] = 'The new passwords do not match'
+        flash[:error] = 'The new passwords do not match.'
         redirect to '/admin/reset'
       end
 
       if params[:new_password].weak_password?
-        flash[:error] = 'The new password is too weak'
+        flash[:error] = 'The new password is too weak.'
         redirect to '/admin/reset'
       end
 
       case Directory.change_password(params)
       when :success
-        flash[:notice] = "The user's password has been changed"
+        flash[:notice] = "The user's password has been changed."
       when :success_inactive
-        flash[:notice] = "The user's password has been changed"
+        flash[:notice] = "The user's password has been changed."
         flash[:more_info] = "The account is not activated. The user can activate the account by changing their password."
       when :bind_failure
-        flash[:error] = "Administrator username or password was incorrect"
+        flash[:error] = "Administrator username or password was incorrect."
       when :not_admin
-        flash[:error] = "The supplied administrator account cannot perform this action"
+        flash[:error] = "The supplied administrator account cannot perform this action."
       when :no_such_account
-        flash[:error] = "Couldn't find that user in the directory"
+        flash[:error] = "Couldn't find that user in the directory."
       end
       redirect to '/admin/reset'
     end
