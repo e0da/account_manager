@@ -14,9 +14,6 @@ end
 
 LadlePidFile = 'tmp/ladle.pid'
 
-def ladle_pid
-end
-
 desc 'Start the app'
 namespace :server do
 
