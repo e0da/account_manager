@@ -33,26 +33,15 @@ knows where to look to find it.
 
 ### Production ###
 
-    RAKE_ENV=production passenger start
-
-or
-
-    RAKE_ENV=production rackup
+    RAKE_ENV=production rake server:start
 
 ### Development ###
 
-    rake ladle:start & rackup
+    rake server:start
 
 ## Testing ##
 
     rspec
-
-or
-    guard -g rspec
-
-or just
-
-    guard
 
 ## Copyright ##
 
