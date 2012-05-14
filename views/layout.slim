@@ -6,7 +6,7 @@ html
     link href==uri('/stylesheets/screen.css') media='screen, projection' rel='stylesheet' type='text/css'
     /[if IE]
       link href==uri('/stylesheets/ie.css') media='screen, projection' rel='stylesheet' type='text/css'
-    script src='//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js'
+    script src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery#{ENV['RACK_ENV'] == 'production' ? '.min' : ''}.js"
     script src==uri('/app.js')
 
   body
