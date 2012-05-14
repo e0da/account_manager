@@ -40,6 +40,15 @@ validate_form = ->
 
   form.data('valid', valid)
 
+check_password = (e) ->
+  @xhr.abort() if @xhr
+  @xhr = $.post 'password_strength', {password: new_password.val()}, (strong) ->
+    strong = parseInt(strong)
+    desc = if strong then 'strong!' else 'weak :('
+    color = if strong then '#080' else '#f00'
+    $('#password_feedback').text(desc).css(color: color)
+    new_password.data 'strong', (if strong then true else false)
+
 $ ->
   $('#problems').hide()
   $('#nav ul ul').hide()
@@ -65,13 +74,7 @@ $ ->
     validation = true
     validate_form()
 
-  new_password.bind 'keyup mouseup', (e) ->
-    $.post 'password_strength', {password: new_password.val()}, (strong) ->
-      strong = parseInt(strong)
-      desc = if strong then 'strong!' else 'weak :('
-      color = if strong then '#080' else '#f00'
-      $('#password_feedback').text(desc).css(color: color)
-      new_password.data 'strong', (if strong then true else false)
+  new_password.bind 'keyup mouseup', check_password
 
   # keep #help and the form the same height
   $(window).resize ->
