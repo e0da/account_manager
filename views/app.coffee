@@ -53,9 +53,7 @@ $ ->
     disable form
     validation = true
     validate_form()
-    if form.data 'valid'
-      form.submit()
-    else
+    unless form.data 'valid'
       e.preventDefault()
     enable form
 
