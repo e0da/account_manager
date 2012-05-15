@@ -24,8 +24,7 @@ my `/etc/hosts` file._
 Then just run this to build the schema. The development environment already
 knows where to look to find it.
 
-    cd support/gevirtz_schema
-    mvn clean && mvn package
+    rake ladle:schema
 
 ## Running ##
 

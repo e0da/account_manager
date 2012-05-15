@@ -101,11 +101,17 @@ namespace :ladle do
   desc 'Restart Ladle server'
   task restart: [:stop, :start]
 
-  desc 'remove Ladle tmp dirs'
+  desc 'Remove Ladle temporary files'
   task :clean do
     Find.find 'tmp' do |f|
       rm_rf f if f.match %r[^tmp/ladle]
     end
+  end
+
+  desc 'Build custom schema for Ladle (Maven required)'
+  task :schema do
+    cd 'support/gevirtz_schema'
+    `mvn clean && mvn package`
   end
 end
 
