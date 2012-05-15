@@ -224,6 +224,9 @@ ituseagreementacceptdate: activation required
 nsroledn: cn=nsmanageddisabledrole,o=education.ucsb.edu
 nsaccountlock: true
 
+#
+# jj243: No ituseagreementacceptdate attribute at all
+#
 dn: uid=jj243,ou=people,dc=example,dc=org
 objectClass: top
 objectClass: person
@@ -237,7 +240,6 @@ mail: josephine@example.org
 uid: jj243
 # Password is "noskcaj"
 userpassword: {SHA}ElqdCxdbvRNqXBgdUdkCmGZlQmk=
-ituseagreementacceptdate: activation required
 nsroledn: cn=nsmanageddisabledrole,o=education.ucsb.edu
 nsaccountlock: true
 
