@@ -1,11 +1,10 @@
-## Downloading ##
+# Gevirtz Account Manager #
+
+## Download and Setup ##
 
     git clone https://github.com/justinforce/account_manager
-
-## Configuring ##
-
+    cd account_manager
     bundle
-    compass compile
 
 ### Config File ###
 
@@ -20,24 +19,22 @@ build are hosted at m2.safehaus.org, which has NEVER responded to an
 HTTP request from me, so to get this to work I had to first add this to
 my `/etc/hosts` file._
 
-    127.6.6.6 m2.safehaus.org
+    127.6.6.6 m2.safehaus.org # redirect these requests to localhost
 
 Then just run this to build the schema. The development environment already
 knows where to look to find it.
 
-    cd support/gevirtz_schema
-    mvn clean && mvn package
-
+    rake ladle:schema
 
 ## Running ##
 
 ### Production ###
 
-    RAKE_ENV=production rake server:start
+    rake production
 
 ### Development ###
 
-    rake server:start
+    rake server
 
 ## Testing ##
 
