@@ -280,6 +280,10 @@ module AccountManager
       it 'returns false if the account is not activated' do
         Directory.activated?('cc414').should be false
       end
+
+      it 'returns false if there is no activation timestamp attribute' do
+        Directory.activated?('jj243').should be false
+      end
     end
 
     describe '.activate' do

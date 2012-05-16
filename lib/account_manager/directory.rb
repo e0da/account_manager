@@ -198,9 +198,11 @@ module AccountManager
       # Return true if the user is activated
       #
       def activated?(uid)
-        !activation_timestamp(uid).match(/#{INACTIVE_VALUE}/)
-      rescue NoMethodError # when there's no activation timestamp
-        false
+        begin
+          !activation_timestamp(uid).match(/#{INACTIVE_VALUE}/)
+        rescue NoMethodError # when there's no activation timestamp
+          false
+        end
       end
 
 

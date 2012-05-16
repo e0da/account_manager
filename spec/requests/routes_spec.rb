@@ -81,7 +81,6 @@ module AccountManager
       end
     end
 
-
     describe 'any other route' do
       it 'redirects to /' do
         visit '/somewhere_totally_fake'
