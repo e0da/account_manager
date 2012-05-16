@@ -64,7 +64,9 @@ module AccountManager
     describe '/reset/:token' do
       context 'when the token exists' do
         it 'renders the password reset page' do
-          visit '/reset/token'
+          token = double 'token', slug: '_slug_', expired?: false
+          Token.stub first: token
+          visit '/reset/_slug_'
           page.find('h2').text.should == 'Reset Your Password'
           page.should have_css 'input[type=password]', count: 2
         end
@@ -72,10 +74,9 @@ module AccountManager
 
       context 'when the token does not exist' do
         it 'informs the user' do
-          pending 'rewrite Token specs'
           visit '/reset/token'
           page.find('h2').text.should == 'Reset Your Password'
-          page.should have_content 'The password link you followed does not exist or has expired.'
+          page.should have_content 'The password reset link you followed does not exist or has expired.'
         end
       end
     end

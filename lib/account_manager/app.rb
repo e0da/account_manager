@@ -137,7 +137,13 @@ module AccountManager
       if token.nil?
         slim :request_reset
       else
-        slim :reset
+        @token = Token.first slug: token
+        if @token.nil? or @token.expired?
+          flash[:error] = 'The password reset link you followed does not exist or has expired.<br><br>You can request a new password reset link by submitting the form again.'
+          redirect to '/reset'
+        else
+          slim :reset
+        end
       end
     end
 
