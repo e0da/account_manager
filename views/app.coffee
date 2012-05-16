@@ -10,9 +10,10 @@ disable = (el) ->
   el.addClass('disabled').attr('disabled', 'disabled')
 
 error = (msg) ->
-  flash = $('.flash.error')
+  flash = $('#help .flash.error')
+  console.log flash
   if flash.length == 0
-    flash = $('<div id=flash><ul class="flash error"></ul></div>').find('.flash.error') if flash.length == 0
+    flash = $('<div id=js_flash><ul class="flash error"></ul></div>').find('.flash.error') if flash.length == 0
     $('#help').append flash
   flash.append $("<li>#{msg}</li>")
   $('#problems').show()
@@ -20,7 +21,6 @@ error = (msg) ->
 
 validate_form = ->
 
-  $('#flash').remove()
   flash.remove() if flash
   $('#problems').hide()
 
