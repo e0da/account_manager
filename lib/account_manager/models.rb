@@ -60,7 +60,7 @@ module AccountManager
           smtp.authenticate mail_conf['user'], mail_conf['password'] if mail_conf['password']
           smtp.send_message mail, from, to
         end
-        throw :email_error
+        throw :mail_error
       end
     end
   end
