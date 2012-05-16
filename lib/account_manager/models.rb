@@ -5,16 +5,6 @@ require 'net/smtp'
 require 'account_manager/directory'
 require 'account_manager/configurable'
 
-MailTemplate = <<END
-From: %s
-To: %s
-Subject: Password reset for %s
-
-To reset your password, visit the following link and create a new one:
-
-    %s
-END
-
 module AccountManager
   class Token
     include DataMapper::Resource
@@ -48,19 +38,7 @@ module AccountManager
         Token.all(uid: uid).destroy
         Token.create(uid: uid)
 
-        mail_conf = conf['mail']
-        from = mail_conf['from']
-        account = Directory.mail(uid)
-        slug = Token.first(uid: uid).slug
-
-        mail = MailTemplate % [from, to, account, "#{url}/#{slug}"]
-
-        return :success if Net::SMTP.start mail_conf['host'], mail_conf['port']  do |smtp|
-          smtp.starttls if smtp.capable_starttls?
-          smtp.authenticate mail_conf['user'], mail_conf['password'] if mail_conf['password']
-          smtp.send_message mail, from, to
-        end
-        throw :mail_error
+        Mail.reset url, Token.first
       end
     end
   end

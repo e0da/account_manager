@@ -58,13 +58,12 @@ module AccountManager
       end
 
       it 'throws an :mail_error if there was a problem sending the email' do
-        Token.stub first: double(Token, slug: nil)
-        Net::SMTP.stub start: false
+        Mail.stub(:reset).and_throw :mail_error
         expect {Token.request_for('','')}.should throw_symbol :mail_error
       end
 
       it 'returns success if a token was created and the email was sent' do
-        Token.stub first: double(Token, slug: nil)
+        Mail.stub reset: :success
         Token.request_for('','').should be :success
       end
     end
