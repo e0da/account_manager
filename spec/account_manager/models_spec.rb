@@ -34,9 +34,12 @@ module AccountManager
           forwarding_address: '',
           mail: ''
         )
-        Token.stub(
-          first: double(Token, slug: nil)
-        )
+        Net::SMTP.stub start: true
+      end
+
+      it 'destroys any existing tokens for the user' do
+        5.times { Token.request_for '', 'name' }
+        Token.all(uid: 'name').length.should be 1
       end
 
       it 'returns :account_inactive if the account is not activated' do
@@ -55,11 +58,13 @@ module AccountManager
       end
 
       it 'throws an :mail_error if there was a problem sending the email' do
+        Token.stub first: double(Token, slug: nil)
         Net::SMTP.stub start: false
         expect {Token.request_for('','')}.should throw_symbol :mail_error
       end
 
       it 'returns success if a token was created and the email was sent' do
+        Token.stub first: double(Token, slug: nil)
         Token.request_for('','').should be :success
       end
     end

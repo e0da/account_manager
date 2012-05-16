@@ -154,7 +154,9 @@ module AccountManager
 
       case Token.request_for(url, uid)
       when :account_inactive
-        flash[:error] = "The account <strong>#{uid}</strong> is not activated or does not exist." if Directory.activated?(uid) == false
+        flash[:error] = "Your account is not activated. You can activate your account by changing your password."
+      when :no_such_account
+        flash[:error] = "The account <strong>#{uid}</strong> does not exist."
       when :success
         flash[:notice] = "Password reset instructions have been emailed to the forwarding address on file for <strong>#{uid}</strong>."
       when :no_forwarding_address
