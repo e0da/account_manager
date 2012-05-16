@@ -138,7 +138,7 @@ module AccountManager
 
         # Indicate that the account doesn't exist if it doesn't
         #
-        return :no_such_account if no_such_account? uid
+        return :no_such_account unless exists? uid
 
         # If this is a user (non-admin), temporarily activate an inactive
         # account so they can perform the password change themselves.
@@ -185,12 +185,12 @@ module AccountManager
       #
       # Return true if the account exists
       #
-      def no_such_account?(uid)
-        no_such_account = true
+      def exists?(uid)
+        exists = false
         search "(uid=#{uid})" do |ldap|
-          no_such_account = false
+          exists = true
         end unless uid == ''
-        no_such_account
+        exists
       end
 
 

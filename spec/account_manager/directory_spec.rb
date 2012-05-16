@@ -262,13 +262,13 @@ module AccountManager
       end
     end
 
-    describe '.no_such_account?' do
-      it 'returns true if the account does not exist' do
-        Directory.no_such_account?('blarg').should be true
+    describe '.exists?' do
+      it 'returns false if the account does not exist' do
+        Directory.exists?('blarg').should be false
       end
 
-      it 'returns false if the account exists' do
-        Directory.no_such_account?('aa729').should be false
+      it 'returns true if the account exists' do
+        Directory.exists?('aa729').should be true
       end
     end
 
