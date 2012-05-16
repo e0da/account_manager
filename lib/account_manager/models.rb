@@ -38,7 +38,7 @@ module AccountManager
 
       def request_for(uid)
 
-        return :no_such_account if Directory.no_such_account?(uid)
+        return :no_such_account unless Directory.exists? uid
 
         return :account_inactive if Directory.activated?(uid) == false
 

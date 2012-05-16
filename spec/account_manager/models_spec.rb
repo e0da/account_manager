@@ -27,13 +27,12 @@ module AccountManager
     describe '.request_for' do
 
       it 'returns :account_inactive if the account is not activated' do
-        Directory.stub activated?: false
-        Directory.stub no_such_account?: false
+        Directory.stub exists?: true, activated?: false
         Token.request_for('name').should be :account_inactive
       end
 
       it 'returns :no_such_account if the account does not exist' do
-        Directory.stub no_such_account?: true
+        Directory.stub exists?: false
         Token.request_for('name').should be :no_such_account
       end
 
