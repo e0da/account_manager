@@ -53,7 +53,7 @@ module AccountManager
       end
 
       it 'returns :no_forwarding_address if no forwarding address could be found' do
-        Directory.stub forwarding_address: nil
+        Mail.stub reset: :no_forwarding_address
         Token.request_for('','').should be :no_forwarding_address
       end
 
