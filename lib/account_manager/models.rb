@@ -32,13 +32,10 @@ module AccountManager
 
         return :account_inactive if Directory.activated?(uid) == false
 
-        to = Directory.forwarding_address(uid)
-        return :no_forwarding_address if to.nil?
-
         Token.all(uid: uid).destroy
         Token.create(uid: uid)
 
-        Mail.reset url, Token.first
+        Mail.reset url, Token.first(uid: uid)
       end
     end
   end
