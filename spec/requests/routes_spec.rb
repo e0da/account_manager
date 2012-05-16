@@ -62,7 +62,7 @@ module AccountManager
     end
 
     describe '/reset/:token' do
-      context 'when the token exists' do
+      context 'when the token is valid' do
         it 'renders the password reset page' do
           token = double 'token', slug: '_slug_', expired?: false
           Token.stub first: token
@@ -72,7 +72,7 @@ module AccountManager
         end
       end
 
-      context 'when the token does not exist' do
+      context 'when the token is not valid' do
         it 'informs the user' do
           visit '/reset/token'
           page.find('h2').text.should == 'Reset Your Password'
