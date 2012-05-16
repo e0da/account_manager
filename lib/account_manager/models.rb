@@ -36,7 +36,7 @@ module AccountManager
 
     class << self
 
-      def request_for(uid)
+      def request_for(url, uid)
 
         return :no_such_account unless Directory.exists? uid
 
@@ -53,7 +53,7 @@ module AccountManager
         account = Directory.mail(uid)
         slug = Token.first(uid: uid).slug
 
-        mail = MailTemplate % [from, to, account, conf['reset_url'] % slug]
+        mail = MailTemplate % [from, to, account, "#{url}/#{slug}"]
 
         return :success if Net::SMTP.start mail_conf['host'], mail_conf['port']  do |smtp|
           smtp.starttls if smtp.capable_starttls?

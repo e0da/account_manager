@@ -148,8 +148,11 @@ module AccountManager
     end
 
     post '/reset' do
+
       uid = params[:uid]
-      case Token.request_for(self, uid)
+      url = "%s://%s%s" % [env['rack.url_scheme'], env['HTTP_HOST'], env['REQUEST_URI']]
+
+      case Token.request_for(url, uid)
       when :account_inactive
         flash[:error] = "The account <strong>#{uid}</strong> is not activated or does not exist." if Directory.activated?(uid) == false
       when :success
