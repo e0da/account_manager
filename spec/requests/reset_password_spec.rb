@@ -16,7 +16,7 @@ module AccountManager
       end
 
       context 'when their account is not activated' do
-        it 'informs the user and does nothing' do
+        it 'informs the user' do
           Token.stub request_for: :account_inactive
           submit_reset_password_form
           page.should have_content 'Your account is not activated.'
@@ -24,10 +24,18 @@ module AccountManager
       end
 
       context 'when no email forwarding address is set' do
-        it 'informs the user and does nothing' do
+        it 'informs the user' do
           Token.stub request_for: :no_forwarding_address
           submit_reset_password_form
           page.should have_content 'There is no email forwarding address on file for some_user'
+        end
+      end
+
+      context 'when the account does not exist' do
+        it 'informs the user' do
+          Token.stub request_for: :no_such_account
+          submit_reset_password_form
+          page.should have_content 'The account some_user does not exist.'
         end
       end
     end
