@@ -25,8 +25,18 @@ module AccountManager
     end
 
     describe '.request_for' do
-      it 'returns :account_inactive if the account is not activated'
-      it 'returns :no_such_account if the account does not exist'
+
+      it 'returns :account_inactive if the account is not activated' do
+        Directory.stub activated?: false
+        Directory.stub no_such_account?: false
+        Token.request_for('name').should be :account_inactive
+      end
+
+      it 'returns :no_such_account if the account does not exist' do
+        Directory.stub no_such_account?: true
+        Token.request_for('name').should be :no_such_account
+      end
+
       it 'returns :no_forwarding_address if no forwarding address could be found'
       it 'throws an :email_error if there was a problem sending the email'
       it 'returns success if a token was created and the email was sent'
