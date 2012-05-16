@@ -23,5 +23,13 @@ module AccountManager
         @token.expired?.should be true
       end
     end
+
+    describe '.request_for' do
+      it 'returns :account_inactive if the account is not activated'
+      it 'returns :no_such_account if the account does not exist'
+      it 'returns :no_forwarding_address if no forwarding address could be found'
+      it 'throws an :email_error if there was a problem sending the email'
+      it 'returns success if a token was created and the email was sent'
+    end
   end
 end
