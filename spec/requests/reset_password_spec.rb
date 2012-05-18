@@ -10,7 +10,7 @@ module AccountManager
 
         it 'emails a new reset token to the user and notifies them' do
           Token.stub request_for: :success
-          submit_reset_password_form
+          submit_reset_request_form
           page.should have_content "Password reset instructions have been emailed to the forwarding address on file for some_user."
         end
       end
@@ -18,7 +18,7 @@ module AccountManager
       context 'when their account is not activated' do
         it 'informs the user' do
           Token.stub request_for: :account_inactive
-          submit_reset_password_form
+          submit_reset_request_form
           page.should have_content 'Your account is not activated.'
         end
       end
@@ -26,7 +26,7 @@ module AccountManager
       context 'when no email forwarding address is set' do
         it 'informs the user' do
           Token.stub request_for: :no_forwarding_address
-          submit_reset_password_form
+          submit_reset_request_form
           page.should have_content 'There is no email forwarding address on file for some_user'
         end
       end
@@ -34,7 +34,7 @@ module AccountManager
       context 'when the account does not exist' do
         it 'informs the user' do
           Token.stub request_for: :no_such_account
-          submit_reset_password_form
+          submit_reset_request_form
           page.should have_content 'The account some_user does not exist.'
         end
       end
@@ -43,18 +43,19 @@ module AccountManager
     describe 'resets their password' do
 
       context 'a successful attempt' do
-        it 'changes the password'
-        it 'deletes the reset token'
+        it 'informs the user'
       end
 
-      context 'an unsuccessful attempt' do
-        it 'does not update the directory'
+      context 'when the password is weak' do
+        it 'informs the user'
+      end
+
+      context 'when the new passwords do not match' do
+        it 'informs the user'
       end
 
       context 'the token is expired' do
-        it 'informs the user the token is expired'
-        it 'deletes the token'
-        it 'prompts the user to try again'
+        it 'informs the user and prompts them to try again'
       end
     end
   end

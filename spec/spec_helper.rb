@@ -80,7 +80,7 @@ def submit_admin_reset_form(data=nil)
   click_on "Change User's Password"
 end
 
-def submit_reset_password_form(user='some_user')
+def submit_reset_request_form(user='some_user')
   visit '/reset'
   fill_in 'Username', with: user
   click_on 'Reset My Password'
