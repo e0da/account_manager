@@ -59,5 +59,12 @@ module AccountManager
         page.should have_content 'Your password has been changed'
       end
     end
+
+    context 'a new user comes in via redirect' do
+      it 'displays a welcome message' do
+        visit '/change_password/register'
+        page.should have_content 'Welcome new user!'
+      end
+    end
   end
 end

@@ -66,7 +66,12 @@ module AccountManager
       redirect to DEFAULT_ROUTE
     end
 
-    get '/change_password' do
+    get '/change_password/?:subaction?' do
+      @title = 'Change Your Password'
+      if params[:subaction]
+        flash[:notice] = "<h3>Welcome new user!</h3> You've come to the right place. Just change your password with this form to claim your account." if params[:subaction] == 'register'
+        redirect '/account/change_password'
+      end
       slim :change_password
     end
 
