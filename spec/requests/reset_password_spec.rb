@@ -54,7 +54,7 @@ module AccountManager
         it 'informs the user'
       end
 
-      context 'the token is expired' do
+      context 'the token is expired or does not exist' do
         it 'informs the user and prompts them to try again'
       end
     end
