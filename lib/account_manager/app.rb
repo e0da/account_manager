@@ -138,13 +138,13 @@ module AccountManager
       redirect to '/admin/reset'
     end
 
-    get '/reset/?:token?' do
-      token = params[:token]
-      if token.nil?
+    get '/reset/?:slug?' do
+      slug = params[:slug]
+      if slug.nil?
         slim :request_reset
       else
-        @token = Token.first slug: token
-        if @token.nil? or @token.expired?
+        token = Token.first slug: slug
+        if token.nil? or token.expired?
           flash[:error] = 'The password reset link you followed does not exist or has expired.<br><br>You can request a new password reset link by submitting the form again.'
           redirect to '/reset'
         else
