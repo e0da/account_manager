@@ -171,6 +171,25 @@ module AccountManager
       redirect to '/reset'
     end
 
+    post '/reset/?:slug?' do
+      slug = params[:slug]
+      if slug.nil?
+        slim :request_reset
+      else
+        token = Token.first slug: slug
+        unless token.nil? or token.expired?
+          params[:admin] = conf['admin']
+          params[:admin_password] = conf['admin_password']
+          pp params
+          pp conf
+          case Directory.change_password(params)
+          when :success
+            flash[:notice] = 'Your password has been changed.'
+          end
+        end
+      end
+    end
+
     get '*' do
       redirect to DEFAULT_ROUTE
     end

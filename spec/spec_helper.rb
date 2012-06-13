@@ -50,38 +50,51 @@ def bind_dn(uid)
 end
 
 
-def submit_change_password_form(user=nil)
+def submit_change_password_form(data=nil)
 
-  user ||= {}
-  user[:new_password] ||= StrongPassword
-  user[:verify_password] ||= user[:new_password]
+  data                    ||= {}
+  data[:new_password]     ||= StrongPassword
+  data[:verify_password]  ||= data[:new_password]
 
-  visit '/change_password'
-  fill_in 'Username', with: user[:uid] || 'some_user'
-  fill_in 'Password', with: user[:password] || 'some_password'
-  fill_in 'New Password', with: user[:new_password]
-  fill_in 'Verify New Password', with: user[:verify_password]
-  check 'agree' unless user[:disagree]
-  click_on 'Change My Password'
+  visit     '/change_password'
+  fill_in   'Username',             with: data[:uid]              || 'some_user'
+  fill_in   'Password',             with: data[:password]         || 'some_password'
+  fill_in   'New Password',         with: data[:new_password]
+  fill_in   'Verify New Password',  with: data[:verify_password]
+  check     'agree' unless data[:disagree]
+  click_on  'Change My Password'
 end
 
 def submit_admin_reset_form(data=nil)
 
-  data ||= {}
-  data[:new_password] ||= StrongPassword
-  data[:verify_password] ||= data[:new_password]
+  data                    ||= {}
+  data[:new_password]     ||= StrongPassword
+  data[:verify_password]  ||= data[:new_password]
 
-  visit '/admin/reset'
-  fill_in "Administrator Username", with: data[:admin_uid] || 'admin'
-  fill_in "Administrator Password", with: data[:admin_password] || 'admin'
-  fill_in "User's Username", with: data[:uid] || 'some_user'
-  fill_in 'New Password', with: data[:new_password]
-  fill_in 'Verify New Password', with: data[:verify_password] || data[:new_password]
-  click_on "Change User's Password"
+  visit     '/admin/reset'
+  fill_in   "Administrator Username", with: data[:admin_uid]        || 'admin'
+  fill_in   "Administrator Password", with: data[:admin_password]   || 'admin'
+  fill_in   "User's Username",        with: data[:uid]              || 'some_user'
+  fill_in   'New Password',           with: data[:new_password]
+  fill_in   'Verify New Password',    with: data[:verify_password]  || data[:new_password]
+  click_on  "Change User's Password"
 end
 
 def submit_reset_request_form(user='some_user')
-  visit '/reset'
-  fill_in 'Username', with: user
-  click_on 'Reset My Password'
+  visit     '/reset'
+  fill_in   'Username', with: user
+  click_on  'Reset My Password'
+end
+
+def submit_reset_form(data=nil)
+
+  data                    ||= {}
+  data[:new_password]     ||= StrongPassword
+  data[:verify_password]  ||= data[:new_password]
+  data[:slug]             ||= 'f'*32
+
+  visit     "/reset/#{data[:slug]}"
+  fill_in   'New Password',         with: data[:new_password]
+  fill_in   'Verify New Password',  with: data[:verify_password]
+  click_on  'Change My Password'
 end

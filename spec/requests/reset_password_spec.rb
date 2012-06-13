@@ -43,19 +43,39 @@ module AccountManager
     describe 'resets their password' do
 
       context 'a successful attempt' do
-        it 'informs the user'
+        it 'informs the user' do
+          pending 'stub some more Directory methods'
+          Directory.stub(
+            exists?: true,
+            activated?: true
+          )
+          Mail.stub reset: :success
+          Token.request_for nil, 'some_user'
+          token = Token.first uid: 'some_user'
+          submit_reset_form slug: token.slug
+          page.should have_content 'Your password has been changed'
+        end
       end
 
       context 'when the password is weak' do
-        it 'informs the user'
+        it 'informs the user' do
+          pending
+          submit_reset_form
+        end
       end
 
       context 'when the new passwords do not match' do
-        it 'informs the user'
+        it 'informs the user' do
+          pending
+          submit_reset_form
+        end
       end
 
-      context 'the token is expired or does not exist' do
-        it 'informs the user and prompts them to try again'
+      context 'when the token is expired' do
+        it 'informs the user and prompts them to try again' do
+          pending
+          submit_reset_form
+        end
       end
     end
   end
