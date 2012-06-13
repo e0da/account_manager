@@ -152,15 +152,26 @@ module AccountManager
         # change. If they can't, deactivate any temporary activations and
         # indicate a bind failure.
         #
-        if can_bind? bind_uid, password
+        if args[:reset] or can_bind? bind_uid, password
           result = nil
-          open_as bind_uid, password do |ldap|
-            operations = [
-              [:replace, :userpassword, new_password],
-              [:replace, :passwordchangedate, timestamp]
-            ]
-            ldap.modify dn: bind_dn(uid), operations: operations
-            result = ldap.get_operation_result
+          operations = [
+            [:replace, :userpassword, new_password],
+            [:replace, :passwordchangedate, timestamp]
+          ]
+
+          #
+          # TODO DRY this
+          #
+          if args[:reset]
+            open_as_admin do |ldap|
+              ldap.modify dn: bind_dn(uid), operations: operations
+              result = ldap.get_operation_result
+            end
+          else
+            open_as bind_uid, password do |ldap|
+              ldap.modify dn: bind_dn(uid), operations: operations
+              result = ldap.get_operation_result
+            end
           end
 
           # If we got an LDAP Insufficient Access Rights error, the admin user

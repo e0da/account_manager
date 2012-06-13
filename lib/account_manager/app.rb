@@ -178,16 +178,15 @@ module AccountManager
       else
         token = Token.first slug: slug
         unless token.nil? or token.expired?
-          params[:admin] = conf['admin']
-          params[:admin_password] = conf['admin_password']
-          pp params
-          pp conf
+          params[:uid] = token.uid
+          params[:reset] = true
           case Directory.change_password(params)
           when :success
             flash[:notice] = 'Your password has been changed.'
           end
         end
       end
+      redirect to '/reset'
     end
 
     get '*' do
