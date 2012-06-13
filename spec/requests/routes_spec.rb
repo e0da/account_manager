@@ -25,7 +25,7 @@ module AccountManager
       end
     end
 
-    describe 'POST /password_strength' do
+    describe '/password_strength' do
       it 'retrieves plain text' do
         page.driver.post '/password_strength', { params: { password: 'moop' } }
         page.response_headers['Content-Type'].should match %r[text/plain;\s?charset=utf-8]
