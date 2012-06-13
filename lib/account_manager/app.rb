@@ -8,6 +8,7 @@ require 'coffee-script'
 
 module AccountManager
   class App < Sinatra::Base
+    include Configurable
 
     DEFAULT_ROUTE = '/change_password'
 
