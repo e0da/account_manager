@@ -154,7 +154,7 @@ module AccountManager
         #
         if can_bind? bind_uid, password
           result = nil
-          outcome = open_as bind_uid, password do |ldap|
+          open_as bind_uid, password do |ldap|
             operations = [
               [:replace, :userpassword, new_password],
               [:replace, :passwordchangedate, timestamp]
