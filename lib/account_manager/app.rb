@@ -193,17 +193,27 @@ module AccountManager
 
     post '/reset/?:slug?' do
       slug = params[:slug]
-      if slug.nil?
-        slim :request_reset
+      token = Token.first slug: slug
+      if token.nil? or token.expired?
+        flash[:error] = 'The password reset link you followed does not exist or has expired.<br><br>You can request a new password reset link by submitting the form again.'
       else
-        token = Token.first slug: slug
-        unless token.nil? or token.expired?
-          params[:uid] = token.uid
-          params[:reset] = true
-          case Directory.change_password(params)
-          when :success
-            flash[:notice] = 'Your password has been changed.'
-          end
+        params[:uid] = token.uid
+        params[:reset] = true
+
+        if params[:new_password] != params[:verify_password]
+          flash[:error] = 'Your new passwords do not match.'
+          redirect to '/change_password'
+        end
+
+        if params[:new_password].weak_password?
+          flash[:error] = 'Your new password is too weak.'
+          redirect to '/change_password'
+        end
+
+
+        case Directory.change_password(params)
+        when :success
+          flash[:notice] = 'Your password has been changed.'
         end
       end
       redirect to '/reset'

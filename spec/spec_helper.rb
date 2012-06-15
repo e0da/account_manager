@@ -94,6 +94,7 @@ def submit_reset_form(data=nil)
   data[:slug]             ||= 'f'*32
 
   visit     "/reset/#{data[:slug]}"
+  AccountManager::Token.any_instance.stub(expired?: true) if data[:expire]
   fill_in   'New Password',         with: data[:new_password]
   fill_in   'Verify New Password',  with: data[:verify_password]
   click_on  'Change My Password'
