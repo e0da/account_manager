@@ -41,6 +41,26 @@ module AccountManager
     end
 
     #
+    # Copy select params into new hash before passing along to Directory to
+    # protect from injection.
+    #
+    def args(params)
+      args = {}
+      [
+        :admin,
+        :admin_password,
+        :uid,
+        :old_password,
+        :new_password,
+        :verify_password,
+        :agree
+      ].each do |symbol|
+        args[symbol] = params[symbol]
+      end
+      args
+    end
+
+    #
     # routes
     #
     get '/app.js' do
@@ -84,7 +104,7 @@ module AccountManager
         redirect to '/change_password'
       end
 
-      case Directory.change_password(params)
+      case Directory.change_password args(params)
       when :success
         flash[:notice] = 'Your password has been changed.'
       when :bind_failure, :no_such_account
@@ -114,7 +134,7 @@ module AccountManager
         redirect to '/admin/reset'
       end
 
-      case Directory.change_password(params)
+      case Directory.change_password args(params)
       when :success
         flash[:notice] = "The user's password has been changed."
       when :success_inactive
