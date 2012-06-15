@@ -115,6 +115,10 @@ module AccountManager
       # password and password change date. If this is an admin reset, the
       # account is not activated, but the password can be set.
       #
+      # If args[:reset] is true, this is a user-initiated password reset. We
+      # already know it's authorized by the reset token, so we just use admin
+      # rights to update the directory attributes.
+      #
       def change_password(args)
 
         # Assign arguments
@@ -153,26 +157,26 @@ module AccountManager
         # indicate a bind failure.
         #
         if args[:reset] or can_bind? bind_uid, password
-          result = nil
-          operations = [
-            [:replace, :userpassword, new_password],
-            [:replace, :passwordchangedate, timestamp]
-          ]
 
+          # The result of the ldap operation
           #
-          # TODO DRY this
+          result = nil
+
+          # This block performs the actual ldap.modify action. Put it in a
+          # block so we can call it in either an admin or user context.
           #
-          if args[:reset]
-            open_as_admin do |ldap|
-              ldap.modify dn: bind_dn(uid), operations: operations
-              result = ldap.get_operation_result
-            end
-          else
-            open_as bind_uid, password do |ldap|
-              ldap.modify dn: bind_dn(uid), operations: operations
-              result = ldap.get_operation_result
-            end
+          blk = lambda do |ldap|
+            ldap.modify(
+              dn: bind_dn(uid),
+              operations: [
+                [:replace, :userpassword, new_password],
+                [:replace, :passwordchangedate, timestamp]
+              ]
+            )
+            result = ldap.get_operation_result
           end
+
+          args[:reset] ? open_as_admin(&blk) : open_as(bind_uid, password, &blk)
 
           # If we got an LDAP Insufficient Access Rights error, the admin user
           # doesn't have the rights to perform this action. If the account
