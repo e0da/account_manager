@@ -15,7 +15,6 @@ module AccountManager
       end
 
       it 'returns success if the mail operation worked' do
-        Net::SMTP.stub start: true
         Mail.reset(nil, @token).should be :success
       end
 
