@@ -15,7 +15,7 @@ If you did make this request, you can reset your password any time in the next 2
 
     %{link}
 
-If you miss this window, don't worry. You can just request a new password reset here:
+Don't worry if you miss the 24 hour window. You can just request a new password reset here:
 
     %{reset}
 
@@ -58,8 +58,11 @@ TEMPLATES[:reset_html] = <<END
 </ul>
 
 <p style="font-style: italic; margin-top: 40px">
-  If you miss this window, don't worry. You can just request a new password
-  reset <a href="%{reset}">here</a>.
+  Don't worry if you miss the 24 hour window. You can just request a new
+  password reset
+  <a href="%{reset}">
+    here
+  </a>.
 </p>
 
 <p style="color: #333; margin-top: 50px">
