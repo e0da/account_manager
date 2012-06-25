@@ -35,7 +35,7 @@ module AccountManager
         Token.all(uid: uid).destroy
         Token.create(uid: uid)
 
-        Mail.reset url, Token.first(uid: uid)
+        Mailer.reset url, Token.first(uid: uid)
       end
     end
   end

@@ -11,6 +11,7 @@ gem 'sass'
 gem 'data_mapper', '~> 1.0'
 gem 'sqlite3'
 gem 'dm-sqlite-adapter'
+gem 'mail'
 
 group :development, :test do
   gem 'ladle'

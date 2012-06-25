@@ -35,6 +35,7 @@ module AccountManager
           mail: ''
         )
         Net::SMTP.stub start: true
+        Mailer.stub reset: :success
       end
 
       it 'destroys any existing tokens for the user' do
@@ -52,19 +53,18 @@ module AccountManager
         Token.request_for('','').should be :no_such_account
       end
 
+      it 'returns success if a token was created and the email was sent' do
+        Token.request_for('','').should be :success
+      end
+
       it 'returns :no_forwarding_address if no forwarding address could be found' do
-        Mail.stub reset: :no_forwarding_address
+        Mailer.stub reset: :no_forwarding_address
         Token.request_for('','').should be :no_forwarding_address
       end
 
       it 'throws an :mail_error if there was a problem sending the email' do
-        Mail.stub(:reset).and_throw :mail_error
+        Mailer.stub(:reset).and_throw :mail_error
         expect {Token.request_for('','')}.should throw_symbol :mail_error
-      end
-
-      it 'returns success if a token was created and the email was sent' do
-        Mail.stub reset: :success
-        Token.request_for('','').should be :success
       end
     end
   end

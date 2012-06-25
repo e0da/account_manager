@@ -47,7 +47,7 @@ module AccountManager
           exists?: true,
           activated?: true
         )
-        Mail.stub reset: :success
+        Mailer.stub reset: :success
         Token.request_for nil, 'some_user'
         @token = Token.first uid: 'some_user'
       end
