@@ -9,7 +9,7 @@ module AccountManager
       before :each do
         Directory.stub(
           mail: 'some_user@example.com',
-          forwarding_address: 'justin@education.ucsb.edu'
+          forwarding_address: 'some_alt@example.net'
         )
         @token = mock Token, uid: 'some_user', slug: 'fake_slug'
       end

@@ -19,9 +19,9 @@ If you miss this window, don't worry. You can just request a new password reset 
 
     %{reset}
 
-Information Technology Group 
-The Gevirtz School 
-University of California, Santa Barbara 
+Information Technology Group
+The Gevirtz School
+University of California, Santa Barbara
 %{site}
 %{from}
 %{phone}
@@ -115,7 +115,7 @@ module AccountManager
 
         Mail.deliver do
           to      to
-          from    "help@education.ucsb.edu"
+          from    from
           subject "Password reset for #{account}"
 
           args = {
