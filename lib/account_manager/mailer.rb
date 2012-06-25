@@ -30,7 +30,7 @@ END
 
 TEMPLATES[:reset_html] = <<END
 <h1>
-  <img src="data:image/png;base64,%{logo64}" alt="ITG" style="vertical-align:middle">
+  <img src="http://education.ucsb.edu/itg/itglogo.png" alt="ITG" style="vertical-align:middle; width: 140px; margin-right: 30px">
   The Gevirtz School
 </h1>
 <p>
@@ -119,7 +119,6 @@ module AccountManager
           subject "Password reset for #{account}"
 
           args = {
-            logo64:   Base64.encode64(open('public/images/itg.png') {|f| f.read}),
             link:     link,
             account:  account,
             reset:    url,
