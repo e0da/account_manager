@@ -80,6 +80,14 @@ module AccountManager
           page.should have_content 'The password reset link you followed does not exist or has expired'
         end
       end
+
+      context 'when the admin user has insufficient rights (a misconfiguration of directory ACLs)' do
+        it 'informs the user' do
+          Directory.stub change_password: :not_admin
+          submit_reset_form slug: @token.slug
+          page.should have_content 'There was a technical problem while processing your request'
+        end
+      end
     end
   end
 end

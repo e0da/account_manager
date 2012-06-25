@@ -214,6 +214,8 @@ module AccountManager
         case Directory.change_password(params)
         when :success
           flash[:notice] = 'Your password has been changed.'
+        when :not_admin
+          flash[:error] = %[There was a technical problem while processing your request.<br><br>Please notify ITG that <strong>"the admin account does not have permission to perform the user password reset action</strong>."]
         end
       end
       redirect to '/reset'
