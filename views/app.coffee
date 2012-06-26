@@ -48,7 +48,7 @@ validate_form = ->
 
 check_password = (e) ->
   @xhr.abort() if @xhr
-  @xhr = $.post 'password_strength', {password: new_password.val()}, (strong) ->
+  @xhr = $.post 'password_strength', {password: encodeURI(new_password.val())}, (strong) ->
     strong = parseInt(strong)
     desc = if strong then 'strong!' else 'weak :('
     color = if strong then '#080' else '#f00'
