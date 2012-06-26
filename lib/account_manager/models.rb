@@ -4,6 +4,7 @@ require 'dm-timestamps'
 require 'net/smtp'
 require 'account_manager/configurable'
 require 'account_manager/directory'
+require 'account_manager/mailer'
 
 module AccountManager
   class Token
