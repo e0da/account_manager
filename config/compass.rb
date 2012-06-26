@@ -1,4 +1,6 @@
-require './app'
+$: << 'lib'
+
+require 'account_manager/app'
 
 # Compass Configuration
 

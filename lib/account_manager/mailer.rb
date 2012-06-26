@@ -1,4 +1,5 @@
-require 'account_manager'
+require 'account_manager/configurable'
+require 'account_manager/directory'
 require 'mail'
 require 'base64'
 

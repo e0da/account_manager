@@ -2,8 +2,8 @@ require 'data_mapper'
 require 'digest'
 require 'dm-timestamps'
 require 'net/smtp'
-require 'account_manager/directory'
 require 'account_manager/configurable'
+require 'account_manager/directory'
 
 module AccountManager
   class Token

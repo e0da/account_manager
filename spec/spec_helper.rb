@@ -8,7 +8,10 @@ $: << '.'
 
 require 'sinatra'
 require 'rack/test'
-require 'account_manager'
+require 'account_manager/app'
+require 'account_manager/directory'
+require 'account_manager/mailer'
+require 'account_manager/models'
 require 'capybara/rspec'
 require 'ladle'
 

@@ -6,6 +6,9 @@ require 'sass'
 require 'compass'
 require 'coffee-script'
 require 'data_mapper'
+require 'account_manager/configurable'
+require 'account_manager/directory'
+require 'account_manager/models'
 
 module AccountManager
   class App < Sinatra::Base

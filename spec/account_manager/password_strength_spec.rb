@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'account_manager/password_strength'
 
 describe ::String do
 
