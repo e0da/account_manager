@@ -234,12 +234,17 @@ module AccountManager
       #
       def activate(uid, timestamp=new_timestamp)
         open_as_admin do |ldap|
-          operations = [
+
+          # perform each LDAP operation atomically so that it doesn't stop if
+          # an attribute doesn't exist or can't be updated.
+          #
+          [
             [:replace, :ituseagreementacceptdate, timestamp],
             [:delete, :nsroledn, DISABLED_ROLE],
-            [:delete, :nsaccountlock, nil]
-          ]
-          ldap.modify dn: bind_dn(uid), operations: operations
+            [:delete, :nsaccountlock, 'true']
+          ].each do |op|
+            ldap.modify dn: bind_dn(uid), operations: [op]
+          end
         end unless activated? uid
       end
 
@@ -249,12 +254,17 @@ module AccountManager
       #
       def deactivate(uid)
         open_as_admin do |ldap|
-          operations = [
+
+          # perform each LDAP operation atomically so that it doesn't stop if
+          # an attribute doesn't exist or can't be updated.
+          #
+          [
             [:replace, :ituseagreementacceptdate, INACTIVE_VALUE],
-            [:replace, :nsroledn, DISABLED_ROLE],
-            [:replace, :nsaccountlock, 'true']
-          ]
-          ldap.modify dn: bind_dn(uid), operations: operations
+            [:add, :nsroledn, DISABLED_ROLE],
+            [:add, :nsaccountlock, 'true']
+          ].each do |op|
+            ldap.modify dn: bind_dn(uid), operations: [op]
+          end
         end
       end
 
