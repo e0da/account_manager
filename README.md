@@ -5,6 +5,11 @@
     git clone https://github.com/justinforce/account_manager
     cd account_manager
     bundle
+    rake
+
+Simply running `rake` will run the recommended tasks for a setup on Ubuntu. For
+more granular control, check out `rake -T`. As a minimum, you're going to want
+to run `rake css` to build the stylesheets before running the app.
 
 ### Config File ###
 
@@ -31,11 +36,11 @@ knows where to look to find it.
 
 ### Production ###
 
-    rake production
+    sudo start account
 
 ### Development ###
 
-    rake server
+    rake start
 
 ## Testing ##
 
