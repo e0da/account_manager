@@ -57,7 +57,7 @@ task :css do
 end
 
 desc 'Run all tasks necessary for deployment'
-task deploy: :css
+task deploy: [:css, :upstart]
 
 namespace :ladle do
 
