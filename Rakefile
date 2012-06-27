@@ -7,9 +7,8 @@ require 'rspec/core/rake_task'
 require 'tempfile'
 
 UPSTART=<<END
-start on started network
-stop on stopping network
-stop on started shutdown
+start on runlevel [2345]
+stop on runlevel [!2345]
 
 env HOME=%{home}
 chdir %{pwd}
