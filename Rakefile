@@ -4,6 +4,17 @@ require 'ladle'
 require 'find'
 require 'timeout'
 require 'rspec/core/rake_task'
+require 'tempfile'
+
+UPSTART=<<END
+start on started networking
+stop on stopped networking
+
+env HOME=%{home}
+chdir %{pwd}
+exec %{passenger} start --environment production --user %{user}
+respawn
+END
 
 ENV['RACK_ENV'] ||= 'development'
 
@@ -17,44 +28,35 @@ end
 
 LadlePidFile = 'tmp/ladle.pid'
 
-desc 'Run the default server task, server:start'
-task server: ['server:start']
+task default: :deploy
 
-namespace :server do
-
-  desc 'Start the server'
-  task start: [:css] do
-    Rake::Task['ladle:start'].invoke if development?
-    `passenger start --daemon`
-  end
-
-  desc 'Stop the server'
-  task :stop do
-    `passenger stop`
-    Rake::Task['ladle:stop'].invoke
-  end
-
-  desc 'Restart the server'
-  task restart: [:stop, :start]
+task :spec do |t|
+  t.verbose
+  `rspec`
 end
+
+desc 'Start the server'
+task start: :css do
+  Rake::Task['ladle:start'].invoke if development?
+  `passenger start --daemon`
+end
+
+desc 'Stop the server'
+task :stop do
+  `passenger stop`
+  Rake::Task['ladle:stop'].invoke if development?
+end
+
+desc 'Restart the server'
+task restart: [:stop, :start]
 
 desc 'Build CSS from source'
-task css: ['compass:compile']
-
-namespace :compass do
-  desc 'Compile compass to CSS'
-  task :compile do
-    `compass compile --output-style compressed --force`
-  end
-
-  desc 'Rebuild CSS as Compass source changes' 
-  task :watch do
-    `compass watch`
-  end
+task :css do
+  `compass compile --output-style compressed --force`
 end
 
-desc 'Run the default Ladle task, ladle:start'
-task ladle: 'ladle:start'
+desc 'Run all tasks necessary for deployment'
+task deploy: :css
 
 namespace :ladle do
 
@@ -115,29 +117,28 @@ namespace :ladle do
   end
 end
 
-desc 'Run the default production task, production:server:start'
-task production: ['production:server:start']
+desc 'Make RVM wrapper for passenger bin'
+task :rvm do
+  `rvm wrapper #{`rvm current`.chomp} --no-prefix passenger`
+end
 
-namespace :production do
-
-  desc 'Run the default production:server task, production:server:start'
-  task server: ['production:server:start']
-
-  namespace :server do
-    
-    desc 'Start the production server'
-    task :start do
-      ENV['RACK_ENV'] = 'production'
-      Rake::Task['server:start'].invoke
-    end
-
-    desc 'Stop the production server'
-    task :stop do
-      ENV['RACK_ENV'] = 'production'
-      Rake::Task['server:stop'].invoke
-    end
-
-    desc 'Restart the production server'
-    task restart: [:stop, :start]
-  end
+desc 'Create an upstart job to start the app on boot (requires Ubuntu, RVM, and your sudo password)'
+task upstart: :rvm do
+  Rake::Task['rvm'].invoke
+  home = `echo $HOME`.chomp
+  user = `whoami`.chomp
+  passenger = "#{home}/.rvm/bin/passenger"
+  pwd = `pwd`.chomp
+  upstart = UPSTART % {
+    home: home,
+    user: user,
+    passenger: passenger,
+    pwd: pwd
+  }
+  tmp = Tempfile.new('account_manager_upstart')
+  tmp.write upstart
+  tmp.flush
+  `sudo cp #{tmp.path} /etc/init/account.conf`
+  tmp.unlink
+  `sudo chmod 644 /etc/init/account.conf`
 end
