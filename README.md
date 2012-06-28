@@ -46,6 +46,12 @@ knows where to look to find it.
 
     rspec
 
+_Note: On my fast computer, some of the specs will fail on the first pass
+because Ladle takes too long to start. If you get a few failures related to
+directory operations, **don't panic**. Just run the specs again and see if they
+pass. Watch for the telltale notification that the server took more than 15
+seconds to start._
+
 ## Copyright ##
 
 Copyright (c) 2012 Justin Force
