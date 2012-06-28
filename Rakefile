@@ -52,7 +52,7 @@ task restart: [:stop, :start]
 
 desc 'Build CSS from source'
 task :css do
-  `compass compile --output-style compressed --force`
+  `compass clean; compass compile --output-style compressed --force`
 end
 
 desc 'Run all tasks necessary for deployment'
