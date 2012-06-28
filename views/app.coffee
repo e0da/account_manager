@@ -20,7 +20,7 @@ error = (msg) ->
 
 sanitize_form = ->
   $('input[type=text]').each ->
-    $(this).val $(this).val().trim()
+    $(this).val $.trim($(this).val())
   $('#uid').val $('#uid').val().replace /@.*/, '' if $('#uid').length is 1
 
 
