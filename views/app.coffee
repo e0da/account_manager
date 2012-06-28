@@ -61,6 +61,19 @@ $ ->
   $('#nav .more').text('...').click ->
     $('#nav ul ul').toggle()
 
+  # set up modal contact box
+  $('#modal').hide()
+  $('#nav .contact').click ->
+    $('#modal').show()
+  $('#contact').click (e)->
+    e.stopPropagation()
+  $('#contact .close').click (e)->
+    e.preventDefault()
+    $('#modal').hide()
+  $('#modal').click ->
+    $('#modal').hide()
+
+
   form = $('form')
   button = $('button')
   new_password = $('#new_password')

@@ -23,7 +23,9 @@ html
             .more title='more' more
             ul
               li
-                a href==uri('/admin/reset') Admin Reset
+                a.admin href==uri('/admin/reset') Admin Reset
+          li
+            .contact Contact Us
 
       #content
         == yield
@@ -35,3 +37,17 @@ html
           a href='http://www.universityofcalifornia.edu/'  University of California
 
     #page_shadow
+    #modal
+      #contact
+        h2 Contact ITG
+        p If you have any questions, just ask us. Call, email or drop by.
+        dl
+          dt Phone
+          dd 805-893-8031
+          dt Email
+          dd
+            a href="mailto:help@education.ucsb.edu" help@education.ucsb.edu
+          dt Room
+          dd Education Building, Room 4203
+        .close
+          a href='#' close
