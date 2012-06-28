@@ -56,7 +56,10 @@ task :css do
 end
 
 desc 'Run all tasks necessary for deployment'
-task deploy: [:css, :upstart]
+task deploy: :css
+
+desk 'Run all installation tasks'
+task install: [:deploy, :upstart]
 
 namespace :ladle do
 
