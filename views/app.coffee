@@ -65,13 +65,13 @@ $ ->
   button = $('button')
   new_password = $('#new_password')
   form.submit (e) ->
-    disable form
+    disable button
     validation = true
     sanitize_form()
     validate_form()
     unless form.data 'valid'
       e.preventDefault()
-      enable form
+      enable button
 
   form.bind 'keyup mouseup', (e) ->
     validate_form() if validation
