@@ -97,7 +97,7 @@ module AccountManager
       # Get a timestamp of the current time in LDAP-friendly format
       #
       def new_timestamp
-        Time.now.strftime '%Y%m%d%H%M%SZ'
+        Time.now.getutc.strftime '%Y%m%d%H%M%SZ'
       end
 
 
