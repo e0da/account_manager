@@ -11,7 +11,6 @@ disable = (el) ->
 
 error = (msg) ->
   flash = $('#help .flash.error')
-  console.log flash
   if flash.length == 0
     flash = $('<div id=js_flash><ul class="flash error"></ul></div>').find('.flash.error') if flash.length == 0
     $('#help').append flash
