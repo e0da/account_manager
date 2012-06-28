@@ -2,8 +2,10 @@
 @import url(//fonts.googleapis.com/css?family=Open+Sans)
 
 html
-  /* Gradients must use the full 6 digits to work with IE */
-  +grad(#6699cc)
+  /* Gradients must use the full 6 digits to work with IE. Compass will
+   * simplify this to 3 digits, so we just add 1 to the blue value so it can't.
+   */
+  +grad(#6699cd)
   background:
     position: bottom
     repeat: no-repeat
