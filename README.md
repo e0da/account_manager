@@ -1,6 +1,8 @@
-# Gevirtz Account Manager #
+Gevirtz Account Manager [![Build Status](https://secure.travis-ci.org/justinforce/account_manager.png?branch=master)](https://travis-ci.org/justinforce/account_manager) [![Dependency Status](https://gemnasium.com/justinforce/account_manager.png)](https://gemnasium.com/justinforce/account_manager)
+=======================
 
-## Download and Setup ##
+Download and Setup
+------------------
 
     git clone https://github.com/justinforce/account_manager
     cd account_manager
@@ -32,7 +34,8 @@ knows where to look to find it.
 
     rake ladle:schema
 
-## Running ##
+Running
+-------
 
 ### Production ###
 
@@ -42,7 +45,8 @@ knows where to look to find it.
 
     rake start
 
-## Testing ##
+Testing
+-------
 
     rspec
 
@@ -52,8 +56,7 @@ directory operations, **don't panic**. Just run the specs again and see if they
 pass. Watch for the telltale notification that the server took more than 15
 seconds to start._
 
-## Copyright ##
+License
+-------
 
-Copyright (c) 2012 Justin Force
-
-Licensed under the MIT License
+Licensed under the MIT License. See `LICENSE`.

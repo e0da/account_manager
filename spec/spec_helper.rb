@@ -2,10 +2,6 @@ require 'simplecov'
 SimpleCov.configure { add_filter 'spec' }
 SimpleCov.start
 
-$: << '.'
-
-# TODO documentation
-
 require 'sinatra'
 require 'rack/test'
 require 'account_manager/app'

@@ -6,6 +6,10 @@ require 'timeout'
 require 'rspec/core/rake_task'
 require 'tempfile'
 
+RSpec::Core::RakeTask.new :spec
+task default: :spec
+task spec: :css
+
 UPSTART=<<END
 start on runlevel [2345]
 stop on runlevel [!2345]
@@ -27,13 +31,6 @@ def production?
 end
 
 LadlePidFile = 'tmp/ladle.pid'
-
-task default: :deploy
-
-task :spec do |t|
-  t.verbose
-  `rspec`
-end
 
 desc 'Start the server'
 task start: :css do
