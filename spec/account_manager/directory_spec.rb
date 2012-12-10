@@ -328,7 +328,7 @@ module AccountManager
         Directory.can_bind?('admin', 'admin').should be true
       end
 
-      it 'returns fallse if the credentials are incorrect' do
+      it 'returns false if the credentials are incorrect' do
         Directory.can_bind?('admin', 'schmadmin').should be false
       end
     end
