@@ -56,9 +56,7 @@ directory operations, **don't panic**. Just run the specs again and see if they
 pass. Watch for the telltale notification that the server took more than 15
 seconds to start._
 
-Copyright
----------
+License
+-------
 
-Copyright (c) 2012 Justin Force
-
-Licensed under the MIT License
+Licensed under the MIT License. See `LICENSE`.
