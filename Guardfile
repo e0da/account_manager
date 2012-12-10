@@ -1,3 +1,5 @@
+# vim: set ft=ruby:
+
 group :rspec do
   guard :rspec, :version => 2 do
     watch(%r[^(spec/.+_spec\.rb)$])
