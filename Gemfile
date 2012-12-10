@@ -21,6 +21,7 @@ group :development, :test do
   gem 'guard-rspec',    require: false
   gem 'ladle'
   gem 'libnotify',      require: false
+  gem 'rb-inotify',     require: false
   gem 'rspec'
   gem 'simplecov'
   gem 'sinatra-contrib'

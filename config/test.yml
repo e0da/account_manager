@@ -7,6 +7,10 @@ admin_bind_dn: uid=admin,ou=people,dc=example,dc=org
 admin_password: admin
 
 mail:
-  host: localhost
-  port: 2525
+  host: fakehost
+  port: 25
   from: help@example.org
+  user: accountmanager
+  password: fake_password
+  phone: 800-555-1234
+  site: http://example.org
