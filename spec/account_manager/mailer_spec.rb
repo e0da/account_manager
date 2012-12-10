@@ -15,8 +15,6 @@ module AccountManager
       end
 
       it 'returns success if the mail operation worked' do
-        Net::SMTP.any_instance.should_receive(:start)
-        Mail.should_receive(:deliver)
         Mailer.reset(nil, @token).should be :success
       end
     end

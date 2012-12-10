@@ -7,10 +7,10 @@ admin_bind_dn: uid=admin,ou=people,dc=example,dc=org
 admin_password: admin
 
 mail:
-  host: fakehost
-  port: 25
+  host: mailtrap.io
+  port: 2525
   from: help@example.org
   user: accountmanager
-  password: fake_password
+  password: 8bf095c7799b490f
   phone: 800-555-1234
   site: http://example.org
