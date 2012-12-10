@@ -8,6 +8,7 @@ require 'tempfile'
 
 RSpec::Core::RakeTask.new :spec
 task default: :spec
+task spec: :css
 
 UPSTART=<<END
 start on runlevel [2345]
