@@ -27,15 +27,17 @@ module AccountManager
 
     describe '/password_strength' do
       it 'retrieves plain text' do
-        page.driver.post '/password_strength', { params: { password: 'moop' } }
-        page.response_headers['Content-Type'].should match %r[text/plain;\s?charset=utf-8]
+        post '/password_strength', { params: { password: 'moop' } }
+        last_response.headers['Content-Type'].should match %r[text/plain;\s?charset=utf-8]
       end
     end
 
     describe '/change_password' do
       it 'should render the Change Password template' do
         visit '/change_password'
-        page.find('h2').text.should == 'Change Your Password'
+        within '#content form' do
+          page.find('h2').text.should == 'Change Your Password'
+        end
       end
     end
 
@@ -49,15 +51,19 @@ module AccountManager
     describe '/admin/reset' do
       it 'renders the admin reset page' do
         visit '/admin/reset'
-        page.find('h2').text.should match /Administrator:(\s+)?Reset a User's Password/
+        within '#content form' do
+          page.find('h2').text.should match /Administrator:(\s+)?Reset a User's Password/
+        end
       end
     end
 
     describe '/reset' do
       it 'renders the request password reset page' do
         visit '/reset'
-        page.find('h2').text.should == 'Reset Your Password'
-        page.should have_css 'input[type=text]', count: 1
+        within '#content form' do
+          page.find('h2').text.should == 'Reset Your Password'
+          page.should have_css 'input[type=text]', count: 1
+        end
       end
     end
 
@@ -67,16 +73,20 @@ module AccountManager
           token = double 'token', slug: '_slug_', expired?: false
           Token.stub first: token
           visit '/reset/_slug_'
-          page.find('h2').text.should == 'Reset Your Password'
-          page.should have_css 'input[type=password]', count: 2
+          within '#content form' do
+            page.find('h2').text.should == 'Reset Your Password'
+            page.should have_css 'input[type=password]', count: 2
+          end
         end
       end
 
       context 'when the token is not valid' do
         it 'informs the user' do
           visit '/reset/token'
-          page.find('h2').text.should == 'Reset Your Password'
-          page.should have_content 'The password reset link you followed does not exist or has expired.'
+          within '#content form' do
+            page.find('h2').text.should == 'Reset Your Password'
+            page.should have_content 'The password reset link you followed does not exist or has expired.'
+          end
         end
       end
     end
