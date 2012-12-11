@@ -5,3 +5,4 @@ config/development.yml
 *.log
 coverage
 capybara-*.html
+public/stylesheets/screen.css
