@@ -64,7 +64,7 @@ module AccountManager
 
       it 'throws an :mail_error if there was a problem sending the email' do
         Mailer.stub(:reset).and_throw :mail_error
-        expect {Token.request_for('','')}.should throw_symbol :mail_error
+        expect {Token.request_for('','')}.to throw_symbol :mail_error
       end
     end
   end

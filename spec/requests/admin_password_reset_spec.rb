@@ -1,8 +1,9 @@
 require 'spec_helper'
+require 'account_manager/app'
 
 module AccountManager
 
-  describe "an administrator resets a user's password", type: :request do
+  describe "an administrator resets a user's password", type: :feature do
 
     describe 'success' do
 
