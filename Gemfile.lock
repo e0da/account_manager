@@ -191,6 +191,7 @@ DEPENDENCIES
   coffee-script
   data_mapper
   dm-sqlite-adapter
+  execjs
   guard
   guard-compass
   guard-rspec
