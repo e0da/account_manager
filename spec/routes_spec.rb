@@ -14,14 +14,14 @@ module AccountManager
     describe '/stylesheets/screen.css' do
       it 'retrieves a stylesheet' do
         visit '/stylesheets/screen.css'
-        page.response_headers['Content-Type'].should match %r[text/css;\s?charset=utf-8]
+        page.response_headers['Content-Type'].should match 'text/css'
       end
     end
 
     describe '/app.js' do
       it 'retrieves a javascript' do
         visit '/app.js'
-        page.response_headers['Content-Type'].should match %r[text/javascript;\s?charset=utf-8]
+        page.response_headers['Content-Type'].should match 'application/javascript'
       end
     end
 
