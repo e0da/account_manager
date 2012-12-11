@@ -40,28 +40,6 @@ module AccountManager
         end
         redirect to '/admin/reset'
       end
-
-      private
-
-      ##
-      # Copies select params into new hash before passing along to Directory to
-      # protect from injection.
-      #
-      def args(params)
-        args = {}
-        [
-          :admin,
-          :admin_password,
-          :uid,
-          :old_password,
-          :new_password,
-          :verify_password,
-          :agree
-        ].each do |symbol|
-          args[symbol] = params[symbol]
-        end
-        args
-      end
     end
   end
 end
