@@ -21,6 +21,7 @@ group :development, :test do
   gem 'libnotify',      require: false
   gem 'rb-inotify',     require: false
   gem 'rspec'
+  gem 'shotgun'
   gem 'simplecov'
   gem 'sinatra-contrib'
 end
