@@ -1,5 +1,4 @@
 require 'sinatra/base'
-require 'sinatra/reloader'
 require 'sinatra/flash'
 require 'slim'
 require 'sass'
@@ -19,10 +18,6 @@ module AccountManager
     include Configurable
 
     DEFAULT_ROUTE = '/change_password'
-
-    configure :development do
-      register Sinatra::Reloader
-    end
 
     configure do
       set :root, File.expand_path('../../..', __FILE__)
