@@ -6,10 +6,13 @@ require 'sass'
 require 'compass'
 require 'coffee-script'
 require 'data_mapper'
+
 require 'account_manager/configurable'
 require 'account_manager/directory'
 require 'account_manager/models'
 require 'account_manager/password_strength'
+
+require 'account_manager/handlers/password_strength'
 
 module AccountManager
   class App < Sinatra::Base
@@ -81,15 +84,11 @@ module AccountManager
       coffee :app
     end
 
-    post '/password_strength' do
-      headers 'Content-Type' => 'text/plain;charset=utf-8'
-      params[:password] ||= ''
-      unescape(params[:password]).strong_password? ? '1' : '0'
-    end
-
     get '/' do
       redirect to DEFAULT_ROUTE
     end
+
+    use AccountManager::Handlers::PasswordStrength
 
     get '/change_password/?:subaction?' do
       if params[:subaction]
@@ -105,7 +104,7 @@ module AccountManager
         flash[:error] = 'You must agree to the terms and conditions.'
         redirect to '/change_password'
       end
-      
+
       if params[:new_password] != params[:verify_password]
         flash[:error] = 'Your new passwords do not match.'
         redirect to '/change_password'
