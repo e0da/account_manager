@@ -15,7 +15,7 @@ gem 'dm-sqlite-adapter'
 gem 'mail'
 
 group :development, :test do
-  gem 'capybara', '~> 1.1'
+  gem 'capybara'
   gem 'guard',          require: false
   gem 'guard-compass',  require: false
   gem 'guard-rspec',    require: false

@@ -16,7 +16,15 @@ AccountManager::App.environment = :test
 Capybara.app = AccountManager::App
 
 RSpec.configure do |config|
+  config.include Capybara::DSL
   config.include Rack::Test::Methods
+end
+
+#
+# Rack::Test compat
+#
+def app
+  AccountManager::App
 end
 
 StrongPassword = 'Strong New Password! Yes!'
@@ -56,10 +64,10 @@ def submit_change_password_form(data=nil)
   data[:verify_password]  ||= data[:new_password]
 
   visit     '/change_password'
-  fill_in   'Username',             with: data[:uid]              || 'some_user'
-  fill_in   'Password',             with: data[:password]         || 'some_password'
-  fill_in   'New Password',         with: data[:new_password]
-  fill_in   'Verify New Password',  with: data[:verify_password]
+  fill_in   'uid',              with: data[:uid]              || 'some_user'
+  fill_in   'old_password',     with: data[:password]         || 'some_password'
+  fill_in   'new_password',     with: data[:new_password]
+  fill_in   'verify_password',  with: data[:verify_password]
   check     'agree' unless data[:disagree]
   click_on  'Change My Password'
 end
@@ -71,17 +79,17 @@ def submit_admin_reset_form(data=nil)
   data[:verify_password]  ||= data[:new_password]
 
   visit     '/admin/reset'
-  fill_in   "Administrator Username", with: data[:admin_uid]        || 'admin'
-  fill_in   "Administrator Password", with: data[:admin_password]   || 'admin'
-  fill_in   "User's Username",        with: data[:uid]              || 'some_user'
-  fill_in   'New Password',           with: data[:new_password]
-  fill_in   'Verify New Password',    with: data[:verify_password]  || data[:new_password]
+  fill_in   'admin',            with: data[:admin_uid]        || 'admin'
+  fill_in   'admin_password',   with: data[:admin_password]   || 'admin'
+  fill_in   'uid',              with: data[:uid]              || 'some_user'
+  fill_in   'new_password',     with: data[:new_password]
+  fill_in   'verify_password',  with: data[:verify_password]  || data[:new_password]
   click_on  "Change User's Password"
 end
 
 def submit_reset_request_form(user='some_user')
   visit     '/reset'
-  fill_in   'Username', with: user
+  fill_in   'uid', with: user
   click_on  'Reset My Password'
 end
 
@@ -94,7 +102,7 @@ def submit_reset_form(data=nil)
 
   visit     "/reset/#{data[:slug]}"
   AccountManager::Token.any_instance.stub(expired?: true) if data[:expire]
-  fill_in   'New Password',         with: data[:new_password]
-  fill_in   'Verify New Password',  with: data[:verify_password]
+  fill_in   'new_password',     with: data[:new_password]
+  fill_in   'verify_password',  with: data[:verify_password]
   click_on  'Change My Password'
 end
