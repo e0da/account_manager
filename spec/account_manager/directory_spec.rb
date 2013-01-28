@@ -185,59 +185,58 @@ module AccountManager
 
       context 'when a user changes their password' do
 
-        def ronk
-          puts :ronk
+        def password_change(password='wakkawakka')
+          Directory.change_password(
+            uid: 'aa729',
+            old_password: 'smada',
+            new_password: password
+          )
         end
 
-        before :all do
-          @origdate = Directory.first 'aa729', :passwordchangedate
-        end
-
-        before :each do
-
-          # Reset aa729
-          #
+        def reset_password
           Directory.change_password(
             admin: 'admin',
             admin_password: 'admin',
             uid: 'aa729',
             new_password: 'smada'
           )
-
-          @outcome = Directory.change_password(
-            uid: 'aa729',
-            old_password: 'smada',
-            new_password: 'wakkawakka'
-          )
         end
+
+        before :all do
+          @origdate = Directory.first 'aa729', :passwordchangedate
+        end
+
+        before(:each) { reset_password }
 
         context "when it's successful" do
 
-          it 'returns :success when it works' do
-            @outcome.should be :success
+          it 'returns :success' do
+            password_change.should be :success
           end
 
           it 'changes the password' do
+            password_change
             Directory.can_bind?('aa729', 'wakkawakka').should be true
           end
 
           it 'changes the "passwordchangedate" timestamp' do
-            Directory.change_password(
-              uid: 'aa729',
-              old_password: 'smada',
-              new_password: 'wakkawakka'
-            )
+            password_change
             Directory.first('aa729', :passwordchangedate).should_not == @origdate
           end
 
           context 'when the account is not activated' do
-            it 'activates the account' do
+
+            before :each do
+              reset_password
               Directory.deactivate 'aa729'
-              Directory.change_password(
-                uid: 'aa729',
-                old_password: 'wakkawakka',
-                new_password: 'wakkawakka'
-              ).should be :success
+              password_change
+            end
+
+            it 'changes the password' do
+              Directory.can_bind?('aa729', 'wakkawakka').should be true
+            end
+
+            it 'activates the account' do
               Directory.activated?('aa729').should be true
             end
           end
