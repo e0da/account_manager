@@ -1,4 +1,4 @@
-source :rubygems
+source 'https://rubygems.org'
 
 gem 'sinatra'
 gem 'sinatra-flash'
@@ -15,14 +15,12 @@ gem 'mail'
 
 group :development, :test do
   gem 'capybara'
-  gem 'guard',          require: false
-  gem 'guard-compass',  require: false
-  gem 'guard-rspec',    require: false
+  gem 'guard'
+  gem 'guard-compass'
+  gem 'guard-rspec'
   gem 'ladle'
-  gem 'libnotify',      require: false
-  gem 'rb-inotify',     require: false
+  gem 'rb-inotify' if RbConfig::CONFIG['target_os'] =~ /linux/
   gem 'rspec'
   gem 'shotgun'
   gem 'simplecov'
-  gem 'sinatra-contrib'
 end
