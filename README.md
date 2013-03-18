@@ -1,5 +1,9 @@
-Gevirtz Account Manager [![Build Status](https://secure.travis-ci.org/justinforce/account_manager.png?branch=master)](https://travis-ci.org/justinforce/account_manager) [![Dependency Status](https://gemnasium.com/justinforce/account_manager.png)](https://gemnasium.com/justinforce/account_manager) [![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/justinforce/account_manager)
+Gevirtz Account Manager
 =======================
+
+[![Build Status](https://secure.travis-ci.org/justinforce/account_manager.png?branch=master)](https://travis-ci.org/justinforce/account_manager)
+[![Dependency Status](https://gemnasium.com/justinforce/account_manager.png)](https://gemnasium.com/justinforce/account_manager)
+[![Code Climate](https://codeclimate.com/github/justinforce/account_manager.png)](https://codeclimate.com/github/justinforce/account_manager)
 
 Download and Setup
 ------------------
