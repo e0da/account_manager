@@ -1,5 +1,9 @@
-Gevirtz Account Manager [![Build Status](https://secure.travis-ci.org/justinforce/account_manager.png?branch=master)](https://travis-ci.org/justinforce/account_manager) [![Dependency Status](https://gemnasium.com/justinforce/account_manager.png)](https://gemnasium.com/justinforce/account_manager) [![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/justinforce/account_manager)
+Gevirtz Account Manager
 =======================
+
+[![Build Status](https://secure.travis-ci.org/justinforce/account_manager.png?branch=master)](https://travis-ci.org/justinforce/account_manager)
+[![Dependency Status](https://gemnasium.com/justinforce/account_manager.png)](https://gemnasium.com/justinforce/account_manager)
+[![Code Climate](https://codeclimate.com/github/justinforce/account_manager.png)](https://codeclimate.com/github/justinforce/account_manager)
 
 Download and Setup
 ------------------
@@ -18,9 +22,10 @@ to run `rake css` to build the stylesheets before running the app.
 Copy `config/production.example.yml` to `config/production.yml` and edit it to
 fit your environment.
 
-### For Development ###
+### Development ###
 
-You need to build the custom schema for Ladle.
+The required custom schema for Ladle is provided. If you need to modify and
+rebuild it, read on.
 
 _Note: I have found that some of the sources referred to by this Maven
 build are hosted at m2.safehaus.org, which has NEVER responded to an
