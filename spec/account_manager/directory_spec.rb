@@ -206,9 +206,9 @@ module AccountManager
           @origdate = Directory.first 'aa729', :passwordchangedate
         end
 
-        before(:each) { reset_password }
-
         context "when it's successful" do
+
+          before(:each) { reset_password }
 
           it 'returns :success' do
             change_password.should be :success
@@ -229,14 +229,15 @@ module AccountManager
             before :each do
               reset_password
               Directory.deactivate 'aa729'
-              change_password
             end
 
             it 'changes the password' do
+              change_password
               Directory.can_bind?('aa729', 'wakkawakka').should be true
             end
 
             it 'activates the account' do
+              change_password
               Directory.activated?('aa729').should be true
             end
           end

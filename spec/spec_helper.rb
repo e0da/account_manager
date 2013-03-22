@@ -18,7 +18,11 @@ Capybara.app = AccountManager::App
 RSpec.configure do |config|
   config.include Capybara::DSL
   config.include Rack::Test::Methods
-  config.order = 'random'
+
+  # it would be nice if random ordering worked, but the Directory specs tests
+  # are too tightly coupled with Ladle.
+  #
+  config.order = 'default'
 end
 
 #
