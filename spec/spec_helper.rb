@@ -18,7 +18,11 @@ Capybara.app = AccountManager::App
 RSpec.configure do |config|
   config.include Capybara::DSL
   config.include Rack::Test::Methods
-  config.order = 0 # FIXME some directory specs must happen in order, and that's a bad thing.
+
+  # it would be nice if random ordering worked, but the Directory specs tests
+  # are too tightly coupled with Ladle.
+  #
+  config.order = 'default'
 end
 
 #
@@ -28,14 +32,14 @@ def app
   AccountManager::App
 end
 
-StrongPassword = 'Strong New Password! Yes!'
+STRONG_PASSWORD = 'Strong New Password! Yes!'
 
 #
 # Start test LDAP server
 #
 def start_ladle
-  ldif = File.expand_path "../../config/test.ldif", __FILE__
-  jar = File.expand_path '../../support/gevirtz_schema/target/gevirtz-schema-1.0-SNAPSHOT.jar', __FILE__
+  ldif = File.expand_path '../../config/test.ldif', __FILE__
+  jar  = File.expand_path '../../support/gevirtz_schema/target/gevirtz-schema-1.0-SNAPSHOT.jar', __FILE__
   opts = {
     allow_anonymous: false,
     quiet: true,
@@ -61,7 +65,7 @@ end
 def submit_change_password_form(data=nil)
 
   data                    ||= {}
-  data[:new_password]     ||= StrongPassword
+  data[:new_password]     ||= STRONG_PASSWORD
   data[:verify_password]  ||= data[:new_password]
 
   visit     '/change_password'
@@ -76,7 +80,7 @@ end
 def submit_admin_reset_form(data=nil)
 
   data                    ||= {}
-  data[:new_password]     ||= StrongPassword
+  data[:new_password]     ||= STRONG_PASSWORD
   data[:verify_password]  ||= data[:new_password]
 
   visit     '/admin/reset'
@@ -97,7 +101,7 @@ end
 def submit_reset_form(data=nil)
 
   data                    ||= {}
-  data[:new_password]     ||= StrongPassword
+  data[:new_password]     ||= STRONG_PASSWORD
   data[:verify_password]  ||= data[:new_password]
   data[:slug]             ||= 'f'*32
 
