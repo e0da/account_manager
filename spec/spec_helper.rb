@@ -18,7 +18,7 @@ Capybara.app = AccountManager::App
 RSpec.configure do |config|
   config.include Capybara::DSL
   config.include Rack::Test::Methods
-  config.order = 0 # FIXME some directory specs must happen in order, and that's a bad thing.
+  config.order = 'random'
 end
 
 #
