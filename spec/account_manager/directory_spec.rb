@@ -185,7 +185,7 @@ module AccountManager
 
       context 'when a user changes their password' do
 
-        def password_change(password='wakkawakka')
+        def change_password(password='wakkawakka')
           Directory.change_password(
             uid: 'aa729',
             old_password: 'smada',
@@ -211,16 +211,16 @@ module AccountManager
         context "when it's successful" do
 
           it 'returns :success' do
-            password_change.should be :success
+            change_password.should be :success
           end
 
           it 'changes the password' do
-            password_change
+            change_password
             Directory.can_bind?('aa729', 'wakkawakka').should be true
           end
 
           it 'changes the "passwordchangedate" timestamp' do
-            password_change
+            change_password
             Directory.first('aa729', :passwordchangedate).should_not == @origdate
           end
 
@@ -229,7 +229,7 @@ module AccountManager
             before :each do
               reset_password
               Directory.deactivate 'aa729'
-              password_change
+              change_password
             end
 
             it 'changes the password' do
