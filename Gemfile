@@ -19,7 +19,6 @@ group :development, :test do
   gem 'guard-compass'
   gem 'guard-rspec'
   gem 'ladle'
-  gem 'rb-inotify' if RbConfig::CONFIG['target_os'] =~ /linux/
   gem 'rspec'
   gem 'shotgun'
   gem 'simplecov'
