@@ -15,6 +15,7 @@ gem 'mail'
 
 group :development, :test do
   gem 'capybara'
+  gem 'coveralls'
   gem 'guard'
   gem 'guard-compass'
   gem 'guard-rspec'

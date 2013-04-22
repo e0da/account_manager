@@ -1,6 +1,13 @@
 require 'simplecov'
-SimpleCov.configure { add_filter 'spec' }
-SimpleCov.start
+require 'coveralls'
+
+SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
+  SimpleCov::Formatter::HTMLFormatter,
+  Coveralls::SimpleCov::Formatter
+]
+SimpleCov.start do
+  add_filter 'spec'
+end
 
 require 'sinatra'
 require 'rack/test'
