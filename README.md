@@ -6,6 +6,12 @@ Gevirtz Account Manager
 [![Code Climate](https://codeclimate.com/github/justinforce/account_manager.png)](https://codeclimate.com/github/justinforce/account_manager)
 [![Dependency Status](https://gemnasium.com/justinforce/account_manager.png)](https://gemnasium.com/justinforce/account_manager)
 
+Requirements
+------------
+
+You have to provide a JavaScript runtime. I recommend installing [node.js][] via
+[package manager][Installing Node.js via package manager].
+
 Download and Setup
 ------------------
 
@@ -66,3 +72,6 @@ License
 -------
 
 Licensed under the MIT License. See `LICENSE`.
+
+[node.js]:http://nodejs.org/
+[Installing Node.js via package manager]:https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager
