@@ -1,25 +1,35 @@
 source 'https://rubygems.org'
 
-gem 'sinatra'
-gem 'sinatra-flash'
-gem 'net-ldap'
-gem 'passenger'
 gem 'coffee-script'
-gem 'slim'
-gem 'sass'
 gem 'data_mapper'
-gem 'sqlite3'
 gem 'dm-sqlite-adapter'
 gem 'mail'
+gem 'net-ldap'
+gem 'sass'
+gem 'sinatra'
+gem 'sinatra-flash'
+gem 'slim'
+gem 'sqlite3'
+
+group :production do
+  gem 'foreman'
+  gem 'puma'
+end
 
 group :development, :test do
+  gem 'ladle'
+end
+
+group :development do
+  gem 'shotgun'
+end
+
+group :test do
   gem 'capybara'
   gem 'coveralls'
   gem 'guard'
   gem 'guard-compass'
   gem 'guard-rspec'
-  gem 'ladle'
   gem 'rspec'
-  gem 'shotgun'
   gem 'simplecov'
 end
