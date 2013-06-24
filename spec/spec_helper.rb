@@ -41,6 +41,10 @@ end
 
 STRONG_PASSWORD = 'Strong New Password! Yes!'
 
+def ladle_running?
+  @ladle.instance_variable_get :@running
+end
+
 #
 # Start test LDAP server
 #
@@ -56,6 +60,7 @@ def start_ladle
     custom_schemas: 'edu.ucsb.education.account.GevirtzSchema'
   }
   @ladle = Ladle::Server.new(opts).start
+  Timeout.timeout(60) { sleep 0.1 until ladle_running? }
 end
 
 
