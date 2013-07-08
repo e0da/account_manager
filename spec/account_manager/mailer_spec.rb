@@ -11,7 +11,7 @@ module AccountManager
           mail: 'some_user@example.com',
           forwarding_address: 'some_alt@example.net'
         )
-        @token = mock Token, uid: 'some_user', slug: 'fake_slug'
+        @token = double Token, uid: 'some_user', slug: 'fake_slug'
       end
 
       it 'returns success if the mail operation worked' do
