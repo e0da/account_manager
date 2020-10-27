@@ -1,10 +1,10 @@
 Gevirtz Account Manager
 =======================
 
-[![Build Status](https://secure.travis-ci.org/justinforce/account_manager.png)](https://travis-ci.org/justinforce/account_manager)
-[![Coverage Status](https://coveralls.io/repos/justinforce/account_manager/badge.png?branch=master)](https://coveralls.io/r/justinforce/account_manager)
-[![Code Climate](https://codeclimate.com/github/justinforce/account_manager.png)](https://codeclimate.com/github/justinforce/account_manager)
-[![Dependency Status](https://gemnasium.com/justinforce/account_manager.png)](https://gemnasium.com/justinforce/account_manager)
+[![Build Status](https://secure.travis-ci.org/e0da/account_manager.png)](https://travis-ci.org/e0da/account_manager)
+[![Coverage Status](https://coveralls.io/repos/e0da/account_manager/badge.png?branch=main)](https://coveralls.io/r/e0da/account_manager)
+[![Code Climate](https://codeclimate.com/github/e0da/account_manager.png)](https://codeclimate.com/github/e0da/account_manager)
+[![Dependency Status](https://gemnasium.com/e0da/account_manager.png)](https://gemnasium.com/e0da/account_manager)
 
 Requirements
 ------------
@@ -15,7 +15,7 @@ You have to provide a JavaScript runtime. I recommend installing [node.js][] via
 Download and Setup
 ------------------
 
-    git clone https://github.com/justinforce/account_manager
+    git clone https://github.com/e0da/account_manager
     cd account_manager
     bundle
     rake
