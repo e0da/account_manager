@@ -3,7 +3,6 @@ Gevirtz Account Manager
 
 [![Build Status](https://secure.travis-ci.org/e0da/account_manager.png)](https://travis-ci.org/e0da/account_manager)
 [![Coverage Status](https://coveralls.io/repos/e0da/account_manager/badge.png?branch=main)](https://coveralls.io/r/e0da/account_manager)
-[![Dependency Status](https://gemnasium.com/e0da/account_manager.png)](https://gemnasium.com/e0da/account_manager)
 
 Requirements
 ------------
